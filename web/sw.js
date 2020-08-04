@@ -19,10 +19,14 @@ precacheAndRoute(
     }
 );
 
+async function onActivate() {
+    const notifsInfo = await self.db.keyVal.get("notifs");
+    if (!notifsInfo || !notifsInfo.value) return;
+    await subWithReg(self.registration);
+}
+
 self.addEventListener("activate", event => {
-    event.waitUntil(
-        subWithReg(self.registration)
-    );
+    event.waitUntil(onActivate());
 });
 
 // notifications

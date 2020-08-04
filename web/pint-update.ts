@@ -38,6 +38,7 @@ export async function updatePint(pintAvgInterval: string, pintSeed: string) {
             "retag-pint-seed",
         ]),
         unsub(),
+        window.db.keyVal.delete("notifs"), // does nothing if key already exists
     ]);
     // reload to allow the new values to take effect
     location.reload();

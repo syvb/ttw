@@ -9,28 +9,34 @@
     let permStatus = window.Notification ? Notification.permission : "default";
     $: {
         switch (permStatus) {
+            // we don't await db promises since this isn't an async function anyways
             case "denied":
                 reason = ", because you have explictly disallowed notification permissions. You may need to click on the icon to the left of the URL bar, and manually enable notifications from there. Once you have done that, you should click the button";
                 enabled = false;
                 localStorage["retag-notifs"] = "";
+                window.db.keyVal.put({ key: "notifs", value: "1" })
                 break;
             case "default":
                 reason = ", because you haven't granted permissions"
                 enabled = false;
                 localStorage["retag-notifs"] = "";
+                window.db.keyVal.put({ key: "notifs", value: "1" })
                 break;
             case "granted":
                 break;
         }
     }
     async function enableNotifs() {
-        if (!window.Notification) reutrn;
+        if (!window.Notification) return console.warn("Notification enable attempted despite no Notification global");
         if (Notification.permission !== "granted") {
             const newStatus = await Notification.requestPermission();
             permStatus = newStatus;
         }
         if (permStatus === "granted") {
-            await sub();
+            await Promise.all([
+                sub(),
+                window.db.keyVal.put({ key: "notifs", value: "1" }),
+            ]);
             localStorage["retag-notifs"] = "1";
             enabled = true;
             reason = "";
@@ -38,8 +44,10 @@
         }
     }
     function disableNotifs() {
+        // we don't wait for any promises here
         unsub();
         localStorage["retag-notifs"] = "";
+        window.db.keyVal.delete("notifs");
         enabled = false;
         permStatus = Notification ? Notification.permission : "default";
     }
