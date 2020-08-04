@@ -281,6 +281,8 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
             // back online! let's sync up
             syncPings();
         });
+        if (Object.keys(pendingConfigChanges).length > 0) syncConfig();
+        syncPings();
     }
     if (status === "out" && location.pathname !== "/") {
         location.pathname = "/";
