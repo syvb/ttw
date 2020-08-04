@@ -77,7 +77,8 @@
         </div>
         <footer>
             <a href="/privacy.html">Privacy policy</a> |
-            <a href="mailto:ttw@smitop.com">Contact us: ttw@smitop.com</a>
+            <a href="mailto:ttw@smitop.com">Contact us: ttw@smitop.com</a> |
+            <a href="/disclaimer.txt">Attribution notices</a>
         </footer>
     </Router>
 </div>
