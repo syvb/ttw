@@ -73,6 +73,7 @@ async function setAuthCookie(res, uid) {
         maxAge: 86400000 * 365, // 1 year
         httpOnly: true,
         sameSite: "None",
+        secure: !!config["secure-cookie"],
     });
 }
 

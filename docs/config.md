@@ -33,6 +33,7 @@ This guide will assume you are in the repo root.
 +    "cookie-secret": "<random text>",
 +    "vapid-private": "lvPFj0f8pYx0f..."
   ```
-6. (optional) If you want, you can store user databases in a custom location with the `user-db-dir` config key in JSON.
+6. If the backend is only accessible over HTTPS, set `secure-cookie` to `true` in `config.json`.
+7. (optional) If you want, you can store user databases in a custom location with the `user-db-dir` config key in `config-private.json`.
 
 You're done!
