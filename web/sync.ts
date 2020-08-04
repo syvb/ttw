@@ -55,11 +55,11 @@ async function updateWithPingData(pings: Ping[], dbEmpty: boolean): Promise<void
             pings.push(ping);
             let filePromise: Promise<void>;
             if (anyNonNew) {
-                filePromise = self.db.pings.put(ping);
+                filePromise = self.db.pings.put({ ...ping, unsynced: "n" });
             } else {
                 filePromise = self.db.pings.get(ping.time).then((result: any) => {
                     if (result !== undefined) anyNonNew = true;
-                    return self.db.pings.put(ping);
+                    return self.db.pings.put({ ...ping, unsynced: "n" });
                 });
             }
             filePromises.push(filePromise);
@@ -75,9 +75,9 @@ async function updateWithPingData(pings: Ping[], dbEmpty: boolean): Promise<void
     } else if (backend() === MINI_BACKEND) {
         // we wiped the DB so it is safe to add and not put here
         if (dbEmpty) {
-            await window.db.pings.bulkAdd(pings);
+            await window.db.pings.bulkAdd(pings.map(ping => ({ ...ping, unsynced: "n" })));
         } else {
-            await window.db.pings.bulkPut(pings);
+            await window.db.pings.bulkPut(pings.map(ping => ({ ...ping, unsynced: "n" })));
         }
         setTimeout(() => rebuildTagIndex(), 2000);
     }
@@ -234,10 +234,13 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
                 localStorage["retag-mini-pings"] = data.totalPings;
                 localStorage["retag-mini-missing"] = data.totalPings - data.pings.length;
                 rebuildTagIndex(); // don't wait for it to finish
-                await self.db.pings.clear();
+                // delete synced pings
+                await window.db.pings.where("unsynced").equals("n").delete();
             }
             loadConfigData(data.config);
-            await updateWithPingData(data.pings, true);
+            // if there are some pending pings the DB won't be empty
+            const dbEmpty = (await window.db.pings.count()) === 0;
+            await updateWithPingData(data.pings, dbEmpty);
             rebuildTagIndex(); // don't wait for it to finish
             lastPingCheck = data.latestUpdate;
             localStorage["retag-last-sync-time"] = lastPingCheck;
