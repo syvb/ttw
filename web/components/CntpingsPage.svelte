@@ -143,8 +143,8 @@
             updatingTableSize = false;
             return;
         }
-        const tagInputWidth = tbodyEle.children[0].children[1].clientWidth;
-        const width = tagInputWidth + (16 * 12) + 16;
+        const biggestTagInputWidth = Math.max.apply(null, [...tbodyEle.children].map(tr => tr.children[1].clientWidth));
+        const width = biggestTagInputWidth + (16 * 12) + 16;
         if (window.innerWidth < width) {
             tableEle.classList.add("smaller");
         } else {
@@ -202,6 +202,8 @@
     td.time-cell {
         margin: 0;
         padding: 0;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
     }
 
     .show-more {
