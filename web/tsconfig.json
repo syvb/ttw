@@ -1,0 +1,11 @@
+{
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+    "compilerOptions": {
+        // makes debugging easier
+        // "target": "ES2017",
+        "downlevelIteration": true
+    }
+}

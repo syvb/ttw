@@ -1,0 +1,83 @@
+<script>
+    import { Router, Link, Route } from "svelte-routing";
+    import Home from "./Home.svelte";
+    import Settings from "./Settings.svelte";
+    import FillPings from "./FillPings.svelte";
+    import CntpingsPage from "./CntpingsPage.svelte";
+    import WelcomePage from "./WelcomePage.svelte";
+    import LoggedInNavbar from "./LoggedInNavbar.svelte";
+    import GraphsPage from "./GraphsPage.svelte";
+    import DayDistGraph from "./graphs/DayDist.svelte";
+    export let url = "";
+    export let username;
+    document.getElementById("loading-msg").style.display = "none";
+</script>
+
+<style>
+    :global(.fake-link, a) {
+        color: rgb(0, 52, 194);
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    :global(.dark .fake-link, .dark a) {
+        color: rgb(92, 210, 255);
+    }
+    :global(body.dark) {
+        background: black;
+        color: white;
+    }
+    footer {
+        margin-top: 1rem;
+        border-top: 2px solid gray;
+        padding-top: 1rem;
+    }
+    .app-root {
+        margin: 8px;
+    }
+</style>
+
+<div class="app-root">
+    <Router {url}>
+        <div>
+            <!-- Keep in sync with regex in ServiceWorker -->
+            <Route path="/settings">
+                <LoggedInNavbar {username} />
+                <FillPings />
+                <Settings />
+            </Route>
+            <Route path="/">
+                {#if window.loginState !== "out"}
+                    <LoggedInNavbar {username} />
+                    <FillPings />
+                {/if}
+                <Home />
+            </Route>
+            <Route path="/cntpings">
+                <LoggedInNavbar {username} />
+                <FillPings />
+                <CntpingsPage />
+            </Route>
+            <Route path="/welcome">
+                <WelcomePage />
+            </Route>
+            <Route path="/graphs">
+                <LoggedInNavbar {username} />
+                <FillPings />
+                <GraphsPage />
+            </Route>
+            <Route path="/graphs/day-dist">
+                <LoggedInNavbar {username} />
+                <FillPings />
+                <DayDistGraph />
+            </Route>
+            <Route>
+                <LoggedInNavbar {username} />
+                Page not found.
+            </Route>
+        </div>
+        <footer>
+            <a href="/privacy.html">Privacy policy</a> |
+            <a href="mailto:ttw@smitop.com">Contact us: ttw@smitop.com</a>
+        </footer>
+    </Router>
+</div>

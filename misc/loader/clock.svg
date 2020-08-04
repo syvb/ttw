@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="946 946 108 108">
+  <!-- viewBox: $0.getBBox(), subtract stroke-width from first 2 and add stroke-width to last 2 -->
+  <circle cx="1000" cy="1000" r="50" stroke="black" stroke-width="8" fill="white" /> <!-- outer circle -->
+  <circle cx="1000" cy="1000" r="6" fill="black" /> <!-- inner circle -->
+  <svg x="946" y="946">
+    <line class="loader-hand big-hand" x1="53.5" y1="53.5" x2="53.5" y2="14" fill="none" stroke-width="6" stroke="black" />
+    <line class="loader-hand small-hand" x1="53.5" y1="53.5" x2="82" y2="53.5" fill="none" stroke-width="6" stroke="black" />
+  </svg>
+  <style>
+    .loader-hand {
+      transform-origin: 50% 50%;
+    }
+    @keyframes rot {
+      from { transform: rotate(0deg);}
+      to { transform: rotate(360deg);}
+    }
+    .big-hand {
+      animation: rot 2s linear infinite;
+    }
+    .small-hand {
+      animation: rot 6.5s linear infinite;
+    }
+  </style>
+</svg>

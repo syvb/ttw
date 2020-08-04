@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TagTime Web</title>
+        <!-- hack to load CSS async -->
+        <link rel="preload" href="/flatpickr.css" as="style">
+        <link rel="stylesheet" href="/flatpickr.css" media="print" onload="this.media='all'">
+        <meta name="application-name" content="TagTime Web">
+        <meta name="description" content="TagTime Web is a time-tracking web app. At random points throughout the day, it asks you what you are doing.">
+        <meta name="theme-color" content="rgb(245, 214, 112)">
+        <link rel="manifest" href="/manifest.webmanifest">
+        <link rel="apple-touch-icon" href="/icon/ttw180.png">
+        <base href="/">
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+                margin: 0;
+            }
+            body.dark > #loading-msg {
+                filter: invert(1);
+            }
+        </style>
+        <!-- Uncomment below line to check what happens when BigInt isn't supported -->
+        <!-- <script>delete window.BigInt;delete window.BigInt64Array;delete window.BigUint64Array;</script> -->
+    </head>
+    <body>
+        <script>
+            let theme = localStorage["retag-theme"] || "default";
+            if ((theme === "default") && matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+            if (theme === "default") theme = "light";
+            document.body.classList.add(theme);
+        </script>
+        <noscript>
+            Sorry, Javascript is required to use Retag.
+        </noscript>
+        <div id="loading-msg" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:100vh;background-color:white;">
+            <!-- misc/loader/clock-min.svg -->
+            <svg style="width:10rem;height:10rem;max-width:90vw;max-height:90vh;display:block;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="946 946 108 108"><defs/><circle cx="1000" cy="1000" r="50" fill="#fff" stroke="#000" stroke-width="8"/><circle cx="1000" cy="1000" r="6"/><svg x="946" y="946"><path fill="none" stroke="#000" stroke-width="6" d="M53.5 53.5V14" class="loader-hand" style="animation:rot 2s linear infinite"/><path fill="none" stroke="#000" stroke-width="6" d="M53.5 53.5H82" class="loader-hand" style="animation:rot 6.5s linear infinite"/></svg><style>.loader-hand{transform-origin:50% 50%}@keyframes rot{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style></svg>
+            <div style="text-align:center;font-size:1.8rem;margin-top: 0.4rem;color:black;">Loading</span>
+        </div>
+        <div style="display: none;">
+            <!-- audio files -->
+            <audio
+                id="audio-d1"
+                preload="none"
+                src="media/d1.mp3"></audio>
+            <audio
+                id="audio-d2"
+                preload="none"
+                src="media/d2.mp3"></audio>
+            <audio
+                id="audio-d3"
+                preload="none"
+                src="media/d3.mp3"></audio>
+        </div>
+    </body>
+</html>

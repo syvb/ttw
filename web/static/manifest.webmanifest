@@ -1,0 +1,46 @@
+{
+    "name": "TagTime Web",
+    "short_name": "TagTime",
+    "categories": ["time", "productivity"],
+    "description": "TagTime Web is a time-tracking web app. At random points throughout the day, it asks you what you are doing.",
+    "dir": "ltr",
+    "lang": "en",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "rgb(245, 214, 112)",
+    "background_color": "rgb(138, 121, 0)",
+    "shortcuts": [
+        {
+            "name": "Dashboard",
+            "url": "/",
+            "description": "Go to your TagTime Web dashboard."
+        },
+        {
+            "name": "Settings",
+            "url": "/settings",
+            "description": "Manage your TagTime Web settings."
+        }
+    ],
+    "icons": [
+        {
+            "src": "/logo/ttw.png",
+            "sizes": "534x534"
+        },
+        {
+            "src": "/logo/ttw120.png",
+            "sizes": "120x120"
+        },
+        {
+            "src": "/logo/ttw180.png",
+            "sizes": "180x180"
+        },
+        {
+            "src": "/logo/ttw192.png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/logo/ttw512.png",
+            "sizes": "512x512"
+        }
+    ]
+}

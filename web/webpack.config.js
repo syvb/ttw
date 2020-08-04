@@ -1,0 +1,102 @@
+const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { InjectManifest } = require("workbox-webpack-plugin");
+
+const mode = process.env.NODE_ENV || "development";
+const prod = mode === "production";
+
+const dist = path.resolve(__dirname, "dist");
+
+module.exports = {
+    mode,
+    devtool: prod ? undefined : "cheap-source-map",
+    entry: {
+        bundle: ["./index.ts"]
+    },
+    output: {
+        path: dist,
+        filename: "[name].[contenthash].js",
+        chunkFilename: "js/[name].[chunkhash].js",
+    },
+    devServer: {
+        contentBase: dist,
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+
+        new HtmlWebpackPlugin({
+            template: __dirname + "/index.html",
+        }),
+
+        new CopyPlugin([
+            path.resolve(__dirname, "static")
+        ]),
+
+        new MiniCssExtractPlugin({
+            filename: "[name].css"
+        }),
+
+        new InjectManifest({
+            swSrc: __dirname + "/sw.js",
+            maximumFileSizeToCacheInBytes: 100 * 1000000, // 100mb
+        })
+    ],
+    resolve: {
+        alias: {
+            svelte: path.resolve("node_modules", "svelte")
+        },
+        extensions: [".mjs", ".js", ".svelte"],
+        mainFields: ["svelte", "browser", "module", "main"]
+    },
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: "ts-loader",
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.svelte$/,
+                use: {
+                    loader: "svelte-loader",
+                    options: {
+                        emitCss: prod,
+                        hotReload: true
+                    }
+                }
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    prod ? MiniCssExtractPlugin.loader : "style-loader",
+                    "css-loader"
+                ]
+            },
+            {
+                test: /\.html$/i,
+                loader: "html-loader",
+            },
+            {
+                test: /\.(mp3)$/i,
+                use: [
+                    {
+                        loader: "file-loader",
+                    },
+                ],
+            },
+        ],
+    },
+    devServer: {
+        index: "index.html",
+        historyApiFallback: true,
+    },
+    optimization: {
+        splitChunks: false
+    },
+    experiments: {
+        asyncWebAssembly: true
+    }
+};

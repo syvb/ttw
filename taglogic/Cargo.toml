@@ -1,0 +1,36 @@
+[package]
+name = "taglogic"
+version = "0.1.0"
+authors = ["Smitty"]
+edition = "2018"
+
+[dependencies]
+lazy_static = "1.4.0"
+fnv = "1.0.7"
+wasm-bindgen = "0.2.64"
+console_error_panic_hook = { version = "0.1.6", optional = true }
+
+[features]
+default = ["console-panic"]
+console-panic = ["console_error_panic_hook"]
+
+[[bin]]
+name = "check_averages"
+
+[lib]
+name = "taglogic"
+crate-type = ["cdylib", "lib"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.dev.package."*"]
+opt-level = "s" # optimize dependencies even in debug builds
+
+[profile.release]
+# we want it to be small
+# "z" would make it a bit smaller, at the cost of loop vectorization, and I
+# think I like loop vectorization
+opt-level = "s"
+lto = "thin"
+panic = "abort"

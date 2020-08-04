@@ -1,0 +1,2 @@
+DROP TABLE pings;
+DROP TABLE meta;

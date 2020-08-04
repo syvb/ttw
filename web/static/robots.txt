@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# This is just a static frontend, by the way. You probably want to access the backend automatically.
+# It is hosted at a seperate domain.
