@@ -33,5 +33,6 @@ This guide will assume you are in the repo root.
 +    "cookie-secret": "<random text>",
 +    "vapid-private": "lvPFj0f8pYx0f..."
   ```
+6. (optional) If you want, you can store user databases in a custom location with the `user-db-dir` config key in JSON.
 
 You're done!

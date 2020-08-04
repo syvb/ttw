@@ -5,6 +5,7 @@ Want to run your own Retag server? This is the documentation file for you!
 ## Notes
 - The server is designed to be constantly running
 - The server has only been tested on GNU/Linux distributions
+- You should occasionally run `uservacuum.sh` in `serv2` to optimize user databases for speed and size.
 
 ## Steps
 1. Ensure you have `git`, `rustc`, `cargo`, `node`, and `yarn` installed.
