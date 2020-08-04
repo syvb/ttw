@@ -434,8 +434,8 @@ app.options("/db", (req, res) => {
 });
 
 app.get("/internal/mini-data", authMiddleware, (req, res) => {
-    if (req.authUser === null) return res.status(403).send();
     setCorsHeaders(res);
+    if (req.authUser === null) return res.status(403).send();
     const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
     // send just over 1 day of tags on default schedule
     // should be quite compressable
