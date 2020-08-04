@@ -96,6 +96,13 @@
         suggestions = newSuggestions;
     }
     function restInput(e) {
+        if (curInput.includes('"') || curInput.includes("'")) {
+            completedTags = completedTags.concat(lastTags);
+            curInput = [...curInput].filter(c => c !== '"' && c !== "'").join("");
+            normalizeCompleted();
+            suggestions = [];
+            activeSuggestion = null;
+        }
         let spaceIndex = curInput.indexOf(" ");
         while (spaceIndex !== -1) {
             let tag = curInput.slice(0, spaceIndex);
