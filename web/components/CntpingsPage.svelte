@@ -47,6 +47,8 @@
             .toArray();
     }
 
+    let overallStats = { total: 0, totalTime: 0 };
+
     // when append = true be very careful to avoid deadlock
     async function fetchDbData(append) {
         let pingsFetchPromise;
@@ -95,8 +97,6 @@
     let rowsPromise = fetchDbData();
     rowsPromise.then(checkTableSize);
     let rowsTime = null;
-
-    let overallStats = { total: 0, totalTime: 0 };
     function listenToDb() {
         let listener = async (modifications, primKey, obj, transaction) => {
             if (transaction.storeNames !== ["pings"]) return;
