@@ -1,5 +1,5 @@
 # TagTime Web
-It's like [TagTime](https://tagti.me), but on the web. It has (will have) a number of features:
+It's like [TagTime](https://tagti.me), but on the web. It has a number of features:
 - works offline once you are logged in
 - can be added to the homescreen
 - native notifications when it's time to tag your time
