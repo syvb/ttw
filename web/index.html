@@ -27,10 +27,10 @@
     </head>
     <body>
         <script>
-            let theme = localStorage["retag-theme"] || "default";
-            if ((theme === "default") && matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
-            if (theme === "default") theme = "light";
-            document.body.classList.add(theme);
+            var __theme = localStorage["retag-theme"] || "default";
+            if ((__theme === "default") && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) __theme = "dark";
+            if (__theme === "default") __theme = "light";
+            document.body.classList.add(__theme);
         </script>
         <noscript>
             Sorry, Javascript is required to use Retag.
