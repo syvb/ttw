@@ -12,6 +12,8 @@ You can use my [public instance](https://ttw.smitop.com/) or [host it yourself](
 - It is is internally called `retag`.
 
 ## License
+Copyright 2020 TagTime Web contributors.
+
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use any file in this repo except in compliance with the License. You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
