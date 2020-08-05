@@ -11,6 +11,7 @@ This guide will assume you are in the repo root.
       "api-server": "<publicly acessible path to backend>",
       "api-listen-port": 80,
       "root-domain": "<publicly acessible path to frontend>",
+      "contact-email": "<public contact email>",
       "db-max-size": 41943040
   }
   ```
@@ -35,5 +36,6 @@ This guide will assume you are in the repo root.
   ```
 6. If the backend is only accessible over HTTPS, set `secure-cookie` to `true` in `config.json`.
 7. (optional) If you want, you can store user databases in a custom location with the `user-db-dir` config key in `config-private.json`.
+8. (optional) You can set `extra-footer-text` or `extra-homepage-text` to add extra text to the footer/homepage.
 
 You're done!

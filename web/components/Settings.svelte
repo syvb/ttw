@@ -13,7 +13,7 @@
         location.href = "/";
     }
 
-    const clearFail = () => alert("All data on this device has been deleted. However, there was an error deleting data from the server. As such, the data from the server may be re-synced once server communication is possible again. Please try deleting data again later.");    
+    const clearFail = () => alert("All data on this device has been deleted. However, there was an error deleting data from the server. As such, the data from the server may be re-synced once server communication is possible again. Please try deleting data again later.");
     async function deleteAllData(event) {
         const reallySure = confirm("Do you *really* want to delete everything? This will clear all data from your device and from the server.");
         if (!reallySure) return;
@@ -279,7 +279,7 @@
     <button on:click={deleteAllData} class="delete-button">Delete all data</button>
 </div>
 <div>
-    Note: This will not delete your account. To delete your account, <a href="mailto:ttw@smitop.com">contact support</a>.
+    Note: This will not delete your account. To delete your account, <a href={"mailto:" + config["contact-email"]}>contact support</a>.
 </div>
 
 <details class="adv">

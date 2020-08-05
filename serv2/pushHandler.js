@@ -10,7 +10,7 @@ const config = {
 };
 
 webPush.setVapidDetails(
-    "mailto:ttw@smitop.com",
+    "mailto:" + config["contact-email"],
     config["vapid-public"],
     config["vapid-private"]
 );

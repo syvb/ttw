@@ -8,6 +8,7 @@
     import LoggedInNavbar from "./LoggedInNavbar.svelte";
     import GraphsPage from "./GraphsPage.svelte";
     import DayDistGraph from "./graphs/DayDist.svelte";
+    import config from "../../config.json";
     export let url = "";
     export let username;
     document.getElementById("loading-msg").style.display = "none";
@@ -76,9 +77,8 @@
             </Route>
         </div>
         <footer>
-            <a href="/privacy.html">Privacy policy</a> |
-            <a href="mailto:ttw@smitop.com">Contact us: ttw@smitop.com</a> |
             <a href="/disclaimer.txt">Attribution notices</a>
+            {@html config["extra-footer-text"] || ""}
         </footer>
     </Router>
 </div>
