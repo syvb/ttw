@@ -58,9 +58,9 @@
         } else if (backend() === MINI_BACKEND) {
             const queryStringParams = new URLSearchParams();
             queryStringParams.set("no204", "1");
-            if (paginate) queryStringParams.set("limit", PAGE_REQ_SIZE);
+            if (curPaginating) queryStringParams.set("limit", PAGE_REQ_SIZE);
             if (range.length === 2) queryStringParams.set("startTime", range[0]);
-            if (paginate && (paginateStart !== null)) {
+            if (curPaginating && (paginateStart !== null)) {
                 queryStringParams.set("endTime", paginateStart);
             } else if (range.length === 2) {
                 queryStringParams.set("endTime", range[1]);
@@ -74,8 +74,13 @@
                 }
                 if (res.status === 200) {
                     const data = await res.json();
-                    if (paginate) {
-                        paginateStart = data.pings[data.pings.length - 1].time;
+                    if (curPaginating) {
+                        if (data.pings.length < PAGE_REQ_SIZE) {
+                            curPaginating = false;
+                        } else {
+                            const oldestPing = data.pings[data.pings.length - 1];
+                            paginateStart = oldestPing.time;
+                        }
                     }
                     forcedLocal = false;
                     return (append ? await rowsPromise : []).concat(data.pings.filter(pingFilter));
