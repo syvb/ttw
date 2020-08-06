@@ -64,7 +64,7 @@ const globalPreped = {
 };
 
 async function setAuthCookie(res, uid) {
-    const randomToken = (await util.promisify(crypto.randomBytes)(256)).toString("base64").replace(/=/g, "");
+    const randomToken = (await util.promisify(crypto.randomBytes)(192)).toString("base64").replace(/=/g, "");
     let cookie = `${uid.toString(36)}.${randomToken}`;
     const hmac = crypto.createHmac("sha256", config["cookie-secret"]);
     hmac.update(cookie);
@@ -169,7 +169,7 @@ app.post("/internal/register", bodyParser.urlencoded({ extended: false, limit: c
     }
 
     const [ emailToken, hashedPw ] = await Promise.all([
-        util.promisify(crypto.randomBytes)(256),
+        util.promisify(crypto.randomBytes)(64),
         argon2.hash(pw, ARGON2_CONFIG), // automatically deals with salt
     ]);
     const uid = globalPreped.registerTx(emailToken.toString("base64"), hashedPw, email, username);
