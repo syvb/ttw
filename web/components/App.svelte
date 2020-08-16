@@ -7,6 +7,7 @@
     import WelcomePage from "./WelcomePage.svelte";
     import LoggedInNavbar from "./LoggedInNavbar.svelte";
     import GraphsPage from "./GraphsPage.svelte";
+    import SyncStatus from "./SyncStatus.svelte";
     import DayDistGraph from "./graphs/DayDist.svelte";
     import config from "../../config.json";
     export let url = "";
@@ -37,24 +38,29 @@
     }
 </style>
 
+
 <div class="app-root">
+
     <Router {url}>
         <div>
             <!-- Keep in sync with regex in ServiceWorker -->
             <Route path="/settings">
                 <LoggedInNavbar {username} />
+                <SyncStatus />
                 <FillPings />
                 <Settings />
             </Route>
             <Route path="/">
                 {#if window.loginState !== "out"}
                     <LoggedInNavbar {username} />
+                    <SyncStatus />
                     <FillPings />
                 {/if}
                 <Home />
             </Route>
             <Route path="/cntpings">
                 <LoggedInNavbar {username} />
+                <SyncStatus />
                 <FillPings />
                 <CntpingsPage />
             </Route>
@@ -63,11 +69,13 @@
             </Route>
             <Route path="/graphs">
                 <LoggedInNavbar {username} />
+                <SyncStatus />
                 <FillPings />
                 <GraphsPage />
             </Route>
             <Route path="/graphs/day-dist">
                 <LoggedInNavbar {username} />
+                <SyncStatus />
                 <FillPings />
                 <DayDistGraph />
             </Route>

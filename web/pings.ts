@@ -1,5 +1,5 @@
 // @ts-ignore
-import { syncPings } from "./sync.ts";
+import { syncPings, externalDbUpdate } from "./sync.ts";
 //@ts-ignore
 import { backend, FULL_BACKEND, MINI_BACKEND } from "./backend.ts";
 const config = require("../config.json");
@@ -30,6 +30,7 @@ async function putPingsInternal(pings: Ping[]) {
         ...ping,
         unsynced: "",
     })));
+    externalDbUpdate();
     const pendingPromises = [syncPings()];
     if (backend() === MINI_BACKEND) {
         pendingPromises.push(retallyPings());

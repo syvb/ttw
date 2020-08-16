@@ -81,6 +81,7 @@ async function updateWithPingData(pings: Ping[], dbEmpty: boolean): Promise<void
         }
         setTimeout(() => rebuildTagIndex(), 2000);
     }
+    externalDbUpdate();
     if (self.recheckPending) self.recheckPending();
 }
 
@@ -180,6 +181,27 @@ export async function syncPings() {
     });
     lastSyncPromise = promise;
     return promise; // flattened
+}
+
+function genPendingPromise() {
+    const promise = (async () => (await db.pings.where("unsynced").equals("").first()) !== undefined)();
+    promise.then((val) => {
+        const event = new CustomEvent("pings-pending-sync-change", {
+            detail: {
+                anyPending: val,
+            },
+        });
+        window.dispatchEvent(event);
+    });
+    return promise;
+}
+let anyPendingPromise;
+export async function anyPending() {
+    return await anyPendingPromise;
+}
+
+export async function externalDbUpdate() {
+    anyPendingPromise = genPendingPromise();
 }
 
 function startCheckLoop() {
@@ -283,6 +305,7 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
         });
         if (Object.keys(pendingConfigChanges).length > 0) syncConfig();
         syncPings();
+        anyPendingPromise = genPendingPromise();
     }
     if (status === "out" && location.pathname !== "/") {
         location.pathname = "/";
