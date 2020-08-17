@@ -5,10 +5,23 @@
 </script>
 
 <style>
-
+    h1 {
+        font-size: 3rem;
+        margin: 1rem;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .tagline {
+        font-weight: bold;
+        font-size: 2.2rem;
+    }
 </style>
 
 <h1>TagTime Web</h1>
+
+<div class="tagline">
+    Time tracking that doesn't waste your time
+</div>
 
 <p>
     TagTime Web is a time-tracking web app. At random points throughout the day, it asks you what you are doing.
