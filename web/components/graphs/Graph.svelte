@@ -1,6 +1,17 @@
 <script>
     import { Link } from "svelte-routing";
+    import { onMount } from "svelte";
     export let pings = {};
+    export let loadChartjs = false;
+    export let graphLoad = () => {};
+    let chartjsPromise;
+    if (loadChartjs) chartjsPromise = import("chart.js");
+    onMount(async () => {
+        if (loadChartjs && !window.Chart) {
+            window.Chart = (await chartjsPromise).default;
+        }
+        graphLoad();
+    });
 </script>
 
 <!-- Generic graph component -->
