@@ -1,146 +1,20 @@
 <script>
     import Loading from "./Loading.svelte";
     import TagEntry from "./TagEntry.svelte";
-    import DateRangePicker from "./DateRangePicker.svelte";
+    import PingSelector from "./PingSelector.svelte";
     import tagColor from "../tagColor.ts";
-    import { overallPingStats, putPings } from "../pings.ts";
+    import { putPings } from "../pings.ts";
     import debounce from "../debounce.ts";
-    import humanizeDuration from "humanize-duration";
-    import { afterUpdate } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { backend, MINI_BACKEND, FULL_BACKEND } from "../backend.ts";
-    const config = require("../../config.json");
 
-    const PAGE_REQ_SIZE = 100;
-
-    let includedTags = [];
-    let excludedTags = [];
-    let range = [];
-    let smaller = false;
-    let showMoreDisabled = false;
-    let paginate = backend() === MINI_BACKEND;
-    let curPaginating = paginate;
-    let paginateStart = null;
-    let forcedLocal = false;
-
-    function pingFilter(row) {
-        if (includedTags.length > 0) {
-            let anyIncluded = false;
-            row.tags.forEach(tag => {
-                if (includedTags.includes(tag)) anyIncluded = true;
-            });
-            if (!anyIncluded) return false;
-        }
-        if (!row.tags.every(tag => !excludedTags.includes(tag))) return false;
-        let rowDate = row.time * 1000;
-        if (range.length === 2) {
-            if (rowDate < +range[0]) return false;
-            if (rowDate > +range[1]) return false;
-        }
-        return true;
-    }
-
-    async function fetchFromLocal() {
-        return window.db.pings
-            .orderBy("time")
-            .reverse()
-            .filter(pingFilter)
-            .toArray();
-    }
-
-    let overallStats = { total: 0, totalTime: 0 };
-
-    // when append = true be very careful to avoid deadlock
-    async function fetchDbData(append) {
-        let pingsFetchPromise;
-        if (backend() === FULL_BACKEND) {
-            forcedLocal = false;
-            pingsFetchPromise = fetchFromLocal();
-        } else if (backend() === MINI_BACKEND) {
-            const queryStringParams = new URLSearchParams();
-            queryStringParams.set("no204", "1");
-            if (curPaginating) queryStringParams.set("limit", PAGE_REQ_SIZE);
-            if (range.length === 2) queryStringParams.set("startTime", range[0]);
-            if (curPaginating && (paginateStart !== null)) {
-                queryStringParams.set("endTime", paginateStart);
-            } else if (range.length === 2) {
-                queryStringParams.set("endTime", range[1]);
-            }
-            const url = `${config["api-server"]}/pings?${queryStringParams.toString()}`;
-            pingsFetchPromise = (async () => {
-                let res;
-                try { res = await fetch(url, { credentials: "include" }); } catch (e) {
-                    forcedLocal = true;
-                    return fetchFromLocal();
-                }
-                if (res.status === 200) {
-                    const data = await res.json();
-                    if (curPaginating) {
-                        if (data.pings.length < PAGE_REQ_SIZE) {
-                            curPaginating = false;
-                        } else {
-                            const oldestPing = data.pings[data.pings.length - 1];
-                            paginateStart = oldestPing.time;
-                        }
-                    }
-                    forcedLocal = false;
-                    return (append ? await rowsPromise : []).concat(data.pings.filter(pingFilter));
-                } else if (res.status === 403) {
-                    location.href = "/";
-                    forcedLocal = false;
-                    return [];
-                } else {
-                    alert("Failed to load pings from server. Try again later.");
-                }
-            })();
-            overallStats = await overallPingStats();
-        }
-        const rows = await pingsFetchPromise;
-        rowsTime = rows.reduce((prev, cur) => prev + (cur.interval), 0);
-        curPaginating = paginate;
-        return rows;
-    }
-    let rowsPromise = fetchDbData();
-    rowsPromise.then(checkTableSize);
-    let rowsTime = null;
-    function listenToDb() {
-        let listener = async (modifications, primKey, obj, transaction) => {
-            if (transaction.storeNames !== ["pings"]) return;
-            if (!(rowsPromise instanceof Promise) && rowsPromise[primKey].modified)
-                // just redo the whole thing
-                rowsPromise = await fetchDbData();
-            checkTableSize();
-        };
-        db.pings.hook("updating", listener);
-        return {
-            destroy() {
-                db.pings.hook("updating").unsubscribe(listener);
-            }
-        }
-    }
-    listenToDb();
     function rowInputComplete(e) {
         this.blur();
     }
-    function updateFilter() {
-        paginateStart = null; // reset pagination
-        rowsPromise = fetchDbData();
-        rowsPromise.then(checkTableSize);
-    }
-    let lastDbUpdate = Promise.resolve();
-    const updateRow = i => debounce(async e => {
-        [rowsPromise] = await Promise.all([rowsPromise, lastDbUpdate]);
-        const newPing = {
-            ...rowsPromise[i],
-            tags: e.detail,
-        };
-        lastDbUpdate = putPings([newPing]);
-        rowsPromise[i].tags = e.detail;
-        rowsPromise[i].modified = true;
-    }, 1800);
 
-    let tbodyEle;
-    let tableEle;
+    let tbodyEle, tableEle, showMorePings, loading, pings, forcedLocal, curPaginating, setRowsWithoutUpdate;
     let updatingTableSize = false;
+    let smaller = false;
     function checkTableSize() {
         updatingTableSize = true;
         if (!tableEle || !tbodyEle || tbodyEle.children.length === 0) {
@@ -161,10 +35,28 @@
         if (!updatingTableSize) checkTableSize()
     });
 
+    let showMoreDisabled = false;
     async function showMore() {
         showMoreDisabled = true;
-        rowsPromise = await fetchDbData(true);
+        await showMorePings();
         showMoreDisabled = false;
+    }
+
+    let lastDbUpdate = Promise.resolve();
+    const updateRow = i => debounce(async e => {
+        console.assert(!loading);
+        await lastDbUpdate;
+        const newPing = {
+            ...pings[i],
+            tags: e.detail,
+        };
+        lastDbUpdate = putPings([newPing]);
+        // pings[i].tags = e.detail;
+        // pings[i].modified = true;
+    }, 1800);
+
+    function pingsChanged() {
+        checkTableSize();
     }
 </script>
 
@@ -233,40 +125,10 @@
     <div>
         Click on a row to edit it.
     </div>
-    <details>
-        <summary>
-            Filtering options
-        </summary>
-        Include tags:
-        <TagEntry bind:tags={includedTags} />
-        Exclude tags:
-        <TagEntry bind:tags={excludedTags} />
-        Date range:
-        <DateRangePicker bind:range />
-        <br>
-        {#if (backend() === MINI_BACKEND) && !forcedLocal}
-            <label for="cntpings-paginate">
-                Paginate
-            </label>
-            <input id="cntpings-paginate" type="checkbox" bind:checked={paginate}>
-            <br>
-        {/if}
-        <button on:click={updateFilter}>Update</button>
-    </details>
-    {#await rowsPromise}
+    <PingSelector bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} />
+    {#if loading !== false}
         <Loading />
-    {:then rows}
-        <div>
-            Showing {rows.length} out of {overallStats.total}
-            {#if overallStats.total !== 0}
-                pings ({((rows.length / (overallStats.total)) * 100).toFixed(2)}%).
-            {:else}
-                pings.
-            {/if}
-        </div>
-        <div>
-            Time: {humanizeDuration(rowsTime * 1000, { round: true })}
-        </div>
+    {:else}
         {#if forcedLocal}
             <div class="warning-block">
                 <span class="warning">Warning</span>:
@@ -290,7 +152,7 @@
                 </tr>
             </thead>
             <tbody bind:this={tbodyEle}>
-                {#each rows as row, i}
+                {#each pings as row, i}
                     <tr>
                         <td class="time-cell">{new Date(row.time * 1000).toLocaleString()}</td>
                         <td>
@@ -303,5 +165,5 @@
         {#if curPaginating && !forcedLocal}
             <button class="show-more" disabled={showMoreDisabled} on:click={showMore}>Show more...</button>
         {/if}
-    {/await}
+    {/if}
 </div>
