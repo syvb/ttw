@@ -41,7 +41,7 @@
         // we always use the full form here,
         // although actual TagTime will sometimes use shorter forms
         // (to ensure all lines are the same length)
-        line += `[${d.getFullYear()}.${d.getMonth().toString().padStart(2, "0")}.${d.getDate().toString().padStart(2, "0")} ${d.toTimeString().split(" ")[0]} ${DAY_NAMES[d.getDay()]}]`;
+        line += `[${d.getFullYear()}.${(d.getMonth() + 1).toString().padStart(2, "0")}.${d.getDate().toString().padStart(2, "0")} ${d.toTimeString().split(" ")[0]} ${DAY_NAMES[d.getDay()]}]`;
         return line;
     }
 
