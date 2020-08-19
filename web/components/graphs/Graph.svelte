@@ -1,16 +1,31 @@
 <script>
     import { Link } from "svelte-routing";
-    import { onMount } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+
     export let pings = {};
     export let loadChartjs = false;
-    export let graphLoad = () => {};
+    let graphLoadPromiseResolve;
+    export const graphLoadPromise = new Promise((resolve, _reject) => graphLoadPromiseResolve = resolve);
+
+    let graphSlot, defaultCanvas;
     let chartjsPromise;
-    if (loadChartjs) chartjsPromise = import("chart.js");
+
     onMount(async () => {
         if (loadChartjs && !window.Chart) {
-            window.Chart = (await chartjsPromise).default;
+            window.Chart = (await import("chart.js")).default;
         }
-        graphLoad();
+        graphLoadPromiseResolve({
+            graphEle: graphSlot,
+            defaultCanvas,
+        });
+        dispatch("graphLoad");
+        const pings = await window.db.pings.toArray(); // TODO: ping filtering
+        dispatch("graphUpdate", {
+            pings,
+            graphEle: graphSlot,
+            defaultCanvas,
+        });
     });
 </script>
 
@@ -25,5 +40,9 @@
 </div>
 
 <div>
-    <slot name="graph"></slot>
+    <slot name="graph">
+        <canvas width="500" height="500" bind:this={defaultCanvas}>
+            Sorry, your browser is old and doesn't support canvas.
+        </canvas>
+    </slot>
 </div>
