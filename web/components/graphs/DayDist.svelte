@@ -1,36 +1,41 @@
 <script>
     import Graph from "./Graph.svelte";
     import { onMount } from "svelte";
-    let pings, graphLoadPromise, chart;
+    let graphLoadPromise, chart;
 
-
-    function generateData() {
-        var data = [];
-        for (var i = 0; i < 7; i++) {
-            data.push({
-                x: Math.random() * 100,
-                y: Math.random() * 100,
-            });
+    function genData(pings) {
+        let hourCounts = {}; // 0-23
+        for (let i = 0; i < 24; i++) hourCounts[i] = 0;
+        pings.forEach(ping => {
+            let hour = (new Date(ping.time * 1000)).getHours();
+            hourCounts[hour]++;
+        });
+        let data = [];
+        for (let hour in hourCounts) {
+            // data.push({
+            //     x: parseInt(hour) + 1,
+            //     y: hourCounts[hour],
+            // })
+            data.push(hourCounts[hour]);
         }
         return data;
     }
 
-    onMount(async () => {
-        const { graphEle, defaultCanvas } = await graphLoadPromise;
-        var color = Chart.helpers.color;
-
-        chart = new Chart.Scatter(defaultCanvas, {
+    // onMount(async () => {
+    //     await graphLoadPromise;
+    // });
+    const graphUpdate = e => {
+        const { defaultCanvas, pings } = e.detail;
+        const color = Chart.helpers.color;
+        chart = new Chart(defaultCanvas, {
+            type: "bar",
             data: {
+                labels: (new Array(24)).fill().map((_ele, i) => (i).toString() + ":00"),
                 datasets: [{
-                    label: "My First dataset",
-                    borderColor: "red",
-                    backgroundColor: color("red").alpha(0.2).rgbString(),
-                    data: generateData()
-                }, {
-                    label: "My Second dataset",
-                    borderColor: "blue",
-                    backgroundColor: color("blue").alpha(0.2).rgbString(),
-                    data: generateData()
+                    label: "Pings per hour",
+                    borderColor: "black",
+                    backgroundColor: color("black").alpha(0.6).rgbString(),
+                    data: genData(pings),
                 }]
             },
             options: {
@@ -38,14 +43,18 @@
                     display: true,
                     text: "Daily distribution"
                 },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
             }
         })
-    });
-    const graphUpdate = e => {
-        console.log("updating graph", e);
     };
 </script>
 
-<Graph bind:pings on:graphUpdate={graphUpdate} bind:graphLoadPromise loadChartjs>
+<Graph on:graphUpdate={graphUpdate} bind:graphLoadPromise loadChartjs>
     <span slot="title">Daily distribution</span>
 </Graph>
