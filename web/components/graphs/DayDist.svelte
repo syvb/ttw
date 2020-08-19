@@ -35,6 +35,8 @@
                     label: "Pings per hour",
                     borderColor: "black",
                     backgroundColor: color("black").alpha(0.6).rgbString(),
+                    barPercentage: 1,
+                    categoryPercentage: 1,
                     data: genData(pings),
                 }]
             },
