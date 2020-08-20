@@ -17,6 +17,7 @@
     <Link to="/">Home</Link>
     <Link to="/cntpings">Pings</Link>
     <Link to="/settings">Settings</Link>
+    <a href="/graphs" target="graphs" use:link>Graphs</a>
     {#if window.loginState === "in"}
         {#if username}
             Logged in as <span class="username">{username}</span>.
