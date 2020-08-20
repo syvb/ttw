@@ -107,15 +107,6 @@
         font-size: 1.1em;
         margin: 0.5rem;
     }
-
-    .warning {
-        font-weight: bold;
-    }
-
-    .warning-block {
-        display: block;
-        background: #d8d800;
-    }
 </style>
 
 <svelte:window on:resize={checkTableSize} />
@@ -129,21 +120,6 @@
     {#if loading !== false}
         <Loading />
     {:else}
-        {#if forcedLocal}
-            <div class="warning-block">
-                <span class="warning">Warning</span>:
-                Unable to connect to the server to download latest pings.
-                The displayed pings might be out of sync.
-                This is probably due to a lack of connection to the Internet.
-            </div>
-        {/if}
-        {#if curPaginating && !forcedLocal}
-            <div class="warning-block">
-                <span class="warning">Warning</span>:
-                Not all pings are being shown.
-                You can cause all pings to be shown by unchecking Paginate in the filtering options, then clicking Update, however this may result in downloading a lot of data.
-            </div>
-        {/if}
         <table class:smaller bind:this={tableEle}>
             <thead>
                 <tr>

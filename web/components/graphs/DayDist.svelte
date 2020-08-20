@@ -21,11 +21,8 @@
         return data;
     }
 
-    // onMount(async () => {
-    //     await graphLoadPromise;
-    // });
-    const graphUpdate = e => {
-        const { defaultCanvas, pings } = e.detail;
+    function graphLoad(e) {
+        const { defaultCanvas } = e.detail;
         const color = Chart.helpers.color;
         chart = new Chart(defaultCanvas, {
             type: "bar",
@@ -37,7 +34,7 @@
                     backgroundColor: color("black").alpha(0.6).rgbString(),
                     barPercentage: 1,
                     categoryPercentage: 1,
-                    data: genData(pings),
+                    data: [],
                 }]
             },
             options: {
@@ -53,10 +50,21 @@
                     }]
                 }
             }
-        })
+        });
+    }
+
+    // onMount(async () => {
+    //     await graphLoadPromise;
+    // });
+    const graphUpdate = e => {
+        const { pings } = e.detail;
+        const chartData = genData(pings);
+        console.log("updating graph", pings, chartData);
+        chart.data.datasets[0].data = chartData;
+        chart.update();
     };
 </script>
 
-<Graph on:graphUpdate={graphUpdate} bind:graphLoadPromise loadChartjs>
+<Graph on:graphUpdate={graphUpdate} on:graphLoad={graphLoad} bind:graphLoadPromise loadChartjs>
     <span slot="title">Daily distribution</span>
 </Graph>

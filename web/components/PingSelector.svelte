@@ -8,8 +8,10 @@
 
     export let pings = [];
     export let loading = true;
-    export const showMorePings = async function () {
-        await fetchDbData(true);
+    export const showMorePings = function () {
+        const promise = fetchDbData(true);
+        promise.then(pingsChanged);
+        return promise;
     }
     export let pingsChanged = () => {};
 
@@ -128,6 +130,17 @@
     }
 </script>
 
+<style>
+    .warning {
+        font-weight: bold;
+    }
+
+    .warning-block {
+        display: block;
+        background: #d8d800;
+    }
+</style>
+
 <div>
     <details>
         <summary>
@@ -163,3 +176,21 @@
         Time: {humanizeDuration(rowsTime * 1000, { round: true })}
     </div>
 </div>
+
+{#if !loading}
+    {#if forcedLocal}
+        <div class="warning-block">
+            <span class="warning">Warning</span>:
+            Unable to connect to the server to download latest pings.
+            The displayed pings might be out of sync.
+            This is probably due to a lack of connection to the Internet.
+        </div>
+    {/if}
+    {#if curPaginating && !forcedLocal}
+        <div class="warning-block">
+            <span class="warning">Warning</span>:
+            Not all pings are being shown.
+            You can cause all pings to be shown by unchecking Paginate in the filtering options, then clicking Update, however this may result in downloading a lot of data.
+        </div>
+    {/if}
+{/if}
