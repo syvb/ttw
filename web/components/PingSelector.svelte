@@ -81,7 +81,8 @@
                     if (curPaginating) {
                         if (data.pings.length < PAGE_REQ_SIZE) {
                             curPaginating = false;
-                        } else {
+                        }
+                        if (data.pings.length > 0) {
                             const oldestPing = data.pings[data.pings.length - 1];
                             paginateStart = oldestPing.time - 1;
                         }
@@ -100,7 +101,6 @@
         }
         const rows = await pingsFetchPromise;
         rowsTime = rows.reduce((prev, cur) => prev + (cur.interval), 0);
-        curPaginating = paginate;
         pings = rows;
         loading = false;
         return rows;
@@ -125,6 +125,7 @@
     function updateFilter() {
         paginateStart = null; // reset pagination
         loading = true;
+        curPaginating = paginate;
         fetchDbData().then(pingsChanged);
     }
 </script>
