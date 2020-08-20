@@ -20,6 +20,7 @@
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
   "dependencies": {
+    "chart.js": "^2.9.3",
     "dexie": "^3.0.1",
     "flatpickr": "^4.6.3",
     "humanize-duration": "^3.23.1",

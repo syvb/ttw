@@ -68,15 +68,9 @@
                 <WelcomePage />
             </Route>
             <Route path="/graphs">
-                <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
                 <GraphsPage />
             </Route>
             <Route path="/graphs/day-dist">
-                <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
                 <DayDistGraph />
             </Route>
             <Route>
