@@ -78,13 +78,12 @@
                 }
                 if (res.status === 200) {
                     const data = await res.json();
-                    // TODO: sort pings here
                     if (curPaginating) {
                         if (data.pings.length < PAGE_REQ_SIZE) {
                             curPaginating = false;
                         } else {
                             const oldestPing = data.pings[data.pings.length - 1];
-                            paginateStart = oldestPing.time;
+                            paginateStart = oldestPing.time - 1;
                         }
                     }
                     forcedLocal = false;
