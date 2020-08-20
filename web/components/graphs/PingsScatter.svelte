@@ -19,6 +19,13 @@
         return dayOfYear;
     }
 
+    function dayNumToDateString(doy) {
+        const yearNum = Math.floor(doy / 365);
+        const dateObj = new Date(yearNum + 1900, 0);
+        dateObj.setDate(doy - (yearNum * 365));
+        return dateObj.toLocaleDateString();
+    }
+
     function genData(pings) {
         return pings.map(ping => {
             const dateObj = (new Date(ping.time * 1000));
@@ -36,6 +43,18 @@
         });
     }
 
+    function msToTimeString(tick) {
+        if (tick > 86400000) return "";
+        let seconds = tick / 1000;
+        let minutes = seconds / 60;
+        seconds -= Math.floor(minutes) * 60;
+        const hours = minutes / 60;
+        minutes -= Math.floor(hours) * 60;
+        const dateObj = new Date();
+        dateObj.setHours(Math.floor(hours), Math.floor(minutes), Math.floor(seconds));
+        return dateObj.toLocaleTimeString();
+    }
+
     function graphLoad(e) {
         const { defaultCanvas } = e.detail;
         const color = Chart.helpers.color;
@@ -47,8 +66,6 @@
                     label: "Pings per hour",
                     borderColor: (window.__theme === "dark") ? "white" : "black",
                     backgroundColor: color((window.__theme === "dark") ? "white" : "black").alpha(0.6).rgbString(),
-                    barPercentage: 1,
-                    categoryPercentage: 1,
                     data: [],
                 }]
             },
@@ -61,19 +78,19 @@
                     yAxes: [{
                         ticks: {
                             beginAtZero: true,
-                            userCallback: tick => {
-                                if (tick < -86400000) return "";
-                                let seconds = -tick / 1000;
-                                let minutes = seconds / 60;
-                                seconds -= Math.floor(minutes) * 60;
-                                const hours = minutes / 60;
-                                minutes -= Math.floor(hours) * 60;
-                                const dateObj = new Date();
-                                dateObj.setHours(Math.floor(hours), Math.floor(minutes), Math.floor(seconds));
-                                return dateObj.toLocaleTimeString();
-                            }
+                            userCallback: tick => msToTimeString(-tick),
                         },
-                    }]
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            userCallback: tick => dayNumToDateString(tick),
+                        },
+                    }],
+                },
+                tooltips: {
+                    callbacks: {
+                        label: (tooltipItem, data) => `${dayNumToDateString(parseInt(tooltipItem.label, 10))} ${msToTimeString(-parseInt(tooltipItem.value, 10))}`
+                    }
                 }
             }
         });
