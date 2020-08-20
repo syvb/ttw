@@ -30,8 +30,8 @@
                 labels: (new Array(24)).fill().map((_ele, i) => (i).toString() + ":00"),
                 datasets: [{
                     label: "Pings per hour",
-                    borderColor: "black",
-                    backgroundColor: color("black").alpha(0.6).rgbString(),
+                    borderColor: (window.__theme === "dark") ? "white" : "black",
+                    backgroundColor: color((window.__theme === "dark") ? "white" : "black").alpha(0.6).rgbString(),
                     barPercentage: 1,
                     categoryPercentage: 1,
                     data: [],
