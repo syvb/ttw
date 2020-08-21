@@ -198,6 +198,8 @@
 </div>
 <div>
     <label for="ping-noise">Audio to play on a ping: </label>
+    <!-- I *this* using `change` is okay here  -->
+    <!-- svelte-ignore a11y-no-onchange -->
     <select id="ping-noise" bind:value={pingNoise} on:change={updatePingNoise}>
         <option value="n">None</option>
         <option value="d3">Simple ding</option>
