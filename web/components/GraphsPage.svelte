@@ -9,4 +9,5 @@
 <ul>
     <li><Link to="/graphs/day-dist">Daily distribution</Link></li>
     <li><Link to="/graphs/pings-scatter">Matrix chart</Link></li>
+    <li><Link to="/graphs/trend/daily">Hours per day</Link></li>
 </ul>

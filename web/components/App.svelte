@@ -10,6 +10,7 @@
     import SyncStatus from "./SyncStatus.svelte";
     import DayDistGraph from "./graphs/DayDist.svelte";
     import PingsScatterGraph from "./graphs/PingsScatter.svelte";
+    import DailyTrendGraph from "./graphs/DailyTrend.svelte";
     import config from "../../config.json";
     export let url = "";
     export let username;
@@ -76,6 +77,9 @@
             </Route>
             <Route path="/graphs/pings-scatter">
                 <PingsScatterGraph />
+            </Route>
+            <Route path="/graphs/trend/daily">
+                <DailyTrendGraph />
             </Route>
             <Route>
                 <LoggedInNavbar {username} />

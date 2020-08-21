@@ -10,7 +10,7 @@ precacheAndRoute(
     {
         urlManipulation: ({ url }) => {
             console.log("checking", url);
-            if (url.pathname.match(/^\/(settings|cntpings|welcome|graphs(\/[^\/]+)?)\/?$/)) {
+            if (url.pathname.match(/^\/(settings|cntpings|welcome|graphs(\/.+)?)\/?$/)) {
                 console.log("match");
                 return [new URL("/index.html", location.href)];
             }
