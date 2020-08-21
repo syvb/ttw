@@ -51,17 +51,15 @@ export function weeksSince1900ish(d: Date) {
     return [d.getUTCFullYear(), weekNo];
 }
 
-export function monthsSince1900ish(dateObj: Date) {
+export function monthsSince1900(dateObj: Date) {
     const yearsSince1990 = dateObj.getFullYear() - 1900;
     const monthsIntoYear = dateObj.getMonth();
-    // ideally, this would calculate the number of hours since 1990
-    // but thanks to leap years, this is sometimes off by a day
     return (yearsSince1990 * 12) + monthsIntoYear;
 }
 
 export function monthNumToString(num: number) {
     let yearNum = Math.floor(num / 12);
-    const monthNum = num - yearNum;
+    const monthNum = num - (yearNum * 12);
     yearNum += 1900;
     const dateObj = new Date();
     dateObj.setFullYear(yearNum, monthNum, 1);

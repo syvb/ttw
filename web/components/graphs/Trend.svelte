@@ -5,7 +5,7 @@
         dayNumToDateString,
         daysSince1900ish,
         weeksSince1900ish,
-        monthsSince1900ish,
+        monthsSince1900,
         monthNumToString,
     } from "../../date-utils.ts";
     import { onMount } from "svelte";
@@ -34,7 +34,7 @@
             } else if (intervalName === "Weekly") {
                 intervalId = weeksSince1900ish(dateObj);
             } else if (intervalName === "Monthly") {
-                intervalId = monthsSince1900ish(dateObj);
+                intervalId = monthsSince1900(dateObj);
             } else {
                 throw new Error("unreachable")
             }
