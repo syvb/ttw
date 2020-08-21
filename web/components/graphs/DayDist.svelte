@@ -11,12 +11,8 @@
             hourCounts[hour]++;
         });
         let data = [];
-        for (let hour in hourCounts) {
-            // data.push({
-            //     x: parseInt(hour) + 1,
-            //     y: hourCounts[hour],
-            // })
-            data.push(hourCounts[hour]);
+        for (let i = 0; i < 24; i++) {
+            data.push(hourCounts[i]);
         }
         return data;
     }
@@ -59,7 +55,6 @@
     const graphUpdate = e => {
         const { pings } = e.detail;
         const chartData = genData(pings);
-        console.log("updating graph", pings, chartData);
         chart.data.datasets[0].data = chartData;
         chart.update();
     };
