@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
+const webpack = require("webpack");
 
 const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
@@ -42,7 +43,10 @@ module.exports = {
         new InjectManifest({
             swSrc: __dirname + "/sw.js",
             maximumFileSizeToCacheInBytes: 100 * 1000000, // 100mb
-        })
+        }),
+
+        // ignore Moment locales
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /asdf/),
     ],
     resolve: {
         alias: {
