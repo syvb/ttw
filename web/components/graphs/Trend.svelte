@@ -1,6 +1,13 @@
 <script>
     import Graph from "./Graph.svelte";
-    import { getDOY, dayNumToDateString, daysSince1900ish } from "../../date-utils.ts";
+    import {
+        getDOY,
+        dayNumToDateString,
+        daysSince1900ish,
+        weeksSince1900ish,
+        monthsSince1900ish,
+        monthNumToString,
+    } from "../../date-utils.ts";
     import { onMount } from "svelte";
 
     export let intervalName;
@@ -10,18 +17,31 @@
     function genData(pings) {
         let intervalTotalHours = {};
         let intervalNames = {};
+        let stringifyIntervalIdFunc;
+        if (intervalName === "Daily") {
+            stringifyIntervalIdFunc = dayNumToDateString;
+        } else if (intervalName === "Weekly") {
+        } else if (intervalName === "Monthly") {
+            stringifyIntervalIdFunc = monthNumToString;
+        } else {
+            throw new Error("invalid intervalId")
+        }
         pings.forEach(ping => {
             let intervalId;
             const dateObj = new Date(ping.time * 1000);
             if (intervalName === "Daily") {
                 intervalId = daysSince1900ish(dateObj);
+            } else if (intervalName === "Weekly") {
+                intervalId = weeksSince1900ish(dateObj);
+            } else if (intervalName === "Monthly") {
+                intervalId = monthsSince1900ish(dateObj);
             } else {
-                throw new Error("invalid intervalName")
+                throw new Error("unreachable")
             }
             const intervalInHours = ping.interval / 3600;
             if (intervalTotalHours[intervalId] === undefined) {
                 intervalTotalHours[intervalId] = intervalInHours;
-                intervalNames[intervalId] = dayNumToDateString(intervalId);//dateObj.toLocaleDateString();
+                intervalNames[intervalId] = stringifyIntervalIdFunc(intervalId);
             } else {
                 // 3600 is 1 hour in seconds
                 intervalTotalHours[intervalId] += intervalInHours;
@@ -42,7 +62,7 @@
                 data.push({
                     x: i,
                     y: 0,
-                    name: dayNumToDateString(i),
+                    name: stringifyIntervalIdFunc(i),
                 });
             }
         }
