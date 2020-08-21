@@ -14,6 +14,7 @@
         return promise;
     }
     export let pingsChanged = () => {};
+    export let open = false;
 
     let includedTags = [];
     let excludedTags = [];
@@ -142,7 +143,7 @@
 </style>
 
 <div>
-    <details>
+    <details {open}>
         <summary>
             Filtering options
         </summary>
