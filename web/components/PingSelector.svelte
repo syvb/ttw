@@ -18,6 +18,7 @@
 
     let includedTags = [];
     let excludedTags = [];
+    let includeType = "some";
 
     const PAGE_REQ_SIZE = 100;
 
@@ -29,11 +30,16 @@
 
     function pingFilter(row) {
         if (includedTags.length > 0) {
-            let anyIncluded = false;
-            row.tags.forEach(tag => {
-                if (includedTags.includes(tag)) anyIncluded = true;
-            });
-            if (!anyIncluded) return false;
+            let valid;
+            if (includeType === "some") {
+                valid = false;
+                row.tags.forEach(tag => {
+                    if (includedTags.includes(tag)) valid = true;
+                });
+            } else {
+                valid = includedTags.every(tag => row.tags.includes(tag));
+            }
+            if (!valid) return false;
         }
         if (!row.tags.every(tag => !excludedTags.includes(tag))) return false;
         let rowDate = row.time * 1000;
@@ -151,9 +157,12 @@
         <summary>
             Filtering options
         </summary>
-        Include tags:
+        <select bind:value={includeType}>
+            <option value="some">At least one of:</option>
+            <option value="all">All of:</option>
+        </select>
         <TagEntry bind:tags={includedTags} />
-        Exclude tags:
+        None of:
         <TagEntry bind:tags={excludedTags} />
         Date range:
         <DateRangePicker bind:range />
