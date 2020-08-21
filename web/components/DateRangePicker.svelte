@@ -8,7 +8,7 @@
     export let range = [];
     let pickerEle;
     onMount(async () => {
-        const flatpickr = await flatpickrPromise;
+        const flatpickr = (await flatpickrPromise).default;
         const picker = flatpickr(pickerEle, {
             mode: "range",
             appendTo: pickerEle,
