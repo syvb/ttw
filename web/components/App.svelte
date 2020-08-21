@@ -11,8 +11,8 @@
     import DayDistGraph from "./graphs/DayDist.svelte";
     import PingsScatterGraph from "./graphs/PingsScatter.svelte";
     import DailyTrendGraph from "./graphs/DailyTrend.svelte";
-    import WeeklyTrendGraph from "./graphs/DailyTrend.svelte";
-    import MonthlyTrendGraph from "./graphs/DailyTrend.svelte";
+    import WeeklyTrendGraph from "./graphs/WeeklyTrend.svelte";
+    import MonthlyTrendGraph from "./graphs/MonthlyTrend.svelte";
     import config from "../../config.json";
     export let url = "";
     export let username;
