@@ -21,6 +21,7 @@
         if (intervalName === "Daily") {
             stringifyIntervalIdFunc = dayNumToDateString;
         } else if (intervalName === "Weekly") {
+            stringifyIntervalIdFunc = num => `week ${num}`;
         } else if (intervalName === "Monthly") {
             stringifyIntervalIdFunc = monthNumToString;
         } else {

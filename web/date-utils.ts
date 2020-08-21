@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 export function msToTimeString(tick) {
     if (tick > 86400000) return "";
     let seconds = tick / 1000;
@@ -43,12 +45,8 @@ export function daysSince1900ish(dateObj: Date) {
 
 // https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
 export function weeksSince1900ish(d: Date) {
-    throw new Error("unimplemented");
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    const weekNo = Math.ceil((((Number(d) - Number(yearStart)) / 86400000) + 1) / 7);
-    return [d.getUTCFullYear(), weekNo];
+    const mom = moment(d);
+    return mom.week();
 }
 
 export function monthsSince1900(dateObj: Date) {
