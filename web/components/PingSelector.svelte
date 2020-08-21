@@ -140,6 +140,10 @@
         display: block;
         background: #d8d800;
     }
+
+    :global(.dark) .warning-block {
+        background: #696900;
+    }
 </style>
 
 <div>
