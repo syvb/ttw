@@ -1,13 +1,14 @@
 <script>
-    import flatpickr from "flatpickr";
     import { onMount } from "svelte";
 
+    const flatpickrPromise = import("flatpickr");
     const now = new Date();
     const foreverAgo = new Date();
     foreverAgo.setFullYear(foreverAgo.getFullYear() - 1);
     export let range = [];
     let pickerEle;
-    onMount(() => {
+    onMount(async () => {
+        const flatpickr = await flatpickrPromise;
         const picker = flatpickr(pickerEle, {
             mode: "range",
             appendTo: pickerEle,
