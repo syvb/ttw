@@ -1,29 +1,23 @@
 <script>
     import Graph from "./Graph.svelte";
-    import {
-        getDOY,
-        dayNumToDateString,
-        daysSince1900ish,
-        weeksSince1900ish,
-        monthsSince1900,
-        monthNumToString,
-    } from "../../date-utils.ts";
     import { onMount } from "svelte";
+    const dateUtils = import("../../date-utils.ts");
 
     export let intervalName;
     export let intervalDurationName;
     let graphLoadPromise, chart;
 
-    function genData(pings) {
+    async function genData(pings) {
         let intervalTotalHours = {};
         let intervalNames = {};
         let stringifyIntervalIdFunc;
+        const dU = await dateUtils;
         if (intervalName === "Daily") {
-            stringifyIntervalIdFunc = dayNumToDateString;
+            stringifyIntervalIdFunc = dU.dayNumToDateString;
         } else if (intervalName === "Weekly") {
             stringifyIntervalIdFunc = num => `week ${num}`;
         } else if (intervalName === "Monthly") {
-            stringifyIntervalIdFunc = monthNumToString;
+            stringifyIntervalIdFunc = dU.monthNumToString;
         } else {
             throw new Error("invalid intervalId")
         }
@@ -31,11 +25,11 @@
             let intervalId;
             const dateObj = new Date(ping.time * 1000);
             if (intervalName === "Daily") {
-                intervalId = daysSince1900ish(dateObj);
+                intervalId = dU.daysSince1900ish(dateObj);
             } else if (intervalName === "Weekly") {
-                intervalId = weeksSince1900ish(dateObj);
+                intervalId = dU.weeksSince1900ish(dateObj);
             } else if (intervalName === "Monthly") {
-                intervalId = monthsSince1900(dateObj);
+                intervalId = dU.monthsSince1900(dateObj);
             } else {
                 throw new Error("unreachable")
             }
@@ -104,9 +98,9 @@
         });
     }
 
-    const graphUpdate = e => {
+    const graphUpdate = async e => {
         const { pings } = e.detail;
-        const { data: chartData, labels } = genData(pings);
+        const { data: chartData, labels } = await genData(pings);
         console.log("chartData", chartData);
         chart.data.datasets[0].data = chartData;
         chart.data.labels = labels;

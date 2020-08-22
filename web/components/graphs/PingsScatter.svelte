@@ -1,14 +1,15 @@
 <script>
     import Graph from "./Graph.svelte";
     import { onMount } from "svelte";
-    import { dayNumToDateString, getDOY, msToTimeString, daysSince1900ish, msIntoDay } from "../../date-utils.ts";
-    let graphLoadPromise, chart;
+    const dateUtils = import("../../date-utils.ts");
 
-    function genData(pings) {
+    let graphLoadPromise, chart;
+    async function genData(pings) {
+        const dU = await dateUtils;
         return pings.map(ping => {
             const dateObj = (new Date(ping.time * 1000));
-            const dayNum = daysSince1900ish(dateObj);
-            const dayMs = msIntoDay(dateObj);
+            const dayNum = dU.daysSince1900ish(dateObj);
+            const dayMs = dU.msIntoDay(dateObj);
             return {
                 x: dayNum,
                 y: -dayMs,
@@ -16,9 +17,10 @@
         });
     }
 
-    function graphLoad(e) {
+    async function graphLoad(e) {
         const { defaultCanvas } = e.detail;
         const color = Chart.helpers.color;
+        const dU = await dateUtils;
         chart = new Chart(defaultCanvas, {
             type: "scatter",
             data: {
@@ -39,18 +41,18 @@
                     yAxes: [{
                         ticks: {
                             beginAtZero: true,
-                            userCallback: tick => msToTimeString(-tick),
+                            userCallback: tick => dU.msToTimeString(-tick),
                         },
                     }],
                     xAxes: [{
                         ticks: {
-                            userCallback: tick => dayNumToDateString(tick),
+                            userCallback: tick => dU.dayNumToDateString(tick),
                         },
                     }],
                 },
                 tooltips: {
                     callbacks: {
-                        label: (tooltipItem, data) => `${dayNumToDateString(parseInt(tooltipItem.label, 10))} ${msToTimeString(-parseInt(tooltipItem.value, 10))}`
+                        label: (tooltipItem, data) => `${dU.dayNumToDateString(parseInt(tooltipItem.label, 10))} ${dU.msToTimeString(-parseInt(tooltipItem.value, 10))}`
                     }
                 }
             }
@@ -60,9 +62,9 @@
     // onMount(async () => {
     //     await graphLoadPromise;
     // });
-    const graphUpdate = e => {
+    const graphUpdate = async e => {
         const { pings } = e.detail;
-        const chartData = genData(pings);
+        const chartData = await genData(pings);
         console.log("updating graph", pings, chartData);
         chart.data.datasets[0].data = chartData;
         chart.update();
