@@ -57,7 +57,7 @@
         }, 7500);
     }
 
-    let online = true;
+    let online = navigator.onLine;
     window.addEventListener("online", () => online = navigator.onLine);
     window.addEventListener("offline", () => online = navigator.onLine);
 </script>
