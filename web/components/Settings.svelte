@@ -211,8 +211,8 @@
             No audio will be played.
         {:else if pingNoise === "d1"}
             It kinda sounds like some windchimes.
-            Apparently an "arpeggio" is a type of broken chord.
-            And a "broken chord" is a chord but broken up and maybe with some notes repeated.
+            Apparently an &ldquo;arpeggio&rdquo; is a type of broken chord.
+            And a &ldquo;broken chord&rdquo; is a chord but broken up and maybe with some notes repeated.
             Audio is from <a href="https://cynicmusic.com/" rel="noopener">The Cynic Project</a>.
         {:else if pingNoise === "d2"}
             Sounds like a doorbell. Ding-dong! Audio is from
