@@ -1,4 +1,6 @@
 <script>
+    import TodoList from "./TodoList.svelte";
+
     let todoState = [
         // TODO: actually load from DB
         {
@@ -43,3 +45,4 @@
 
 <h2>Todo list</h2>
 
+<TodoList todos={todoState} />
