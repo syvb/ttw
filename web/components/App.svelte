@@ -16,6 +16,7 @@
     import config from "../../config.json";
     export let url = "";
     export let username;
+    export let buildInfo;
     document.getElementById("loading-msg").style.display = "none";
 </script>
 
@@ -95,6 +96,7 @@
             </Route>
         </div>
         <footer>
+            {buildInfo} |
             <a href="/disclaimer.txt">Attribution notices</a>
             {@html config["extra-footer-text"] || ""}
         </footer>

@@ -86,6 +86,8 @@ window.recheckPending = () => {}; // ignore calls to recheck pending until ping 
         target: document.body,
         props: {
             username,
+            // @ts-ignore
+            buildInfo: __BUILD_INFO__,
         },
     });
 

@@ -1,4 +1,5 @@
 const path = require("path");
+const child_process = require("child_process");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -10,6 +11,8 @@ const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
 
 const dist = path.resolve(__dirname, "dist");
+
+const buildInfo = `v${child_process.execSync("git rev-list --count HEAD").toString()} (${child_process.execSync("git rev-parse --short HEAD").toString().trim()}${child_process.execSync("git diff --quiet || echo ', dirty'").toString().trim()})`;
 
 module.exports = {
     mode,
@@ -47,6 +50,10 @@ module.exports = {
 
         // ignore Moment locales
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /asdf/),
+
+        new webpack.DefinePlugin({
+            __BUILD_INFO__: JSON.stringify(buildInfo),
+        })
     ],
     resolve: {
         alias: {
