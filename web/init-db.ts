@@ -3,8 +3,8 @@ const Dexie = require("dexie").default;
 const db: any = new Dexie("retag");
 db.version(5).stores({
     // new table
-    // non-indexed properties: 
-    todos: "id,name,*children,done"
+    // non-indexed properties: expanded
+    todos: "id,name,*children,done,root"
 })
 db.version(4).stores({
     // non-indexed properties: comment
