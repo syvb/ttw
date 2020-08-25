@@ -8,10 +8,31 @@
     .signout-form {
         display: inline;
     }
+
     .username {
         font-weight: bold;
     }
+
+    .skip-link {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        top: auto;
+    }
+
+    .skip-link:focus {
+        display: inline-block;
+        height: auto;
+        width: auto;
+        position: static;
+        margin: auto;
+    }
 </style>
+
+<a class="skip-link" href="#maincontent">
+    Skip Navigation
+</a>
 
 <nav>
     <Link to="/">Home</Link>
@@ -27,3 +48,5 @@
         </form>
     {/if}
 </nav>
+
+<a name="maincontent" id="maincontent"></a>
