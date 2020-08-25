@@ -2,8 +2,9 @@
     import { createEventDispatcher, onMount } from "svelte";
     import tagColor from "../tagColor.ts";
     import { searchTagIndex } from "../tagIndex.ts";
-    
+
     export let small = false;
+    export let forceMobile = false;
     export let tags = [];
     export let lastTags = [];
     export const setTags = (newTags, newCur = "") => {
@@ -226,9 +227,16 @@
         background-color: rgb(77, 77, 77);
         color: white;
     }
+    .force-mobile .tag-entry-main {
+        display: block;
+    }
+    .force-mobile .tag {
+        display: block;
+        margin-bottom: 2px;
+    }
 </style>
 
-<div class="tag-entry-root" on:click={focusRest} bind:this={root} class:small>
+<div class="tag-entry-root" on:click={focusRest} bind:this={root} class:small class:force-mobile={forceMobile}>
     <div class="tag-entry-main">
         {#each completedTags as tag}
             <span tabindex="0" class="tag" on:click={removeTag} style="background-color: {tagColor(tag).bg};color: {tagColor(tag).fg};">

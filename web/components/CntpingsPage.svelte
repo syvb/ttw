@@ -22,12 +22,13 @@
             updatingTableSize = false;
             return;
         }
+        smaller = false;
         const biggestTagInputWidth = Math.max.apply(null, [...tbodyEle.children].map(tr => tr.children[1].clientWidth));
         const width = biggestTagInputWidth + (16 * 12) + 16;
         if (window.innerWidth < width) {
-            tableEle.classList.add("smaller");
+            smaller = true;
         } else {
-            tableEle.classList.remove("smaller");
+            smaller = false;
         }
         updatingTableSize = false;
     }
@@ -114,7 +115,7 @@
 <div>
     <h1>Pings</h1>
     <div>
-        Click on a row to edit it.
+        Click on a row to edit it. {smaller}
     </div>
     <PingSelector bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} />
     {#if loading !== false}
@@ -132,7 +133,7 @@
                     <tr>
                         <td class="time-cell">{new Date(row.time * 1000).toLocaleString()}</td>
                         <td>
-                            <TagEntry on:input={updateRow(i)} on:inputComplete={rowInputComplete} tags={row.tags} />
+                            <TagEntry on:input={updateRow(i)} on:inputComplete={rowInputComplete} tags={row.tags} forceMobile={smaller} />
                         </td>
                     </tr>
                 {/each}
