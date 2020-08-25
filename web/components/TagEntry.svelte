@@ -20,7 +20,7 @@
     let completedTags = [];
     let curInput = "";
     let restInputEle;
-    let root;
+    let root, tagEntryMain;
     let suggestions = [];
     let activeSuggestion = null;
 
@@ -81,6 +81,21 @@
                 activeSuggestion--;
             } else if (suggestions.length > 0) {
                 activeSuggestion = suggestions.length - 1;
+            }
+        } else if ((e.key === "a" || e.key === "A") && e.ctrlKey) {
+            e.preventDefault();
+            if (tagEntryMain) {
+                if (document.body.createTextRange) {
+                    const range = document.body.createTextRange();
+                    range.moveToElementText(tagEntryMain);
+                    range.select();
+                } else if (window.getSelection) {
+                    const selection = window.getSelection();
+                    const range = document.createRange();
+                    range.selectNodeContents(tagEntryMain);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
             }
         }
     }
@@ -158,6 +173,7 @@
     .small.tag-entry-root {
         display: inline-block;
     }
+
     .tag-entry-main {
         border: 1px solid black;
         padding: 0.4rem;
@@ -165,13 +181,16 @@
         cursor: text;
         background-color: white;
     }
+
     .small .tag-entry-main {
         width: fit-content;
     }
+
     :global(.dark) .tag-entry-main {
         background-color: rgb(44, 44, 44);
         border: none;
     }
+
     .rest-tags {
         border: 0;
         height: 100%;
@@ -184,10 +203,12 @@
         margin-left: 0.25rem;
         font-size: 1.1rem;
     }
+
     :global(.dark) .rest-tags {
         color: white;
         background-color: rgb(44, 44, 44);
     }
+
     .tag {
         /* in em not rem, since a space width is relative to the width of a normal character */
         margin-right: 0.3em;
@@ -199,9 +220,11 @@
         font-size: 1.1rem;
         border-radius: 0.4rem;
     }
+
     .ws {
         font-size: 0;
     }
+
     .autocomplete {
         list-style: none;
         padding: 0;
@@ -210,26 +233,34 @@
         border-left: 2px solid black;
         border-right: 2px solid black;
     }
-    .autocomplete > li {
+
+    .autocomplete>li {
         background: white;
         border-top: 1px solid black;
         border-bottom: 1px solid black;
         cursor: pointer;
     }
-    .autocomplete > li.active, .autocomplete > li:hover {
+
+    .autocomplete>li.active,
+    .autocomplete>li:hover {
         background: rgb(206, 206, 206);
     }
-    :global(.dark) .autocomplete > li {
+
+    :global(.dark) .autocomplete>li {
         background-color: black;
         color: white;
     }
-    :global(.dark) .autocomplete > li.active, :global(.dark) .autocomplete > li:hover {
+
+    :global(.dark) .autocomplete>li.active,
+    :global(.dark) .autocomplete>li:hover {
         background-color: rgb(77, 77, 77);
         color: white;
     }
+
     .force-mobile .tag-entry-main {
         display: block;
     }
+
     .force-mobile .tag {
         display: block;
         margin-bottom: 2px;
@@ -237,15 +268,13 @@
 </style>
 
 <div class="tag-entry-root" on:click={focusRest} bind:this={root} class:small class:force-mobile={forceMobile}>
-    <div class="tag-entry-main">
+    <div class="tag-entry-main" bind:this={tagEntryMain}>
         {#each completedTags as tag}
             <span tabindex="0" class="tag" on:click={removeTag} style="background-color: {tagColor(tag).bg};color: {tagColor(tag).fg};">
-                {tag}
-                <span class="ws"> </span>
+                {tag}<span class="ws">{"\t "}</span>
             </span>
         {/each}
         <input type="text" class="rest-tags" bind:value={curInput} bind:this={restInputEle} on:input={restInput} on:keydown={restKeydown}>
-
     </div>
     {#if suggestions.length > 0}
         <ul class="autocomplete">
