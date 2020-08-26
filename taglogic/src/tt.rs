@@ -1,4 +1,4 @@
-//! Implementation of the original TagTime algorithim.
+//! Implementation of the original TagTime algorithm.
 
 // see https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282
 
