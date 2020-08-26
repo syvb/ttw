@@ -1,13 +1,14 @@
 use std::time;
 use wasm_bindgen::prelude::*;
-mod hash;
 
-/// Utility function for getting the current Unix time as a u64.
-fn cur_unix_time() -> u64 {
-    time::SystemTime::now()
-        .duration_since(time::UNIX_EPOCH)
-        .expect("Failed to get Unix time: system clock is set to a time before Jan. 1 1970")
-        .as_secs()
+mod hash;
+mod tt;
+
+#[wasm_bindgen]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum PingAlg {
+    FnvTime,
+    TagTime,
 }
 
 #[wasm_bindgen]
@@ -15,6 +16,7 @@ fn cur_unix_time() -> u64 {
 pub struct PingIntervalData {
     pub seed: u32,
     pub avg_interval: u32,
+    pub alg: PingAlg,
 }
 
 /// Used to create interval data from JS. `seed` is passed in as a u32, but gets converted to
@@ -25,6 +27,7 @@ pub fn new_ping_interval_data(seed: u32, avg_interval: u32) -> PingIntervalData 
     PingIntervalData {
         seed,
         avg_interval,
+        alg: PingAlg::FnvTime,
     }
 }
 
@@ -120,137 +123,162 @@ pub fn init() {
 mod test {
     use super::*;
 
-    #[test]
-    fn correct_tags_between() {
-        assert_eq!(
+    mod fnv_alg {
+        use super::*;
+
+        #[test]
+        fn correct_tags_between() {
+            assert_eq!(
+                pings_between(
+                    5,
+                    100,
+                    &PingIntervalData {
+                        seed: 1234,
+                        avg_interval: 28,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                vec![21, 50, 87]
+            )
+        }
+
+        #[test]
+        #[should_panic]
+        fn tags_between_panics_on_bad_range() {
             pings_between(
-                5,
                 100,
+                5,
                 &PingIntervalData {
                     seed: 1234,
                     avg_interval: 28,
-                }
-            ),
-            vec![21, 50, 87]
-        )
+                    alg: PingAlg::FnvTime,
+                },
+            );
+        }
+
+        #[test]
+        fn correct_next_ping() {
+            assert_eq!(
+                next_ping_after(
+                    10000000,
+                    &PingIntervalData {
+                        seed: 1234,
+                        avg_interval: 1000,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                Some(10001167)
+            );
+            assert_eq!(
+                next_ping_after(
+                    0,
+                    &PingIntervalData {
+                        seed: 543431,
+                        avg_interval: 60000,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                Some(40874)
+            );
+            assert_eq!(
+                next_ping_after(
+                    0,
+                    &PingIntervalData {
+                        seed: 0,
+                        avg_interval: 1,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                Some(1)
+            );
+        }
+
+        #[test]
+        fn next_ping_none_on_overflow() {
+            assert_eq!(
+                next_ping_after(
+                    u64::MAX,
+                    &PingIntervalData {
+                        seed: 54224,
+                        avg_interval: 1000,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                None
+            );
+            assert_eq!(
+                next_ping_after(
+                    u64::MAX - 1000000,
+                    &PingIntervalData {
+                        seed: 542432,
+                        avg_interval: u32::MAX,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                None
+            );
+        }
+
+        #[test]
+        fn correct_last_ping() {
+            assert_eq!(
+                last_ping(
+                    10000000,
+                    &PingIntervalData {
+                        seed: 12352,
+                        avg_interval: 1000,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                Some(9999257)
+            );
+            assert_eq!(
+                last_ping(
+                    1000,
+                    &PingIntervalData {
+                        seed: 1234,
+                        avg_interval: 100,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                Some(944)
+            );
+        }
+
+        #[test]
+        fn correct_last_ping_none_on_underflow() {
+            assert_eq!(
+                last_ping(
+                    0,
+                    &PingIntervalData {
+                        seed: 1234,
+                        avg_interval: 100,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                None
+            );
+            assert_eq!(
+                last_ping(
+                    10000,
+                    &PingIntervalData {
+                        seed: 387112,
+                        avg_interval: 100000,
+                        alg: PingAlg::FnvTime,
+                    }
+                ),
+                None
+            );
+        }
     }
 
-    #[test]
-    #[should_panic]
-    fn tags_between_panics_on_bad_range() {
-        pings_between(
-            100,
-            5,
-            &PingIntervalData {
-                seed: 1234,
-                avg_interval: 28,
-            },
-        );
-    }
+    mod tagtime_alg {
+        use super::*;
 
-    #[test]
-    fn correct_next_ping() {
-        assert_eq!(
-            next_ping_after(
-                10000000,
-                &PingIntervalData {
-                    seed: 1234,
-                    avg_interval: 1000,
-                }
-            ),
-            Some(10001167)
-        );
-        assert_eq!(
-            next_ping_after(
-                0,
-                &PingIntervalData {
-                    seed: 543431,
-                    avg_interval: 60000,
-                }
-            ),
-            Some(40874)
-        );
-        assert_eq!(
-            next_ping_after(
-                0,
-                &PingIntervalData {
-                    seed: 0,
-                    avg_interval: 1,
-                }
-            ),
-            Some(1)
-        );
-    }
-
-    #[test]
-    fn next_ping_none_on_overflow() {
-        assert_eq!(
-            next_ping_after(
-                u64::MAX,
-                &PingIntervalData {
-                    seed: 54224,
-                    avg_interval: 1000,
-                }
-            ),
-            None
-        );
-        assert_eq!(
-            next_ping_after(
-                u64::MAX - 1000000,
-                &PingIntervalData {
-                    seed: 542432,
-                    avg_interval: u32::MAX,
-                }
-            ),
-            None
-        );
-    }
-
-    #[test]
-    fn correct_last_ping() {
-        assert_eq!(
-            last_ping(
-                10000000,
-                &PingIntervalData {
-                    seed: 12352,
-                    avg_interval: 1000,
-                }
-            ),
-            Some(9999257)
-        );
-        assert_eq!(
-            last_ping(
-                1000,
-                &PingIntervalData {
-                    seed: 1234,
-                    avg_interval: 100,
-                }
-            ),
-            Some(944)
-        );
-    }
-
-    #[test]
-    fn correct_last_ping_none_on_underflow() {
-        assert_eq!(
-            last_ping(
-                0,
-                &PingIntervalData {
-                    seed: 1234,
-                    avg_interval: 100,
-                }
-            ),
-            None
-        );
-        assert_eq!(
-            last_ping(
-                10000,
-                &PingIntervalData {
-                    seed: 387112,
-                    avg_interval: 100000,
-                }
-            ),
-            None
-        );
+        // see https://tagtime.glitch.me/
+        #[test]
+        fn correct_should_ping() {
+            let pint_data = PingIntervalData { seed: 1059773018 };
+        }
     }
 }
