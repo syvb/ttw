@@ -57,6 +57,32 @@ mod test {
     }
 
     #[test]
+    fn exp_rand_100k() {
+        /*
+            var x = "";
+            var state = 11193462; // seed
+            var IA = 16807;
+            var IM = 2147483647;
+            function lcg() { return state = IA * state % IM }
+            function exprand(m) { return -m * Math.log(lcg()/IM) }
+            for (let i = 0; i < 100_000; i++) { x += exprand(2700) + "\n" }
+            console.log(x);
+        */
+        let lines = include_str!("exprand_100k.txt");
+        let val_iter = lines
+            .split_ascii_whitespace()
+            .filter(|line| !line.is_empty())
+            .map(|line| line.parse::<f32>().unwrap())
+            .enumerate();
+        let mut state = State(11193462);
+        for (index, expected_val) in val_iter {
+            state.next_state();
+            // using f32 quells issues with slightly different decimal stringification
+            assert_eq!(state.exp_rand(2700) as f32, expected_val, "diverged on {}th call", index + 1);
+        }
+    }
+
+    #[test]
     fn next_state_matches_100k() {
         let mut state = State(1);
         /*
