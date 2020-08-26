@@ -53,7 +53,7 @@ mod test {
     fn exp_rand() {
         // valid value determined by using JS refrence implementation functions
         let state = State::from_seed(UNIV_SCHED.seed);
-        assert_eq!(state.exp_rand(2700), 1360.5429307641095);
+        assert_eq!(state.exp_rand(2700), 14193.149888904356);
     }
 
     #[test]
