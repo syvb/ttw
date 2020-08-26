@@ -153,8 +153,12 @@ pub fn pings_between(t1: u64, t2: u64, interval_data: &PingIntervalData) -> Vec<
             let gap = state.gap(interval_data.avg_interval);
             pung += u64::from(gap);
             if pung >= t1 {
-                pings.push(pung);
-                break;
+                if pung <= t2 {
+                    pings.push(pung);
+                    break;
+                } else {
+                    return vec![];
+                };
             };
         }
         loop {
@@ -313,6 +317,10 @@ mod test {
             assert_eq!(
                 pings_between(1533748818, 1533759939, &tt::UNIV_SCHED),
                 vec![1533754341, 1533758980]
+            );
+            assert_eq!(
+                pings_between(1598481008, 1598481905, &tt::UNIV_SCHED),
+                vec![],
             );
         }
     }
