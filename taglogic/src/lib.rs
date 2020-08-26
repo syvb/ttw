@@ -144,11 +144,38 @@ pub fn pings_between(t1: u64, t2: u64, interval_data: &PingIntervalData) -> Vec<
         "t1 must be less than t2, since t1 and t2 specify a range."
     );
     let mut pings = Vec::with_capacity(1);
-    for t in t1..=t2 {
-        if should_ping_at_time(t, &interval_data) {
-            pings.push(t);
-        };
-    }
+    if interval_data.alg == PingAlg::TagTime {
+        // this can be optimized better than repeated calling of should_ping_at_time
+        let mut pung = tt::UR_PING;
+        let mut state = tt::State::from_seed(interval_data.seed);
+        loop {
+            state.next_state();
+            let gap = state.gap(interval_data.avg_interval);
+            pung += u64::from(gap);
+            if pung >= t1 {
+                pings.push(pung);
+                break;
+            };
+        }
+        loop {
+            state.next_state();
+            let gap = state.gap(interval_data.avg_interval);
+            pung += u64::from(gap);
+            if pung > t2 {
+                break;
+            } else if pung == t2 {
+                pings.push(pung);
+                break;
+            };
+            pings.push(pung);
+        }
+    } else {
+        for t in t1..=t2 {
+            if should_ping_at_time(t, &interval_data) {
+                pings.push(t);
+            };
+        }
+    };
     pings.shrink_to_fit();
     pings
 }
@@ -271,6 +298,22 @@ mod test {
         fn correct_last_ping() {
             assert_eq!(last_ping(1533758980, &tt::UNIV_SCHED), Some(1533754341));
             assert_eq!(last_ping(1533758975, &tt::UNIV_SCHED), Some(1533754341));
+        }
+
+        #[test]
+        fn correct_tags_between() {
+            assert_eq!(
+                pings_between(1533748817, 1533759940, &tt::UNIV_SCHED),
+                vec![1533748817, 1533754341, 1533758980, 1533759940]
+            );
+            assert_eq!(
+                pings_between(1533748814, 1533759943, &tt::UNIV_SCHED),
+                vec![1533748817, 1533754341, 1533758980, 1533759940]
+            );
+            assert_eq!(
+                pings_between(1533748818, 1533759939, &tt::UNIV_SCHED),
+                vec![1533754341, 1533758980]
+            );
         }
     }
 }
