@@ -264,7 +264,7 @@
     <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
 </div>
 
-<h3>Universal Schedule</h3>
+<h3>Universal Schedule (beta)</h3>
 <div>
     <div>
         Click the button to use the
@@ -334,7 +334,7 @@
     <div>
         <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
         <label for="pint-tt-alg">
-            Use old algorithm (see below)
+            Use old algorithm (beta, see below)
         </label>
         <details>
             <summary>Read this before changing the above checkbox!</summary>
