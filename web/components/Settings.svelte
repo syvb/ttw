@@ -181,7 +181,7 @@
         width: 3em;
     }
     #pint-seed {
-        width: 4em;
+        width: 6em;
     }
     .adv-settings {
         display: inline;
@@ -248,19 +248,6 @@
         </label>
         <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
     </div>
-    <div>
-        <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
-        <label for="pint-tt-alg">
-            Use old algorithm (see below)
-        </label>
-        <details>
-            <summary>Read this before changing the above checkbox!</summary>
-            You should check this box if you want compatability with the original TagTime.
-            Checking this checkbox will enable using the algorithm used by the original TagTime.
-            You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
-            To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462.
-        </details>
-    </div>
     <button on:click={updatePintClick}>Update</button>
 </div>
 <div>
@@ -317,5 +304,18 @@
         </label>
         <input type="number" id="pint-seed" bind:value={pintSeed}>
         <button on:click={updatePintClick}>Update</button>
+    </div>
+    <div>
+        <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
+        <label for="pint-tt-alg">
+            Use old algorithm (see below)
+        </label>
+        <details>
+            <summary>Read this before changing the above checkbox!</summary>
+            You should check this box if you want compatability with the original TagTime.
+            Checking this checkbox will enable using the algorithm used by the original TagTime.
+            You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
+            To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462.
+        </details>
     </div>
 </details>
