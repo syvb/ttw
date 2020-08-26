@@ -51,7 +51,6 @@ pub fn should_ping_at_time(time: u64, interval_data: &PingIntervalData) -> bool 
                 let gap = state.gap(interval_data.avg_interval);
                 pung += u64::from(gap);
                 if pung > time {
-                    println!("Nope, {} seconds off", pung - time);
                     return false;
                 } else if pung == time {
                     return true;
@@ -69,6 +68,19 @@ pub fn should_ping_at_time_u32(time: u32, interval_data: &PingIntervalData) -> b
 /// Returns the next ping **after** a given timestamp. Returns None if there will never be another ping
 /// with a time repersentable as a u64. (although this should only occur if the average interval is *really* high).
 pub fn next_ping_after(mut t: u64, interval_data: &PingIntervalData) -> Option<u64> {
+    if interval_data.alg == PingAlg::TagTime {
+        // this can be optimized better than repeated calling of should_ping_at_time
+        let mut pung = tt::UR_PING;
+        let mut state = tt::State::from_seed(interval_data.seed);
+        loop {
+            state.next_state();
+            let gap = state.gap(interval_data.avg_interval);
+            pung += u64::from(gap);
+            if pung > t {
+                return Some(pung);
+            };
+        }
+    };
     // NonZeroU64 isn't supported by wasm_bindgen, so we use a normal u64 (although zero will never be returned)
     loop {
         // if we fail to add one to the initial time, then the former time must have been the max
@@ -89,6 +101,20 @@ pub fn next_ping_after_u32(t: u32, interval_data: &PingIntervalData) -> Option<u
 /// Returns the next ping **before** a given timestamp. Returns None if there never was another earlier ping
 /// with a time repersentable as a u64. (although this should only occur if the average interval is *really* high).
 pub fn last_ping(mut t: u64, interval_data: &PingIntervalData) -> Option<u64> {
+    if interval_data.alg == PingAlg::TagTime {
+        // this can be optimized better than repeated calling of should_ping_at_time
+        let mut pung = tt::UR_PING;
+        let mut state = tt::State::from_seed(interval_data.seed);
+        loop {
+            state.next_state();
+            let gap = state.gap(interval_data.avg_interval);
+            pung += gap as u64;
+            if pung >= t {
+                return Some(pung - (gap as u64));
+            };
+        }
+    };
+
     loop {
         // if we fail to add one to the initial time, then the former time must have been the max
         // u64 value, and therefore the next ping would be out of bounds (or never), so we return
@@ -227,6 +253,24 @@ mod test {
         #[test]
         fn correct_should_ping() {
             assert!(should_ping_at_time(1594907790, &tt::UNIV_SCHED));
+        }
+
+        #[test]
+        fn correct_next_ping_after() {
+            assert_eq!(
+                next_ping_after(1533754341, &tt::UNIV_SCHED),
+                Some(1533758980)
+            );
+            assert_eq!(
+                next_ping_after(1533754349, &tt::UNIV_SCHED),
+                Some(1533758980)
+            );
+        }
+
+        #[test]
+        fn correct_last_ping() {
+            assert_eq!(last_ping(1533758980, &tt::UNIV_SCHED), Some(1533754341));
+            assert_eq!(last_ping(1533758975, &tt::UNIV_SCHED), Some(1533754341));
         }
     }
 }

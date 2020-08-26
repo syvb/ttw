@@ -78,7 +78,12 @@ mod test {
         for (index, expected_val) in val_iter {
             state.next_state();
             // using f32 quells issues with slightly different decimal stringification
-            assert_eq!(state.exp_rand(2700) as f32, expected_val, "diverged on {}th call", index + 1);
+            assert_eq!(
+                state.exp_rand(2700) as f32,
+                expected_val,
+                "diverged on {}th call",
+                index + 1
+            );
         }
     }
 
@@ -101,7 +106,12 @@ mod test {
         for (index, expected_val) in val_iter {
             state.next_state();
             // using f32 quells issues with slightly different decimal stringification
-            assert_eq!(state.gap(2700) as f32, expected_val, "diverged on {}th call", index + 1);
+            assert_eq!(
+                state.gap(2700) as f32,
+                expected_val,
+                "diverged on {}th call",
+                index + 1
+            );
         }
     }
 
@@ -149,6 +159,5 @@ mod test {
             pung += u64::from(gap);
             assert_eq!(pung, time, "diverged on {}th ping from start", index + 1);
         }
-
     }
 }
