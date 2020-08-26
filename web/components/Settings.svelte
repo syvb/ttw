@@ -136,6 +136,10 @@
         updatePint(pintAvgInterval, pintSeed, pintAlgChecked);
     }
 
+    function useUnivSched() {
+        updatePint("45:00", "11193462", true);
+    }
+
     let afkTags = (localStorage["retag-afk-tags"] || "afk").split(" ");
     if (afkTags.length === 1 && afkTags[0] === "") afkTags = [];
     const afkTagsUpdate = debounce(event => {
@@ -248,11 +252,33 @@
         </label>
         <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
     </div>
-    <button on:click={updatePintClick}>Update</button>
+    <div>
+        Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
+    </div>
+    <div>
+        <button on:click={updatePintClick}>Update</button>
+    </div>
 </div>
 <div>
     Default tags when <abbr title="Away From Keyboard">AFK</abbr>:
     <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
+</div>
+
+<h3>Universal Schedule</h3>
+<div>
+    <div>
+        Click the button to use the
+        <a href="https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282">universal schedule</a>.
+        This overides your interval, seed (in advanced settings), and algorithm (in advanced settings) to the universal schedule with just one click.
+    </div>
+    <div>
+        Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
+    </div>
+    <div>
+        <button on:click={useUnivSched}>
+            Use the universal schedule
+        </button>
+    </div>
 </div>
 
 <h3>Import/export</h3>
@@ -300,7 +326,7 @@
     </div>
     <div>
         <label for="pint-seed">
-            Ping seed (changing this will disable notifications):
+            Ping seed (changing this will disable notifications, see above warning for interval):
         </label>
         <input type="number" id="pint-seed" bind:value={pintSeed}>
         <button on:click={updatePintClick}>Update</button>
@@ -315,7 +341,8 @@
             You should check this box if you want compatability with the original TagTime.
             Checking this checkbox will enable using the algorithm used by the original TagTime.
             You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
-            To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462.
+            To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
         </details>
+        <button on:click={updatePintClick}>Update</button>
     </div>
 </details>
