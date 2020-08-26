@@ -47,6 +47,7 @@ pub fn should_ping_at_time(time: u64, interval_data: &PingIntervalData) -> bool 
             let mut pung = tt::UR_PING;
             let mut state = tt::State::from_seed(interval_data.seed);
             loop {
+                state.next_state();
                 let gap = state.gap(interval_data.avg_interval);
                 pung += u64::from(gap);
                 if pung > time {
@@ -55,7 +56,6 @@ pub fn should_ping_at_time(time: u64, interval_data: &PingIntervalData) -> bool 
                 } else if pung == time {
                     return true;
                 }
-                state.next_state();
             }
         }
     }
