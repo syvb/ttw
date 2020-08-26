@@ -17,6 +17,9 @@ console-panic = ["console_error_panic_hook"]
 [[bin]]
 name = "check_averages"
 
+[[bin]]
+name = "gen_lookup_table"
+
 [lib]
 name = "taglogic"
 crate-type = ["cdylib", "lib"]

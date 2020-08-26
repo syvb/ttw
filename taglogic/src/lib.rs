@@ -1,9 +1,7 @@
 use wasm_bindgen::prelude::*;
 
 mod hash;
-mod tt;
-
-pub use tt::UNIV_SCHED;
+pub mod tt;
 
 #[wasm_bindgen]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]

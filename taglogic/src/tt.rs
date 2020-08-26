@@ -9,6 +9,7 @@ pub const UNIV_SCHED: super::PingIntervalData = super::PingIntervalData {
     avg_interval: 2700, // 45 minutes
     alg: super::PingAlg::TagTime,
 };
+pub const LOOKUP_TABLE_INTERVAL: u64 = 432000; // 5 days, regenerate lookup table when changing
 const IA: f64 = 16807.0;
 const IM_U32: u32 = 2147483647;
 const IM_F64: f64 = 2147483647.0;
@@ -42,6 +43,11 @@ impl State {
     /// Returns the integer number of seconds until the next ping.
     pub fn gap(&self, avg_interval: u32) -> u32 {
         (self.exp_rand(avg_interval).round() as u32).max(1)
+    }
+
+    /// Gets the inner RNG value.
+    pub fn inner(&self) -> u32 {
+        self.0
     }
 }
 
