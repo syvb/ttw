@@ -245,7 +245,17 @@
         Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
     </label>
     <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
+    <input type="checkbox" id="pint-tt-alg">
+    <label for="pint-tt-alg">
+        Use old algorithm
+    </label>
     <button on:click={updatePintClick}>Update</button>
+    <details>
+        <summary>About the old algorithm</summary>
+        Checking this checkbox will enable using the algorithm used by the original TagTime.
+        You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
+        To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462.
+    </details>
 </div>
 <div>
     Default tags when <abbr title="Away From Keyboard">AFK</abbr>:
