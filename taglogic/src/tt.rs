@@ -83,6 +83,29 @@ mod test {
     }
 
     #[test]
+    fn gap_matches_100k() {
+        /*
+            On https://tagtime.glitch.me
+            var x = "";
+            init(URPING);
+            for (let i = 0; i < 1000; i++) { x += gap() + "\n" }
+            console.log(x);
+        */
+        let lines = include_str!("gaps_100k.txt");
+        let val_iter = lines
+            .split_ascii_whitespace()
+            .filter(|line| !line.is_empty())
+            .map(|line| line.parse::<f32>().unwrap())
+            .enumerate();
+        let mut state = State(11193462);
+        for (index, expected_val) in val_iter {
+            state.next_state();
+            // using f32 quells issues with slightly different decimal stringification
+            assert_eq!(state.gap(2700) as f32, expected_val, "diverged on {}th call", index + 1);
+        }
+    }
+
+    #[test]
     fn next_state_matches_100k() {
         let mut state = State(1);
         /*
