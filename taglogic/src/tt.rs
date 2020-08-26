@@ -144,10 +144,10 @@ mod test {
         let mut state = State::from_seed(UNIV_SCHED.seed);
         for (index, time) in time_iter {
             // initial ping not included in test file
+            state.next_state();
             let gap = state.gap(UNIV_SCHED.avg_interval);
             pung += u64::from(gap);
             assert_eq!(pung, time, "diverged on {}th ping from start", index + 1);
-            state.next_state();
         }
 
     }
