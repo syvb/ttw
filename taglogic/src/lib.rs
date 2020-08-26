@@ -3,6 +3,8 @@ use wasm_bindgen::prelude::*;
 mod hash;
 mod tt;
 
+pub use tt::UNIV_SCHED;
+
 #[wasm_bindgen]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum PingAlg {
@@ -220,16 +222,11 @@ mod test {
 
     mod tagtime_alg {
         use super::*;
-        const UNIV_SCHED: PingIntervalData = PingIntervalData {
-            seed: 11193462,
-            avg_interval: 2700,
-            alg: PingAlg::TagTime,
-        };
 
         // see https://tagtime.glitch.me/
         #[test]
         fn correct_should_ping() {
-            assert!(should_ping_at_time(1594907790, &UNIV_SCHED));
+            assert!(should_ping_at_time(1594907790, &tt::UNIV_SCHED));
         }
     }
 }

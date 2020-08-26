@@ -50,6 +50,13 @@ mod test {
     use super::*; // compiler bug cause it to think this is unused, incorrectly
 
     #[test]
+    fn exp_rand() {
+        // valid value determined by using JS refrence implementation functions
+        let state = State::from_seed(UNIV_SCHED.seed);
+        assert_eq!(state.exp_rand(2700), 1360.5429307641095);
+    }
+
+    #[test]
     fn correct_first_pings() {
         // on https://tagtime.glitch.me/ run:
         // var x = ""; init(URPING); for (let i = 0; i < 250; i++) { x += nextping() + "\n" }; console.log(x)
