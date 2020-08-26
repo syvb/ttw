@@ -7,7 +7,7 @@ fn main() {
         for seed in 1000000..1010000 {
             let pung = taglogic::should_ping_at_time(
                 12345678,
-                &taglogic::new_ping_interval_data(seed, 10),
+                &taglogic::new_ping_interval_data(seed, 10, false),
             );
             if pung {
                 pings += 1;
@@ -16,7 +16,7 @@ fn main() {
         println!("Test 1: pung {} times, should be near 1000.", pings);
     }
     {
-        let pid = taglogic::new_ping_interval_data(23456789, 1000);
+        let pid = taglogic::new_ping_interval_data(23456789, 1000, false);
         let mut actual_intervals = Vec::with_capacity(10000);
         let mut last = 1;
         for _ in 0..10000 {

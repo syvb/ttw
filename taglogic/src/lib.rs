@@ -23,11 +23,11 @@ pub struct PingIntervalData {
 /// a u64 in the returned struct. Not an associated function since I couldn't get that to work
 /// with wasm-bindgen.
 #[wasm_bindgen]
-pub fn new_ping_interval_data(seed: u32, avg_interval: u32) -> PingIntervalData {
+pub fn new_ping_interval_data(seed: u32, avg_interval: u32, old_alg: bool) -> PingIntervalData {
     PingIntervalData {
         seed,
         avg_interval,
-        alg: PingAlg::FnvTime,
+        alg: if old_alg { PingAlg::TagTime } else { PingAlg::FnvTime },
     }
 }
 
