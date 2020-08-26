@@ -131,8 +131,9 @@
 
     let pintAvgInterval = toDurString(window.pintData.avg_interval);
     let pintSeed = window.pintData.seed.toString();
+    let pintAlgChecked = localStorage["retag-pint-alg"] === "tagtime";
     function updatePintClick() {
-        updatePint(pintAvgInterval, pintSeed);
+        updatePint(pintAvgInterval, pintSeed, pintAlgChecked);
     }
 
     let afkTags = (localStorage["retag-afk-tags"] || "afk").split(" ");
@@ -241,21 +242,26 @@
 
 <h3>Pinging</h3>
 <div>
-    <label for="pint-interval">
-        Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
-    </label>
-    <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
-    <input type="checkbox" id="pint-tt-alg">
-    <label for="pint-tt-alg">
-        Use old algorithm
-    </label>
+    <div>
+        <label for="pint-interval">
+            Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+        </label>
+        <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
+    </div>
+    <div>
+        <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
+        <label for="pint-tt-alg">
+            Use old algorithm (see below)
+        </label>
+        <details>
+            <summary>Read this before changing the above checkbox!</summary>
+            You should check this box if you want compatability with the original TagTime.
+            Checking this checkbox will enable using the algorithm used by the original TagTime.
+            You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
+            To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462.
+        </details>
+    </div>
     <button on:click={updatePintClick}>Update</button>
-    <details>
-        <summary>About the old algorithm</summary>
-        Checking this checkbox will enable using the algorithm used by the original TagTime.
-        You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
-        To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462.
-    </details>
 </div>
 <div>
     Default tags when <abbr title="Away From Keyboard">AFK</abbr>:
