@@ -57,6 +57,31 @@ mod test {
     }
 
     #[test]
+    fn next_state_matches_100k() {
+        let mut state = State(1);
+        /*
+            Generating:
+            var x = "";
+            var state = 1;
+            var IA = 16807;
+            var IM = 2147483647;
+            function lcg() { return state = IA * state % IM }
+            for (let i = 0; i < 100000; i++) { x += lcg() + "\n"; }
+            console.log(x)
+        */
+        let lines = include_str!("lcg_100k.txt");
+        let val_iter = lines
+            .split_ascii_whitespace()
+            .filter(|line| !line.is_empty())
+            .map(|line| State(line.parse::<u32>().unwrap()))
+            .enumerate();
+        for (index, expected_state) in val_iter {
+            state.next_state();
+            assert_eq!(state, expected_state, "diverged on {}th call", index + 1);
+        }
+    }
+
+    #[test]
     fn correct_first_pings() {
         // on https://tagtime.glitch.me/ run:
         // var x = ""; init(URPING); for (let i = 0; i < 250; i++) { x += nextping() + "\n" }; console.log(x)
