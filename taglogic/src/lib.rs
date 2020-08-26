@@ -132,11 +132,7 @@ mod test {
                 pings_between(
                     5,
                     100,
-                    &PingIntervalData {
-                        seed: 1234,
-                        avg_interval: 28,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(1234, 28, false),
                 ),
                 vec![21, 50, 87]
             )
@@ -148,11 +144,7 @@ mod test {
             pings_between(
                 100,
                 5,
-                &PingIntervalData {
-                    seed: 1234,
-                    avg_interval: 28,
-                    alg: PingAlg::FnvTime,
-                },
+                &new_ping_interval_data(1234, 28, false),
             );
         }
 
@@ -161,33 +153,21 @@ mod test {
             assert_eq!(
                 next_ping_after(
                     10000000,
-                    &PingIntervalData {
-                        seed: 1234,
-                        avg_interval: 1000,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(1234, 1000, false),
                 ),
                 Some(10001167)
             );
             assert_eq!(
                 next_ping_after(
                     0,
-                    &PingIntervalData {
-                        seed: 543431,
-                        avg_interval: 60000,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(543431, 60000, false),
                 ),
                 Some(40874)
             );
             assert_eq!(
                 next_ping_after(
                     0,
-                    &PingIntervalData {
-                        seed: 0,
-                        avg_interval: 1,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(0, 1, false),
                 ),
                 Some(1)
             );
@@ -198,22 +178,14 @@ mod test {
             assert_eq!(
                 next_ping_after(
                     u64::MAX,
-                    &PingIntervalData {
-                        seed: 54224,
-                        avg_interval: 1000,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(54224, 1000, false),
                 ),
                 None
             );
             assert_eq!(
                 next_ping_after(
                     u64::MAX - 1000000,
-                    &PingIntervalData {
-                        seed: 542432,
-                        avg_interval: u32::MAX,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(542432, u32::MAX, false),
                 ),
                 None
             );
@@ -224,22 +196,14 @@ mod test {
             assert_eq!(
                 last_ping(
                     10000000,
-                    &PingIntervalData {
-                        seed: 12352,
-                        avg_interval: 1000,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(12352, 1000, false),
                 ),
                 Some(9999257)
             );
             assert_eq!(
                 last_ping(
                     1000,
-                    &PingIntervalData {
-                        seed: 1234,
-                        avg_interval: 100,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(1234, 100, false),
                 ),
                 Some(944)
             );
@@ -250,22 +214,14 @@ mod test {
             assert_eq!(
                 last_ping(
                     0,
-                    &PingIntervalData {
-                        seed: 1234,
-                        avg_interval: 100,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(1234, 100, false),
                 ),
                 None
             );
             assert_eq!(
                 last_ping(
                     10000,
-                    &PingIntervalData {
-                        seed: 387112,
-                        avg_interval: 100000,
-                        alg: PingAlg::FnvTime,
-                    }
+                    &new_ping_interval_data(387112, 100000, false),
                 ),
                 None
             );
@@ -275,10 +231,10 @@ mod test {
     mod tagtime_alg {
         use super::*;
 
-        // see https://tagtime.glitch.me/
-        #[test]
-        fn correct_should_ping() {
-            let pint_data = PingIntervalData { seed: 1059773018 };
-        }
+        // // see https://tagtime.glitch.me/
+        // #[test]
+        // fn correct_should_ping() {
+        //     // let pint_data = PingIntervalData { seed: 1059773018 };
+        // }
     }
 }
