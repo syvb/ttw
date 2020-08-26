@@ -20,7 +20,10 @@ impl State {
 
     /// ran0 from Numerical Recipes. Has a period of around 2 billion
     pub fn next_state(&mut self) {
-        self.0 = ((IA * (self.0 as f64)) % IM) as u32;
+        let new_val = (IA * (self.0 as f64)) % IM;
+        debug_assert!(new_val > 1.0);
+        debug_assert!(new_val <= 2147483648.0);
+        self.0 = new_val as u32;
     }
 
     /// Returns a random number drawn from an exponential distribution with the given mean and state.
