@@ -1,4 +1,3 @@
-use std::time;
 use wasm_bindgen::prelude::*;
 
 mod hash;
@@ -27,14 +26,37 @@ pub fn new_ping_interval_data(seed: u32, avg_interval: u32, old_alg: bool) -> Pi
     PingIntervalData {
         seed,
         avg_interval,
-        alg: if old_alg { PingAlg::TagTime } else { PingAlg::FnvTime },
+        alg: if old_alg {
+            PingAlg::TagTime
+        } else {
+            PingAlg::FnvTime
+        },
     }
 }
 
 /// Returns if a ping should occur at a given timestamp.
 pub fn should_ping_at_time(time: u64, interval_data: &PingIntervalData) -> bool {
-    let time_hash = hash::time_hash(time, interval_data.seed as u64);
-    time_hash < (1.0 / (interval_data.avg_interval as f64))
+    match interval_data.alg {
+        PingAlg::FnvTime => {
+            let time_hash = hash::time_hash(time, interval_data.seed as u64);
+            time_hash < (1.0 / (interval_data.avg_interval as f64))
+        }
+        PingAlg::TagTime => {
+            let mut pung = tt::UR_PING;
+            let mut state = tt::State::from_seed(interval_data.seed);
+            loop {
+                let gap = state.gap(interval_data.avg_interval);
+                pung += u64::from(gap);
+                if pung > time {
+                    println!("Nope, {} seconds off", pung - time);
+                    return false;
+                } else if pung == time {
+                    return true;
+                }
+                state.next_state();
+            }
+        }
+    }
 }
 
 #[wasm_bindgen]
@@ -129,11 +151,7 @@ mod test {
         #[test]
         fn correct_tags_between() {
             assert_eq!(
-                pings_between(
-                    5,
-                    100,
-                    &new_ping_interval_data(1234, 28, false),
-                ),
+                pings_between(5, 100, &new_ping_interval_data(1234, 28, false),),
                 vec![21, 50, 87]
             )
         }
@@ -141,34 +159,21 @@ mod test {
         #[test]
         #[should_panic]
         fn tags_between_panics_on_bad_range() {
-            pings_between(
-                100,
-                5,
-                &new_ping_interval_data(1234, 28, false),
-            );
+            pings_between(100, 5, &new_ping_interval_data(1234, 28, false));
         }
 
         #[test]
         fn correct_next_ping() {
             assert_eq!(
-                next_ping_after(
-                    10000000,
-                    &new_ping_interval_data(1234, 1000, false),
-                ),
+                next_ping_after(10000000, &new_ping_interval_data(1234, 1000, false),),
                 Some(10001167)
             );
             assert_eq!(
-                next_ping_after(
-                    0,
-                    &new_ping_interval_data(543431, 60000, false),
-                ),
+                next_ping_after(0, &new_ping_interval_data(543431, 60000, false),),
                 Some(40874)
             );
             assert_eq!(
-                next_ping_after(
-                    0,
-                    &new_ping_interval_data(0, 1, false),
-                ),
+                next_ping_after(0, &new_ping_interval_data(0, 1, false),),
                 Some(1)
             );
         }
@@ -176,10 +181,7 @@ mod test {
         #[test]
         fn next_ping_none_on_overflow() {
             assert_eq!(
-                next_ping_after(
-                    u64::MAX,
-                    &new_ping_interval_data(54224, 1000, false),
-                ),
+                next_ping_after(u64::MAX, &new_ping_interval_data(54224, 1000, false),),
                 None
             );
             assert_eq!(
@@ -194,17 +196,11 @@ mod test {
         #[test]
         fn correct_last_ping() {
             assert_eq!(
-                last_ping(
-                    10000000,
-                    &new_ping_interval_data(12352, 1000, false),
-                ),
+                last_ping(10000000, &new_ping_interval_data(12352, 1000, false),),
                 Some(9999257)
             );
             assert_eq!(
-                last_ping(
-                    1000,
-                    &new_ping_interval_data(1234, 100, false),
-                ),
+                last_ping(1000, &new_ping_interval_data(1234, 100, false),),
                 Some(944)
             );
         }
@@ -212,17 +208,11 @@ mod test {
         #[test]
         fn correct_last_ping_none_on_underflow() {
             assert_eq!(
-                last_ping(
-                    0,
-                    &new_ping_interval_data(1234, 100, false),
-                ),
+                last_ping(0, &new_ping_interval_data(1234, 100, false),),
                 None
             );
             assert_eq!(
-                last_ping(
-                    10000,
-                    &new_ping_interval_data(387112, 100000, false),
-                ),
+                last_ping(10000, &new_ping_interval_data(387112, 100000, false),),
                 None
             );
         }
@@ -230,11 +220,16 @@ mod test {
 
     mod tagtime_alg {
         use super::*;
+        const UNIV_SCHED: PingIntervalData = PingIntervalData {
+            seed: 11193462,
+            avg_interval: 2700,
+            alg: PingAlg::TagTime,
+        };
 
-        // // see https://tagtime.glitch.me/
-        // #[test]
-        // fn correct_should_ping() {
-        //     // let pint_data = PingIntervalData { seed: 1059773018 };
-        // }
+        // see https://tagtime.glitch.me/
+        #[test]
+        fn correct_should_ping() {
+            assert!(should_ping_at_time(1594907790, &UNIV_SCHED));
+        }
     }
 }
