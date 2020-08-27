@@ -77,9 +77,26 @@ window.recheckPending = () => {}; // ignore calls to recheck pending until ping 
     const taglogic = await taglogicPromise;
     taglogic.init();
     window.taglogic = taglogic;
+    let algBoolValue;
+    switch (localStorage["retag-pint-alg"]) {
+        case "fnv":
+        case undefined:
+        case null:
+        case "":
+            algBoolValue = false;
+            break;
+        case "tagtime":
+            algBoolValue = true;
+            break;
+        default:
+            alert("Unsupported interval algorithm. Try reloading. If that doesn't work, try clearing your cache or filing a bug report at http://github.com/smittyvb/ttw.");
+    }
     window.pintData = taglogic.new_ping_interval_data(
         localStorage["retag-pint-seed"] ? parseInt(localStorage["retag-pint-seed"], 10) : 12345,
         localStorage["retag-pint-interval"] ? parseInt(localStorage["retag-pint-interval"], 10) : (60 * 45),
+        // fnv - false
+        // tagtime - true
+        algBoolValue,
     );
 
     const app = new App({

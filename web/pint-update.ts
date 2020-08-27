@@ -19,7 +19,7 @@ export function fromDurString(str: string) {
     return val;
 }
 
-export async function updatePint(pintAvgInterval: string, pintSeed: string) {
+export async function updatePint(pintAvgInterval: string, pintSeed: string, tagtimeAlg: boolean) {
     const interval = fromDurString(pintAvgInterval);
     if (interval === false) {
         return alert("Invalid average interval duration.");
@@ -30,12 +30,14 @@ export async function updatePint(pintAvgInterval: string, pintSeed: string) {
     }
     localStorage["retag-pint-interval"] = interval.toString();
     localStorage["retag-pint-seed"] = seed.toString();
+    localStorage["retag-pint-alg"] = tagtimeAlg ? "tagtime" : "fnv";
     localStorage["retag-notifs"] = "";
-    // at least *try* to sync up before reloading
+    // try to sync up before reloading
     await Promise.all([
         syncConfig([
             "retag-pint-interval",
             "retag-pint-seed",
+            "retag-pint-alg",
         ]),
         unsub(),
         window.db.keyVal.delete("notifs"), // does nothing if key already exists

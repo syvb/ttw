@@ -32,6 +32,7 @@ function loadConfigData(json: ConfigData) {
     let reload = false;
     const interval = json["retag-pint-interval"] ?? (60 * 45).toString();
     const seed = json["retag-pint-seed"] ?? "12345";
+    const alg = json["retag-pint-alg"] ?? "fnv";
     if (localStorage["retag-pint-interval"] !== interval) {
         localStorage["retag-pint-interval"] = parseInt(interval, 10);
         reload = true;
@@ -39,6 +40,13 @@ function loadConfigData(json: ConfigData) {
     if (localStorage["retag-pint-seed"] !== seed) {
         localStorage["retag-pint-seed"] = parseInt(seed, 10);
         reload = true;
+    }
+    if (localStorage["retag-pint-alg"] !== alg) {
+        // if it's undefined then it's the same as fnv, no need to reload
+        if (!((localStorage["retag-pint-alg"] === undefined) && (alg === "fnv"))) {
+            reload = true;
+        }
+        localStorage["retag-pint-alg"] = alg;
     }
     const afkTags = json["retag-afk-tags"] ?? "afk";
     localStorage["retag-afk-tags"] = afkTags;

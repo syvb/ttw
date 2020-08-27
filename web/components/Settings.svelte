@@ -131,8 +131,13 @@
 
     let pintAvgInterval = toDurString(window.pintData.avg_interval);
     let pintSeed = window.pintData.seed.toString();
+    let pintAlgChecked = localStorage["retag-pint-alg"] === "tagtime";
     function updatePintClick() {
-        updatePint(pintAvgInterval, pintSeed);
+        updatePint(pintAvgInterval, pintSeed, pintAlgChecked);
+    }
+
+    function useUnivSched() {
+        updatePint("45:00", "1184097393", true);
     }
 
     let afkTags = (localStorage["retag-afk-tags"] || "afk").split(" ");
@@ -180,7 +185,7 @@
         width: 3em;
     }
     #pint-seed {
-        width: 4em;
+        width: 10em;
     }
     .adv-settings {
         display: inline;
@@ -241,15 +246,46 @@
 
 <h3>Pinging</h3>
 <div>
-    <label for="pint-interval">
-        Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
-    </label>
-    <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
-    <button on:click={updatePintClick}>Update</button>
+    <div>
+        <label for="pint-interval">
+            Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+        </label>
+        <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
+    </div>
+    <div>
+        {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
+            Note: You are are using the original TagTime algorithm but not the universal schedule.
+            Performance will be degraded (due to the lack of lookup tables).
+            Click the below button to use the universal schedule.
+        {/if}
+    </div>
+    <div>
+        Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
+    </div>
+    <div>
+        <button on:click={updatePintClick}>Update</button>
+    </div>
 </div>
 <div>
     Default tags when <abbr title="Away From Keyboard">AFK</abbr>:
     <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
+</div>
+
+<h3>Universal Schedule (beta)</h3>
+<div>
+    <div>
+        Click the button to use the
+        <a href="https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282">universal schedule</a>.
+        This overides your interval, seed (in advanced settings), and algorithm (in advanced settings) to the universal schedule with just one click.
+    </div>
+    <div>
+        Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
+    </div>
+    <div>
+        <button on:click={useUnivSched}>
+            Use the universal schedule
+        </button>
+    </div>
 </div>
 
 <h3>Import/export</h3>
@@ -297,9 +333,26 @@
     </div>
     <div>
         <label for="pint-seed">
-            Ping seed (changing this will disable notifications):
+            Ping seed (changing this will disable notifications, see above warning for interval):
         </label>
         <input type="number" id="pint-seed" bind:value={pintSeed}>
+        <div>
+            Note that if the box below is checked, performance will be worse if the seed isn't 1184097393. (due to lookup tables)
+        </div>
+        <button on:click={updatePintClick}>Update</button>
+    </div>
+    <div>
+        <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
+        <label for="pint-tt-alg">
+            Use original TagTime algorithm (beta, see below)
+        </label>
+        <details>
+            <summary>Read this before changing the above checkbox!</summary>
+            You should check this box if you want compatability with the original TagTime.
+            Checking this checkbox will enable using the algorithm used by the original TagTime.
+            You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
+            To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
+        </details>
         <button on:click={updatePintClick}>Update</button>
     </div>
 </details>
