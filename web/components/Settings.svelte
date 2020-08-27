@@ -185,7 +185,7 @@
         width: 3em;
     }
     #pint-seed {
-        width: 6em;
+        width: 10em;
     }
     .adv-settings {
         display: inline;
