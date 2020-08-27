@@ -329,12 +329,15 @@
             Ping seed (changing this will disable notifications, see above warning for interval):
         </label>
         <input type="number" id="pint-seed" bind:value={pintSeed}>
+        <div>
+            Note that if you are using the original TagTime algorithm, performance will be worse if the seed isn't 1184097393.
+        </div>
         <button on:click={updatePintClick}>Update</button>
     </div>
     <div>
         <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
         <label for="pint-tt-alg">
-            Use old algorithm (beta, see below)
+            Use original TagTime algorithm (beta, see below)
         </label>
         <details>
             <summary>Read this before changing the above checkbox!</summary>

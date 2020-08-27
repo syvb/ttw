@@ -11,13 +11,14 @@ fn main() {
     loop {
         loop {
             state.next_state();
-            let gap = state.gap(interval_data.avg_interval);
-            pung += u64::from(gap);
-            if pung > time {
+            let gap = u64::from(state.gap(interval_data.avg_interval));
+            pung += gap;
+            if pung >= time {
+                pung -= gap;
                 break;
             };
         }
-        bytes.extend_from_slice(&pung.to_le_bytes());
+        assert!(pung == taglogic::tt::UR_PING || pung < time);
         bytes.extend_from_slice(&state.inner().to_le_bytes());
         time += taglogic::tt::LOOKUP_TABLE_INTERVAL;
         if time > 1893387600 {

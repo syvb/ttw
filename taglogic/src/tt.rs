@@ -1,6 +1,7 @@
 //! Implementation of the original TagTime algorithm.
-
 // see https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282
+
+use std::convert::TryInto;
 
 /// Effective start of time.
 pub const UR_PING: u64 = 1184097393;
@@ -9,6 +10,7 @@ pub const UNIV_SCHED: super::PingIntervalData = super::PingIntervalData {
     avg_interval: 2700, // 45 minutes
     alg: super::PingAlg::TagTime,
 };
+const UNIV_SCHED_LOOKUP_TABLE: &[u8; 6568] = include_bytes!("tt/lookup_tables/univ.bin");
 pub const LOOKUP_TABLE_INTERVAL: u64 = 432000; // 5 days, regenerate lookup table when changing
 const IA: f64 = 16807.0;
 const IM_U32: u32 = 2147483647;
@@ -25,6 +27,30 @@ impl State {
         assert!(seed > 0);
         assert!(seed < IM_U32);
         Self(seed)
+    }
+
+    pub fn from_seed_before(seed: u32, before: u64) -> (Self, u64) {
+        if seed == UNIV_SCHED.seed {
+            // try to find the state in the lookup table
+            // integer division rounds down, which is what we want here
+            let item_num = (before - UR_PING) / LOOKUP_TABLE_INTERVAL;
+            let item_num_usize: usize = match item_num.try_into() {
+                Ok(x) => x,
+                Err(_) => return (Self::from_seed(seed), UR_PING),
+            };
+            let index = item_num_usize * 4; // 4 bytes per item
+            if index >= UNIV_SCHED_LOOKUP_TABLE.len() {
+                (Self::from_seed(seed), UR_PING)
+            } else {
+                // 4 bytes of data
+                let bytes = UNIV_SCHED_LOOKUP_TABLE.get(index..=(index + 4)).unwrap();
+                let state = Self::from_seed(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]));
+                let time = UR_PING + (item_num * LOOKUP_TABLE_INTERVAL);
+                (state, time)
+            }
+        } else {
+            (Self::from_seed(seed), UR_PING)
+        }
     }
 
     /// ran0 from Numerical Recipes. Has a period of around 2 billion
