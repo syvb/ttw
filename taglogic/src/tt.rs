@@ -32,7 +32,7 @@ impl State {
         if seed == UNIV_SCHED.seed {
             // try to find the state in the lookup table
             // integer division rounds down, which is what we want here
-            let item_num = (before - UR_PING) / LOOKUP_TABLE_INTERVAL;
+            let item_num = (before - UR_PING - 1) / LOOKUP_TABLE_INTERVAL;
             let item_num_usize: usize = match item_num.try_into() {
                 Ok(x) => x,
                 Err(_) => return (Self::from_seed(seed), UR_PING),
