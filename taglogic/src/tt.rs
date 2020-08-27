@@ -28,18 +28,18 @@ impl State {
         Self(seed)
     }
 
-    pub fn from_seed_before(seed: u32, before: u64) -> (Self, u64) {
-        if seed == UNIV_SCHED.seed {
+    pub fn from_seed_before(pint: &super::PingIntervalData, before: u64) -> (Self, u64) {
+        if *pint == UNIV_SCHED {
             // try to find the state in the lookup table
             // integer division rounds down, which is what we want here
             let item_num = (before - UR_PING - 1) / LOOKUP_TABLE_INTERVAL;
             let item_num_usize: usize = match item_num.try_into() {
                 Ok(x) => x,
-                Err(_) => return (Self::from_seed(seed), UR_PING),
+                Err(_) => return (Self::from_seed(pint.seed), UR_PING),
             };
             let index = item_num_usize * 12; // 12 bytes per item
             if index >= UNIV_SCHED_LOOKUP_TABLE.len() {
-                (Self::from_seed(seed), UR_PING)
+                (Self::from_seed(pint.seed), UR_PING)
             } else {
                 // 4 bytes of data for state
                 let bytes = UNIV_SCHED_LOOKUP_TABLE.get(index..=(index + 12)).unwrap();
@@ -62,7 +62,7 @@ impl State {
                 (state, time)
             }
         } else {
-            (Self::from_seed(seed), UR_PING)
+            (Self::from_seed(pint.seed), UR_PING)
         }
     }
 
@@ -209,6 +209,6 @@ mod test {
     #[test]
     fn works_after_end_of_lookup_table() {
         let year2100 = 4102376400000;
-        assert_eq!(State::from_seed_before(UNIV_SCHED.seed, year2100), (State::from_seed(UNIV_SCHED.seed), UR_PING));
+        assert_eq!(State::from_seed_before(&UNIV_SCHED, year2100), (State::from_seed(UNIV_SCHED.seed), UR_PING));
     }
 }
