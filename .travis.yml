@@ -6,6 +6,10 @@ rust:
   - stable
   - beta
   - nightly
+  
+node_js:
+  - 10
+  - 14
 
 matrix:
   allow_failures:
