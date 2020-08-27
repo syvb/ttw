@@ -99,8 +99,10 @@ pub fn next_ping_after_u32(t: u32, interval_data: &PingIntervalData) -> Option<u
 pub fn last_ping(mut t: u64, interval_data: &PingIntervalData) -> Option<u64> {
     if interval_data.alg == PingAlg::TagTime {
         // this can be optimized better than repeated calling of should_ping_at_time
-        let mut pung = tt::UR_PING;
-        let mut state = tt::State::from_seed(interval_data.seed);
+        let (mut state, mut pung) = tt::State::from_seed_before(interval_data.seed, t);
+        // lookup table always has times/states at whole ping intervals
+        // so there's no way we can get a ping at or after t
+        assert!(pung < t);
         loop {
             state.next_state();
             let gap = state.gap(interval_data.avg_interval);
