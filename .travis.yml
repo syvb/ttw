@@ -1,7 +1,5 @@
 language: rust
 
-sudo: required
-
 rust:
   - stable
   - beta
@@ -24,12 +22,17 @@ addons:
       - libiberty-dev
 
 install:
-  - true
+  - nvm install 10
+  - cargo install wasm-pack
 
 script:
+  - cp config.example.json config.json
   - cd taglogic
   - cargo build --verbose
   - cargo test --verbose
+  - cd ../web
+  - yarn
+  - NODE_ENV=production yarn build
 
 after_success: |
   cd $TRAVIS_BUILD_DIR/taglogic
