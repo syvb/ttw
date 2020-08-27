@@ -196,7 +196,9 @@
 </style>
 
 <h2>Settings</h2>
-
+<div>
+    Note: some settings cannot be changed while offline
+</div>
 <h3>Ping notifications</h3>
 <div>
     <NotificationsPerm />
