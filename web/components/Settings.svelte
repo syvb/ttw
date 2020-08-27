@@ -137,7 +137,7 @@
     }
 
     function useUnivSched() {
-        updatePint("45:00", "11193462", true);
+        updatePint("45:00", "1184097393", true);
     }
 
     let afkTags = (localStorage["retag-afk-tags"] || "afk").split(" ");
