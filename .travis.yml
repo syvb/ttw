@@ -25,6 +25,7 @@ addons:
 
 install:
   - nvm install 10
+  - cargo install wasm-pack
 
 script:
   - cd taglogic
