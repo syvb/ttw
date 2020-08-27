@@ -43,20 +43,10 @@ impl State {
             } else {
                 // 4 bytes of data for state
                 let bytes = UNIV_SCHED_LOOKUP_TABLE.get(index..=(index + 12)).unwrap();
-                let state = Self::from_seed(u32::from_le_bytes([
-                    bytes[0],
-                    bytes[1],
-                    bytes[2],
-                    bytes[3],
-                ]));
+                let state =
+                    Self::from_seed(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]));
                 let time = u64::from_le_bytes([
-                    bytes[4],
-                    bytes[5],
-                    bytes[6],
-                    bytes[7],
-                    bytes[8],
-                    bytes[9],
-                    bytes[10],
+                    bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9], bytes[10],
                     bytes[11],
                 ]);
                 (state, time)
@@ -209,6 +199,9 @@ mod test {
     #[test]
     fn works_after_end_of_lookup_table() {
         let year2100 = 4102376400000;
-        assert_eq!(State::from_seed_before(&UNIV_SCHED, year2100), (State::from_seed(UNIV_SCHED.seed), UR_PING));
+        assert_eq!(
+            State::from_seed_before(&UNIV_SCHED, year2100),
+            (State::from_seed(UNIV_SCHED.seed), UR_PING)
+        );
     }
 }
