@@ -205,4 +205,10 @@ mod test {
             assert_eq!(pung, time, "diverged on {}th ping from start", index + 1);
         }
     }
+
+    #[test]
+    fn works_after_end_of_lookup_table() {
+        let year2100 = 4102376400000;
+        assert_eq!(State::from_seed_before(UNIV_SCHED.seed, year2100), (State::from_seed(UNIV_SCHED.seed), UR_PING));
+    }
 }
