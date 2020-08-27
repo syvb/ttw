@@ -42,8 +42,7 @@ pub fn should_ping_at_time(time: u64, interval_data: &PingIntervalData) -> bool 
             time_hash < (1.0 / (interval_data.avg_interval as f64))
         }
         PingAlg::TagTime => {
-            let mut pung = tt::UR_PING;
-            let mut state = tt::State::from_seed(interval_data.seed);
+            let (mut state, mut pung) = tt::State::from_seed_before(interval_data.seed, time);
             loop {
                 state.next_state();
                 let gap = state.gap(interval_data.avg_interval);
@@ -68,8 +67,7 @@ pub fn should_ping_at_time_u32(time: u32, interval_data: &PingIntervalData) -> b
 pub fn next_ping_after(mut t: u64, interval_data: &PingIntervalData) -> Option<u64> {
     if interval_data.alg == PingAlg::TagTime {
         // this can be optimized better than repeated calling of should_ping_at_time
-        let mut pung = tt::UR_PING;
-        let mut state = tt::State::from_seed(interval_data.seed);
+        let (mut state, mut pung) = tt::State::from_seed_before(interval_data.seed, t);
         loop {
             state.next_state();
             let gap = state.gap(interval_data.avg_interval);
@@ -144,8 +142,7 @@ pub fn pings_between(t1: u64, t2: u64, interval_data: &PingIntervalData) -> Vec<
     let mut pings = Vec::with_capacity(1);
     if interval_data.alg == PingAlg::TagTime {
         // this can be optimized better than repeated calling of should_ping_at_time
-        let mut pung = tt::UR_PING;
-        let mut state = tt::State::from_seed(interval_data.seed);
+        let (mut state, mut pung) = tt::State::from_seed_before(interval_data.seed, t1);
         loop {
             state.next_state();
             let gap = state.gap(interval_data.avg_interval);

@@ -10,7 +10,7 @@ pub const UNIV_SCHED: super::PingIntervalData = super::PingIntervalData {
     avg_interval: 2700, // 45 minutes
     alg: super::PingAlg::TagTime,
 };
-const UNIV_SCHED_LOOKUP_TABLE: &[u8; 6568] = include_bytes!("tt/lookup_tables/univ.bin");
+const UNIV_SCHED_LOOKUP_TABLE: &[u8; 19704] = include_bytes!("tt/lookup_tables/univ.bin");
 pub const LOOKUP_TABLE_INTERVAL: u64 = 432000; // 5 days, regenerate lookup table when changing
 const IA: f64 = 16807.0;
 const IM_U32: u32 = 2147483647;
@@ -18,8 +18,7 @@ const IM_F64: f64 = 2147483647.0;
 
 /// Repersents a state of the RNG, wraps a u32.
 /// Since the RNG state is a 31-bit non-zero integer, the leading bit is always zero.
-/// Copy/Clone aren't implemented since there shouldn't be a need for them.
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct State(u32);
 
 impl State {
@@ -38,14 +37,28 @@ impl State {
                 Ok(x) => x,
                 Err(_) => return (Self::from_seed(seed), UR_PING),
             };
-            let index = item_num_usize * 4; // 4 bytes per item
+            let index = item_num_usize * 12; // 12 bytes per item
             if index >= UNIV_SCHED_LOOKUP_TABLE.len() {
                 (Self::from_seed(seed), UR_PING)
             } else {
-                // 4 bytes of data
-                let bytes = UNIV_SCHED_LOOKUP_TABLE.get(index..=(index + 4)).unwrap();
-                let state = Self::from_seed(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]));
-                let time = UR_PING + (item_num * LOOKUP_TABLE_INTERVAL);
+                // 4 bytes of data for state
+                let bytes = UNIV_SCHED_LOOKUP_TABLE.get(index..=(index + 12)).unwrap();
+                let state = Self::from_seed(u32::from_le_bytes([
+                    bytes[0],
+                    bytes[1],
+                    bytes[2],
+                    bytes[3],
+                ]));
+                let time = u64::from_le_bytes([
+                    bytes[4],
+                    bytes[5],
+                    bytes[6],
+                    bytes[7],
+                    bytes[8],
+                    bytes[9],
+                    bytes[10],
+                    bytes[11],
+                ]);
                 (state, time)
             }
         } else {

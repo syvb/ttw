@@ -10,16 +10,20 @@ fn main() {
     let mut bytes = Vec::new();
     loop {
         loop {
+            let (old_state, old_pung) = (state.clone(), pung);
             state.next_state();
             let gap = u64::from(state.gap(interval_data.avg_interval));
             pung += gap;
             if pung >= time {
-                pung -= gap;
+                // pung -= gap;
+                state = old_state;
+                pung = old_pung;
                 break;
             };
         }
         assert!(pung == taglogic::tt::UR_PING || pung < time);
         bytes.extend_from_slice(&state.inner().to_le_bytes());
+        bytes.extend_from_slice(&pung.to_le_bytes());
         time += taglogic::tt::LOOKUP_TABLE_INTERVAL;
         if time > 1893387600 {
             // 2026 in UTC
