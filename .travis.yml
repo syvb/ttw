@@ -32,7 +32,7 @@ script:
   - cargo test --verbose
   - cd ../web
   - yarn
-  - yarn build
+  - NODE_ENV=production yarn build
 
 after_success: |
   cd $TRAVIS_BUILD_DIR/taglogic
