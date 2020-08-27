@@ -26,6 +26,7 @@ install:
   - cargo install wasm-pack
 
 script:
+  - cp config.example.json config.json
   - cd taglogic
   - cargo build --verbose
   - cargo test --verbose
