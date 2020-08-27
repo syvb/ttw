@@ -253,6 +253,13 @@
         <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
     </div>
     <div>
+        {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
+            Note: You are are using the original TagTime algorithm but not the universal schedule.
+            Performance will be degraded (due to the lack of lookup tables).
+            Click the below button to use the universal schedule.
+        {/if}
+    </div>
+    <div>
         Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
     </div>
     <div>
