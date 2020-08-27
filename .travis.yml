@@ -30,6 +30,9 @@ script:
   - cd taglogic
   - cargo build --verbose
   - cargo test --verbose
+  - cd ../web
+  - yarn
+  - yarn build
 
 after_success: |
   cd $TRAVIS_BUILD_DIR/taglogic
