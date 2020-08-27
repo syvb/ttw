@@ -21,7 +21,7 @@ export async function rebuildTagIndex() {
         });
     }
     await clearPromise;
-    await window.db.tags.bulkAdd(bulkInsertData);
+    await window.db.tags.bulkPut(bulkInsertData);
 }
 
 export async function updateTagIndexWithPings(pings: any[]) {
