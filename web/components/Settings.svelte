@@ -330,7 +330,7 @@
         </label>
         <input type="number" id="pint-seed" bind:value={pintSeed}>
         <div>
-            Note that if you are using the original TagTime algorithm, performance will be worse if the seed isn't 1184097393.
+            Note that if the box below is checked, performance will be worse if the seed isn't 1184097393. (due to lookup tables)
         </div>
         <button on:click={updatePintClick}>Update</button>
     </div>
