@@ -80,10 +80,9 @@ impl State {
     }
 }
 
+#[cfg(test)]
 mod test {
-    #[allow(unused_imports)]
-    use super::*; // compiler bug cause it to think this is unused, incorrectly
-
+    use super::*;
     #[test]
     fn exp_rand() {
         // valid value determined by using JS refrence implementation functions
