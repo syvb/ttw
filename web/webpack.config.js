@@ -35,9 +35,11 @@ module.exports = {
             template: __dirname + "/index.html",
         }),
 
-        new CopyPlugin([
-            path.resolve(__dirname, "static")
-        ]),
+        new CopyPlugin({
+            patterns: [
+                path.resolve(__dirname, "static")
+            ]
+        }),
 
         new MiniCssExtractPlugin({
             filename: "[name].css"
