@@ -3,7 +3,6 @@
     import Loading from "../Loading.svelte";
     import { Link } from "svelte-routing";
     import { onMount, createEventDispatcher } from "svelte";
-    import { allPings } from "../../pings.ts";
 
     const dispatch = createEventDispatcher();
 
