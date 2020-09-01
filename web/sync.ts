@@ -286,6 +286,7 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
         localStorage.removeItem("retag-pending-config-changes");
         localStorage.removeItem("retag-pending-config-changes-time");
         localStorage.removeItem("retag-username");
+        localStorage.removeItem("retag-notifs");
         pendingConfigChanges = [];
         if (self.db) {
             self.db.pings.clear();
