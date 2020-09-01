@@ -41,6 +41,10 @@ if (fs.existsSync(__dirname + "/logged-out-tokens.txt")) {
 }
 const globalDb = new Database("global.db");
 globalDb.exec(fs.readFileSync(__dirname + "/initGlobalDb.sql", "utf-8"));
+try {
+    globalDb.exec("ALTER TABLE pushregs ADD COLUMN alg DEFAULT 0");
+    console.log("Upgraded DB");
+} catch (e) {}
 const globalPreped = {
     emailCheck: globalDb.prepare("SELECT 1 FROM emails WHERE LOWER(email) = LOWER(?) AND verified = 1 LIMIT 1"),
     usernameCheck: globalDb.prepare("SELECT 1 FROM users WHERE username = ? LIMIT 1"),
@@ -288,7 +292,7 @@ app.get("/pings", authMiddleware, (req, res) => {
     const stmtText =
         `SELECT time, tags, interval, category, comment, last_change FROM pings${wherePart}${limitPart}`;
     const stmt = userDb.prepare(stmtText);
-    const rows = stmt.all({ editedAfter, startTime, endTime, limit });  
+    const rows = stmt.all({ editedAfter, startTime, endTime, limit });
     let latestUpdate = rows.reduce((prev, current) => (prev.last_change > current.last_change) ? prev : current, { last_change: 1 }).last_change;
     // more than 2ms since the latest update time?
     // no risk of another update in the same millisecond of the last update,

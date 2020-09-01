@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS pushregs (
     p256dh TEXT NOT NULL,
     auth TEXT NOT NULL,
     seed INTEGER NOT NULL,
+    alg INTEGER NOT NULL,
     avg_interval INTEGER NOT NULL,
     PRIMARY KEY (endpoint_uri, p256dh, auth)
 ) WITHOUT ROWID;

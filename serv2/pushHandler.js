@@ -18,10 +18,10 @@ webPush.setVapidDetails(
 module.exports = function pushHandler(globalDb) {
     const pushPreped = {
         "delete-sub": globalDb.prepare("DELETE FROM pushregs WHERE endpoint_uri = ? AND p256dh = ? AND auth = ?"),
-        "get-sub": globalDb.prepare("SELECT seed, avg_interval FROM pushregs WHERE endpoint_uri = ? AND p256dh = ? AND auth = ?"),
-        "add-sub": globalDb.prepare("INSERT OR REPLACE INTO pushregs (endpoint_uri, p256dh, auth, seed, avg_interval) VALUES (?, ?, ?, ?, ?)"),
-        "get-pints-subs": globalDb.prepare("SELECT p256dh, auth, endpoint_uri FROM pushregs WHERE seed = ? AND avg_interval = ?"),
-        "get-pints": globalDb.prepare("SELECT DISTINCT seed, avg_interval FROM pushregs"),
+        "get-sub": globalDb.prepare("SELECT seed, avg_interval, alg FROM pushregs WHERE endpoint_uri = ? AND p256dh = ? AND auth = ?"),
+        "add-sub": globalDb.prepare("INSERT OR REPLACE INTO pushregs (endpoint_uri, p256dh, auth, seed, avg_interval, alg) VALUES (?, ?, ?, ?, ?, ?)"),
+        "get-pints-subs": globalDb.prepare("SELECT p256dh, auth, endpoint_uri FROM pushregs WHERE seed = ? AND avg_interval = ? AND alg = ?"),
+        "get-pints": globalDb.prepare("SELECT DISTINCT seed, avg_interval, alg FROM pushregs"),
     };
 
     const router = express.Router();
@@ -45,7 +45,7 @@ module.exports = function pushHandler(globalDb) {
         pints.forEach(pint => {
             const between = taglogic.pings_between_u32(lastCheck, now, pint);
             if (between.length > 0) {
-                const usersToNotify = pushPreped["get-pints-subs"].all(pint.seed, pint.avg_interval);
+                const usersToNotify = pushPreped["get-pints-subs"].all(pint.seed, pint.avg_interval, pint.alg);
                 usersToNotify.forEach(user => {
                     const subscription = {
                         endpoint: user.endpoint_uri,
@@ -80,12 +80,14 @@ module.exports = function pushHandler(globalDb) {
         const pintData = json.pintData;
         if (typeof pintData.seed !== "number") return res.status(400).send("no seed");
         if (typeof pintData.avg_interval !== "number") return res.status(400).send("no avg_interval");
+        if (!(pintData.alg === 0 || pintData.alg === 1)) pintData.alg = 0; // fallback for older clients
         pushPreped["add-sub"].run(
             subscription.endpoint,
             subscription.keys.p256dh,
             subscription.keys.auth,
             pintData.seed,
-            pintData.avg_interval
+            pintData.avg_interval,
+            pintData.alg ?? 0,
         );
         res.status(201).send();
     });
@@ -101,9 +103,9 @@ module.exports = function pushHandler(globalDb) {
         if (typeof subscription.keys.auth !== "string") return res.status(400).send("no auth");
         pushPreped["delete-sub"].run(subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth);
         res.status(201).send();
-        pints = pushPreped["get-pints"].all().map(({ seed, avg_interval }) => taglogic.new_ping_interval_data(seed, avg_interval));
+        pints = pushPreped["get-pints"].all().map(({ seed, avg_interval, alg }) => taglogic.new_ping_interval_data(seed, avg_interval, Boolean(alg)));
     });
-    pints = pushPreped["get-pints"].all().map(({ seed, avg_interval }) => taglogic.new_ping_interval_data(seed, avg_interval));
+    pints = pushPreped["get-pints"].all().map(({ seed, avg_interval, alg }) => taglogic.new_ping_interval_data(seed, avg_interval, Boolean(alg)));
 
     router.options("/register", (req, res) => {
         setCorsHeaders(res);
