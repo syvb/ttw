@@ -55,6 +55,7 @@ export async function overallPingStats(): Promise<OverallStats> {
     }
 }
 
+// all pings, oldest to newest
 export async function allPings(): Promise<Ping[] | null> {
     if (backend() === MINI_BACKEND) {
         let res: Response;
@@ -68,12 +69,12 @@ export async function allPings(): Promise<Ping[] | null> {
         }
         if (res.status === 200) {
             const data = await res.json();
-            return data.pings;
+            return data.pings.sort((a, b) => a.time - b.time);
         } else {
             return null;
         }
     } else if (backend() === FULL_BACKEND) {
-        return window.db.pings.toArray();
+        return window.db.pings.orderBy("time").toArray();
     }
 }
 
