@@ -87,7 +87,7 @@ module.exports = function pushHandler(globalDb) {
             subscription.keys.auth,
             pintData.seed,
             pintData.avg_interval,
-            pintData.alg ?? 0,
+            pintData.alg,
         );
         res.status(201).send();
     });
