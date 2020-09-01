@@ -8,7 +8,8 @@ export async function unsub() {
         const subscription = await registration.pushManager.getSubscription();
         if (subscription) {
             console.log("Unsubscribed", subscription.endpoint);
-            return fetch(config["api-server"] + "/internal/push/unregister", {
+            const unsubPromise = subscription.unsubscribe();
+            const fetchPromise = fetch(config["api-server"] + "/internal/push/unregister", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json"
@@ -17,6 +18,7 @@ export async function unsub() {
                     subscription,
                 })
             });
+            return Promise.all([unsubPromise, fetchPromise]);
         }
     }
     console.log("Ignoring unsub request since no sub found");
