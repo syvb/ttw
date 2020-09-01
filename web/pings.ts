@@ -20,13 +20,13 @@ export interface Ping {
 
 async function retallyPings() {
     console.log("Retallying");
-    let pings = await window.db.pings.count();
+    let pings = await self.db.pings.count();
     if (backend() === MINI_BACKEND) pings += window.miniData.missing;
     window.miniData.total = pings;
 }
 
 async function putPingsInternal(pings: Ping[]) {
-    await window.db.pings.bulkPut(pings.map(ping => ({
+    await self.db.pings.bulkPut(pings.map(ping => ({
         ...ping,
         unsynced: "",
     })));
@@ -47,7 +47,7 @@ export async function overallPingStats(): Promise<OverallStats> {
     if (backend() === MINI_BACKEND) {
         return window.miniData;
     } else if (backend() === FULL_BACKEND) {
-        const total = await window.db.pings.count();
+        const total = await self.db.pings.count();
         return {
             total,
             totalTime: null,
@@ -74,22 +74,22 @@ export async function allPings(): Promise<Ping[] | null> {
             return null;
         }
     } else if (backend() === FULL_BACKEND) {
-        return window.db.pings.orderBy("time").toArray();
+        return self.db.pings.orderBy("time").toArray();
     }
 }
 
 export function eachLocalPing(cb: (ping: Ping) => void): Promise<void> {
-    return window.db.pings.each(cb);
+    return self.db.pings.each(cb);
 }
 
 export function latestPing(): Promise<Ping> {
     // always same regardless of backend
-    return window.db.pings.orderBy("time").last();
+    return self.db.pings.orderBy("time").last();
 }
 
 export function unsyncedPings(): Promise<Ping[]> {
     // always same regardless of backend
-    return window.db.pings
+    return self.db.pings
         .where("unsynced")
         .equals("")
         .toArray();
