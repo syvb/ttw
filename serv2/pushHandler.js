@@ -92,6 +92,11 @@ module.exports = function pushHandler(globalDb) {
         res.status(201).send();
     });
 
+    function updatePints() {
+        pints = pushPreped["get-pints"].all()
+            .filter(({ seed, avg_interval, alg }) => (alg === 0) || (seed === 1184097393 && avg_interval === 2700))
+            .map(({ seed, avg_interval, alg }) => taglogic.new_ping_interval_data(seed, avg_interval, Boolean(alg)));
+    }
     router.post("/unregister", bodyParser.json({ limit: 10000 }), (req, res) => {
         setCorsHeaders(res);
         const json = req.body;
@@ -103,9 +108,9 @@ module.exports = function pushHandler(globalDb) {
         if (typeof subscription.keys.auth !== "string") return res.status(400).send("no auth");
         pushPreped["delete-sub"].run(subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth);
         res.status(201).send();
-        pints = pushPreped["get-pints"].all().map(({ seed, avg_interval, alg }) => taglogic.new_ping_interval_data(seed, avg_interval, Boolean(alg)));
+        updatePints();
     });
-    pints = pushPreped["get-pints"].all().map(({ seed, avg_interval, alg }) => taglogic.new_ping_interval_data(seed, avg_interval, Boolean(alg)));
+    updatePints();
 
     router.options("/register", (req, res) => {
         setCorsHeaders(res);

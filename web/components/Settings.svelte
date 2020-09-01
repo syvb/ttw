@@ -257,7 +257,7 @@
     <div>
         {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
             Note: You are are using the original TagTime algorithm but not the universal schedule.
-            Performance will be degraded (due to the lack of lookup tables).
+            Performance will be degraded and notifications will not be sent (due to the lack of lookup tables).
             Click the below button to use the universal schedule.
         {/if}
     </div>
