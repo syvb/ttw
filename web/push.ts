@@ -59,6 +59,7 @@ export async function subWithReg(reg: ServiceWorkerRegistration) {
             pintData: {
                 seed,
                 avg_interval: avgInterval,
+                alg: self.pintData.alg,
             },
         }),
     });
