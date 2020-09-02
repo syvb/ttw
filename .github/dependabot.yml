@@ -7,7 +7,11 @@ updates:
     directory: "/web"
     schedule:
       interval: "daily"
-  - package-ecosystem: "cargo"
+  - package-ecosystem: "npm"
     directory: "/serv2"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "cargo"
+    directory: "/taglogic"
     schedule:
       interval: "daily"
