@@ -1,9 +1,12 @@
 <script>
+    import { navigate } from "svelte-routing";
     let goals = [
         { name: "Example goal" },
         { name: "Do less stuff" },
         { name: "Make more goals" },
-    ]
+    ];
+    const toGoal = i => () => navigate("/goals/" + i);
+    const toNew = () => navigate("/goals/new");
 </script>
 
 <style>
@@ -48,11 +51,11 @@
 </div>
 
 <div class="goal-grid">
-    {#each goals as goal}
-        <div class="goal">
+    {#each goals as goal, i}
+        <div on:click={toGoal(i)} class="goal">
             <div style="background: magenta;" class="goal-img"></div>
             {goal.name}
         </div>
     {/each}
-    <div class="goal new-goal"><span class="new-goal-plus"><span>+</span></span></div>
+    <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"><span>+</span></span></div>
 </div>
