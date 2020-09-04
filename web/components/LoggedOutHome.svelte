@@ -20,7 +20,7 @@
 <h1>TagTime Web</h1>
 
 <div class="tagline">
-    Time tracking that doesn't waste your time
+    Time tracking that samples you randomly
 </div>
 
 <p>
