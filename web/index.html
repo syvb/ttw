@@ -10,6 +10,9 @@
         <meta name="application-name" content="TagTime Web">
         <meta name="description" content="TagTime Web is a time-tracking web app. At random points throughout the day, it asks you what you are doing.">
         <meta name="theme-color" content="rgb(245, 214, 112)">
+        <!-- https://github.com/chrishtr/battery-savings/blob/master/explainer.md -->
+        <!-- not specifying allow-reduced-script-speed since scripting can be heavy, but we don't really care about FPS in a time-tracking app -->
+        <meta name="battery-savings" content="allow-reduced-framerate">
         <link rel="manifest" href="/manifest.webmanifest">
         <link rel="apple-touch-icon" href="/icon/ttw180.png">
         <base href="/">
