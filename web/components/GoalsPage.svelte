@@ -16,6 +16,8 @@
         width: 300px;
         height: 150px;
         cursor: pointer;
+        vertical-align: middle;
+        margin-bottom: 1.2em;
     }
     .new-goal {
         display: inline-flex;
@@ -31,6 +33,10 @@
         content: "+";
         font-size: 7rem;
         color: #535353;
+    }
+    .goal-name {
+       margin-left: 2.5%;
+       font-size: 120%;
     }
     .about {
         margin-bottom: 1rem;
@@ -55,7 +61,7 @@
     {#each goals as goal, i}
         <div on:click={toGoal(i)} class="goal">
             <div style="background: magenta;" class="goal-img"></div>
-            {goal.name}
+            <div class="goal-name">{goal.name}</div>
         </div>
     {/each}
     <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"></span></div>
