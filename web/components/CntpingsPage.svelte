@@ -112,7 +112,7 @@
 
 <svelte:window on:resize={checkTableSize} />
 
-<div>
+<main id="maincontent">
     <h1>Pings</h1>
     <div>
         Click on a row to edit it. {smaller}
@@ -143,4 +143,4 @@
             <button class="show-more" disabled={showMoreDisabled} on:click={showMore}>Show more...</button>
         {/if}
     {/if}
-</div>
+</main>
