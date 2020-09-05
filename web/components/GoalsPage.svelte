@@ -14,9 +14,7 @@
         display: inline-block;
         border-radius: 0.5rem;
         width: 300px;
-        max-width: 90vw;
         height: 150px;
-        max-height: 25vh;
         cursor: pointer;
     }
     .new-goal {
@@ -26,8 +24,11 @@
         justify-content: center;
         border: 3px solid rgb(84, 84, 84);
         background-color: rgb(224, 224, 224);
+        width: 5rem;
+        height: 5rem;
     }
-    .new-goal-plus span {
+    .new-goal-plus:before {
+        content: "+";
         font-size: 7rem;
         color: #535353;
     }
@@ -57,5 +58,5 @@
             {goal.name}
         </div>
     {/each}
-    <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"><span>+</span></span></div>
+    <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"></span></div>
 </div>
