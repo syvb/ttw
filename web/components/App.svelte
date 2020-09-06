@@ -6,6 +6,7 @@
     import CntpingsPage from "./CntpingsPage.svelte";
     import WelcomePage from "./WelcomePage.svelte";
     import GoalsPage from "./GoalsPage.svelte";
+    import NewGoalPage from "./NewGoalPage.svelte";
     import LoggedInNavbar from "./LoggedInNavbar.svelte";
     import GraphsPage from "./GraphsPage.svelte";
     import SyncStatus from "./SyncStatus.svelte";
@@ -81,6 +82,12 @@
                 <SyncStatus />
                 <FillPings />
                 <GoalsPage />
+            </Route>
+            <Route path="/goals/new">
+                <LoggedInNavbar {username} />
+                <SyncStatus />
+                <FillPings />
+                <NewGoalPage />
             </Route>
             <Route path="/graphs/day-dist">
                 <DayDistGraph />
