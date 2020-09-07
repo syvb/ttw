@@ -1,7 +1,10 @@
 <script>
+    import { Link } from "svelte-routing";
     export let id; // goal ID, passed from router
     let goalDataPromise = window.db.goals.get(id);
 </script>
+
+<Link to="/goals">Back to all goals</Link>
 
 {#await goalDataPromise}
     <h1>Loading...</h1>
