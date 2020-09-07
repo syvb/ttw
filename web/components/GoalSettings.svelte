@@ -1,6 +1,8 @@
 <script>
-    import PingSelector from "./PingSelector.svelte";
     import { navigate } from "svelte-routing";
+    import { createEventDispatcher } from "svelte";
+    import PingSelector from "./PingSelector.svelte";
+    let dispatch = createEventDispatcher();
     export let goal = null;
     let settingsName = goal?.name ?? "Goal name";
     let settingsType = goal?.type ?? "max";
@@ -23,9 +25,10 @@
         db.goals.add(settings);
         navigate("/goals");
     }
-    function updateGoal() {
+    async function updateGoal() {
         let settings = genObj();
         db.goals.update(settings.id, settings);
+        dispatch("update", settings);
     }
 </script>
 
