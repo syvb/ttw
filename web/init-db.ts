@@ -1,6 +1,10 @@
 const Dexie = require("dexie").default;
 
 const db: any = new Dexie("retag");
+db.version(5).stores({
+    // non-indexed priperties: type, interval, perInterval, adjInterval
+    goals: "id,name,genGraph,beemGoal",
+})
 db.version(4).stores({
     // non-indexed properties: comment
     pings: "time,*tags,category,interval,unsynced",

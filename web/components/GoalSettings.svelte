@@ -1,19 +1,26 @@
 <script>
     import PingSelector from "./PingSelector.svelte";
+    import { navigate } from "svelte-routing";
     let settingsName = "Goal name";
     let settingsType = "max";
     let settingsPerInterval = 0.5;
     let settingsInterval = "daily";
     let settingsGenGraph = false;
-    export let settings;
-    $: {
-        settings = {
+    function genObj() {
+        return {
+            id: Math.random().toString(36).split(".")[1],
             name: settingsName,
             type: settingsType,
             perInterval: settingsPerInterval,
             interval: settingsInterval,
-            genGraph: settingsGenGraph,
+            genGraph: settingsGenGraph ? 1 : 0,
+            beemGoal: "todo",
         };
+    }
+    function createGoal() {
+        let settings = genObj();
+        db.goals.add(settings);
+        navigate("/goals");
     }
 </script>
 
@@ -23,7 +30,6 @@
     </div>
     <div>
         <div>
-            {settingsGenGraph}
             <label>
                 <input type="checkbox" bind:checked={settingsGenGraph}>
                 Generate graph
@@ -47,5 +53,5 @@
             </div>
         {/if}
     </div>
-    <button>Create</button>
+    <button on:click={createGoal}>Create</button>
 </div>
