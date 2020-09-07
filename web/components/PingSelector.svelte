@@ -179,8 +179,8 @@
 
 
     <div>
-        Showing {pings.length} out of {overallStats.total}
-        {#if overallStats.total !== 0}
+        Showing {pings.length} out of {overallStats ? overallStats.total : "..."}
+        {#if overallStats && (overallStats.total !== 0)}
             pings ({((pings.length / (overallStats.total)) * 100).toFixed(2)}%).
         {:else}
             pings.
