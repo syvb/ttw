@@ -1,14 +1,15 @@
 <script>
     import PingSelector from "./PingSelector.svelte";
     import { navigate } from "svelte-routing";
-    let settingsName = "Goal name";
-    let settingsType = "max";
-    let settingsPerInterval = 0.5;
-    let settingsInterval = "daily";
-    let settingsGenGraph = false;
+    export let goal = null;
+    let settingsName = goal?.name ?? "Goal name";
+    let settingsType = goal?.type ?? "max";
+    let settingsPerInterval = goal?.perInterval ?? 0.5;
+    let settingsInterval = goal?.interval ?? "daily";
+    let settingsGenGraph = goal?.genGraph ?? false;
     function genObj() {
         return {
-            id: Math.random().toString(36).split(".")[1],
+            id: (goal.id === null) ? Math.random().toString(36).split(".")[1] : goal.id,
             name: settingsName,
             type: settingsType,
             perInterval: settingsPerInterval,
@@ -21,6 +22,10 @@
         let settings = genObj();
         db.goals.add(settings);
         navigate("/goals");
+    }
+    function updateGoal() {
+        let settings = genObj();
+        db.goals.update(settings.id, settings);
     }
 </script>
 
@@ -53,5 +58,11 @@
             </div>
         {/if}
     </div>
-    <button on:click={createGoal}>Create</button>
+    {#if goal == null}
+        <!-- new goal -->
+        <button on:click={createGoal}>Create</button>
+    {:else}
+        <!-- existing goal -->
+        <button on:click={updateGoal}>Update</button>
+    {/if}
 </div>
