@@ -11,6 +11,8 @@ import "./init-db.ts";
 // @ts-ignore
 import { latestPing } from "./pings.ts";
 import "regenerator-runtime";
+// @ts-ignore
+import GraphsWorker from 'worker-loader!./graphs.worker.js';
 
 declare global {
     interface Window {
