@@ -1,10 +1,6 @@
 <script>
     import { navigate } from "svelte-routing";
-    let goals = [
-        { name: "Example goal" },
-        { name: "Do less stuff" },
-        { name: "Make more goals" },
-    ];
+    let goalsPromise = window.db.goals.toArray();
     const toGoal = i => () => navigate("/goals/" + i);
     const toNew = () => navigate("/goals/new");
 </script>
@@ -58,11 +54,15 @@
 </div>
 
 <div class="goal-grid">
-    {#each goals as goal, i}
-        <div on:click={toGoal(i)} class="goal">
-            <div style="background: magenta;" class="goal-img"></div>
-            <div class="goal-name">{goal.name}</div>
-        </div>
-    {/each}
+    {#await goalsPromise}
+        Loading
+    {:then goals}
+        {#each goals as goal, i}
+            <div on:click={toGoal(i)} class="goal">
+                <div style="background: magenta;" class="goal-img"></div>
+                <div class="goal-name">{goal.name}</div>
+            </div>
+        {/each}
+    {/await}
     <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"></span></div>
 </div>
