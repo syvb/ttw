@@ -9,7 +9,7 @@
     let settingsGenGraph = goal?.genGraph ?? false;
     function genObj() {
         return {
-            id: (goal.id === null) ? Math.random().toString(36).split(".")[1] : goal.id,
+            id: (goal === null) ? Math.random().toString(36).split(".")[1] : goal.id,
             name: settingsName,
             type: settingsType,
             perInterval: settingsPerInterval,
