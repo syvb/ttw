@@ -60,20 +60,22 @@
 </script>
 
 <!-- Generic graph component -->
-<h1><slot name="title"></slot></h1>
-<div>
-    Back to <Link to="/graphs">all graphs</Link>
-</div>
+<main id="maincontent">
+    <h1><slot name="title"></slot></h1>
+    <div>
+        Back to <Link to="/graphs">all graphs</Link>
+    </div>
 
-<PingSelector bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} open />
-{#if curPaginating && !forcedLocal}
-    <button class="show-more" disabled={showMoreDisabled} on:click={showMore}>Load older pings</button>
-{/if}
+    <PingSelector bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} open />
+    {#if curPaginating && !forcedLocal}
+        <button class="show-more" disabled={showMoreDisabled} on:click={showMore}>Load older pings</button>
+    {/if}
 
-<div>
-    <slot name="graph">
-        <canvas width="500" height="200" bind:this={defaultCanvas}>
-            Sorry, your browser is old and doesn't support canvas.
-        </canvas>
-    </slot>
-</div>
+    <div>
+        <slot name="graph">
+            <canvas width="500" height="200" bind:this={defaultCanvas}>
+                Sorry, your browser is old and doesn't support canvas.
+            </canvas>
+        </slot>
+    </div>
+</main>

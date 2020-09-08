@@ -48,5 +48,3 @@
         </form>
     {/if}
 </nav>
-
-<a name="maincontent" id="maincontent"></a>
