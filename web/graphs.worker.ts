@@ -1,5 +1,5 @@
-const config = require("../config.json");
-
+// @ts-ignore
+import beebrain from "../road/src/beebrain.js";
 // we don't bother with checking the target origin, since we don't use any
 // persistent data
 self.addEventListener("message", e => {
@@ -12,6 +12,7 @@ self.addEventListener("message", e => {
         e.data.goals.forEach(goal => {
             // TODO: generate
             let graphImg = "...";
+            console.log("bb",beebrain);
             // @ts-ignore
             self.postMessage({
                 type: "graphImg",

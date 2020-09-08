@@ -115,5 +115,7 @@ module.exports = {
     },
     experiments: {
         asyncWebAssembly: true
-    }
+    },
+    // otherwise UMD modules try to use AMD
+    amd: false,
 };
