@@ -12,10 +12,12 @@ self.addEventListener("message", e => {
         e.data.goals.forEach(goal => {
             // TODO: generate
             let graphImg = "...";
+            // @ts-ignore
             self.postMessage({
                 type: "graphImg",
                 goalId: goal.id,
-            }, "*");
+                graphImg,
+            });
         });
     } else {
         console.warn("Ignored message with unknown type", e.data.type);
