@@ -8,7 +8,7 @@
     let settingsType = goal?.type ?? "max";
     let settingsPerInterval = goal?.perInterval ?? 0.5;
     let settingsInterval = goal?.interval ?? "daily";
-    let settingsGenGraph = goal?.genGraph ?? false;
+    let settingsGenGraph = goal?.genGraph ?? true;
     function genObj() {
         return {
             id: (goal === null) ? Math.random().toString(36).split(".")[1] : goal.id,
