@@ -4859,9 +4859,9 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
-svelte-loader@smittyvb/svelte-loader#60e4bea6087c2accd60e51e26b5d7fcebeaca0f2:
+svelte-loader@smittyvb/svelte-loader#update-virtual-modules:
   version "2.13.6"
-  resolved "https://codeload.github.com/smittyvb/svelte-loader/tar.gz/60e4bea6087c2accd60e51e26b5d7fcebeaca0f2"
+  resolved "https://codeload.github.com/smittyvb/svelte-loader/tar.gz/c32ecf0accd124d481a97102a93283a574ca79c5"
   dependencies:
     loader-utils "^1.1.0"
     svelte-dev-helper "^1.1.9"
