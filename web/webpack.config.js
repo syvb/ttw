@@ -93,7 +93,7 @@ module.exports = {
                 loader: "html-loader",
             },
             {
-                test: /\.(mp3)$/i,
+                test: /\.(png|mp3)$/i,
                 use: [
                     {
                         loader: "file-loader",

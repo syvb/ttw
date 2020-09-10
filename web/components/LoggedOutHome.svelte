@@ -1,6 +1,10 @@
 <script>
     import { Link } from "svelte-routing";
     import { signIn } from "../sync.ts";
+    import scrPing from "../media/scrping.png";
+    import scrMatrix from "../media/scrmatrix.png";
+    import scrDailyTrend from "../media/scrdailytrend.png";
+    import scrAutoComplete from "../media/scrautocomplete.png";
     import config from "../../config.json";
 </script>
 
@@ -65,7 +69,7 @@
 </p>
 
 <p>
-    <img src="/media/scrping.png" alt="What a ping looks like" class="scr" />
+    <img src={scrPing} alt="What a ping looks like" class="scr" />
 </p>
 
 <p>
@@ -73,7 +77,7 @@
 </p>
 
 <p>
-    <img src="/media/scrautocomplete.png" alt="Entering tags" class="scr" />
+    <img src={scrAutoComplete} alt="Entering tags" class="scr" />
 </p>
 
 <p>
@@ -81,8 +85,8 @@
 </p>
 
 <p>
-    <img src="/media/scrdailytrend.png" alt="Daily trend" class="scr-graph" />
-    <img src="/media/scrmatrix.png" alt="Matrix of pings" class="scr-graph" />
+    <img src={scrDailyTrend} alt="Daily trend" class="scr-graph" />
+    <img src={scrMatrix} alt="Matrix of pings" class="scr-graph" />
 </p>
 
 <p>
