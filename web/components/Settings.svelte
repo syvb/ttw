@@ -323,6 +323,11 @@
         <option selected={theme === "light"} value="light">Light</option>
     </select>
 
+    <h2>Account</h2>
+    <div>
+        <a href={config["api-server"] + "/internal/changepw"}>Change password</a>
+    </div>
+
     <h3 class="dz">Danger Zone</h3>
     <div>
         <button on:click={deleteAllData} class="delete-button">Delete all data</button>
