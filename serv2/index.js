@@ -252,15 +252,12 @@ app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended:
     const pwValidationMsg = validate.pw(pw);
     if (pwValidationMsg) return res.send(changePwFormWithError(req, pwValidationMsg));
 
-    const dbData = globalPreped.changePw.get({
+    const hashedPw = await argon2.hash(pw, ARGON2_CONFIG);
+    globalPreped.changePw.run({
         pw: hashedPw,
-        uid,
+        uid: req.authUser,
     });
-    if (!dbData) {
-        return res.send(changePwFormWithError(req, "Username not found"));
-    }
 
-    await setAuthCookie(res, dbData.id);
     res.redirect(config["root-domain"]);
 });
 app.get("/.well-known/change-password", (req, res) => {
