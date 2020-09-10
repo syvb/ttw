@@ -192,6 +192,7 @@ window.recheckPending = () => {}; // ignore calls to recheck pending until ping 
     await db.keyVal.bulkPut([
         { key: "seed", value: window.pintData.seed },
         { key: "avgInterval", value: window.pintData.avg_interval },
+        { key: "alg", value: window.pintData.alg },
     ]);
     if ("serviceWorker" in navigator) {
         await navigator.serviceWorker.register("./sw.js");
