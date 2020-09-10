@@ -258,7 +258,7 @@ app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended:
         uid: req.authUser,
     });
 
-    res.redirect(config["root-domain"]);
+    res.redirect(302, "/internal/login");
 });
 app.get("/.well-known/change-password", (req, res) => {
     res.redirect(302, "/internal/changepw");
