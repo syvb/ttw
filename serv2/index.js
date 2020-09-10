@@ -51,6 +51,7 @@ const globalPreped = {
     register: globalDb.prepare("INSERT INTO users (username, pw, register_date, plan) VALUES (@username, @pw, @register_date, 1)"),
     registerEmail: globalDb.prepare("INSERT INTO emails (user_id, email, token, verified) VALUES (@user_id, @email, @token, 0)"),
     login: globalDb.prepare("SELECT id, pw FROM users WHERE username = ?"),
+    changePw: globalDb.prepare("UPDATE users SET pw = @pw WHERE id = @uid"),
     uidUsername: globalDb.prepare("SELECT username FROM users WHERE id = ?"),
     registerTx: globalDb.transaction((emailToken, hashedPw, email, username) => {
         const { lastInsertRowid } = globalPreped.register.run({
@@ -223,6 +224,48 @@ app.post("/internal/login", bodyParser.urlencoded({ extended: false, limit: conf
     await setAuthCookie(res, dbData.id);
     res.redirect(config["root-domain"]);
 });
+
+const changePwForm = fs.readFileSync(__dirname + "/forms/changepw.html", "utf-8");
+function changePwFormWithError(req, error) {
+    const username = globalPreped.uidUsername.get(req.authUser).username;
+    return changePwForm.replace(/%errors%/g, `<div class="error">${error}</div>`).replace(/%main%/g, config["root-domain"]).replace(/%username%/g, username);
+}
+app.get("/internal/changepw", authMiddleware, (req, res) => {
+    if (req.authUser === null) {
+        res.redirect(302, "/internal/login");
+        return;
+    }
+    const username = globalPreped.uidUsername.get(req.authUser).username;
+    res.send(changePwForm.replace(/%errors%/g, "").replace(/%main%/g, config["root-domain"]).replace(/%username%/g, username));
+});
+app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended: false, limit: config["db-max-size"] }), async (req, res) => {
+    if (req.authUser === null) {
+        // 302 since /internal/login should be GETed in this case
+        res.redirect(302, "/internal/login");
+        return;
+    }
+
+    const pw = req.body.pw;
+    if (typeof pw !== "string") {
+        return res.status(400).body(changePwFormWithError(req, "No pw specified"));
+    }
+    const pwValidationMsg = validate.pw(pw);
+    if (pwValidationMsg) return res.send(changePwFormWithError(req, pwValidationMsg));
+
+    const dbData = globalPreped.changePw.get({
+        pw: hashedPw,
+        uid,
+    });
+    if (!dbData) {
+        return res.send(changePwFormWithError(req, "Username not found"));
+    }
+
+    await setAuthCookie(res, dbData.id);
+    res.redirect(config["root-domain"]);
+});
+app.get("/.well-known/change-password", (req, res) => {
+    res.redirect(302, "/internal/changepw");
+})
 
 app.post("/logout", authMiddleware, (req, res) => {
     res.clearCookie("retag-auth");
