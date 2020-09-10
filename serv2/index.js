@@ -238,7 +238,7 @@ app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended:
         pw: hashedPw,
         uid: req.authUser,
     });
-
+    authPrepped.invalidateAll.run(req.authUser);
     res.redirect(302, "/internal/login");
 });
 app.get("/.well-known/change-password", (req, res) => {
