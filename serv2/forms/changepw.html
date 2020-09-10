@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/internal/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change password</title>
+</head>
+
+<body>
+    <a href="%main%">Back to homepage</a>
+    <form action="" method="POST">
+        %errors%
+        <div>
+            Changing password for %username%. You will be logged out of all sessions.
+        </div>
+        <div>
+            <label for="pw">New password: </label>
+            <input type="password" id="pw" name="pw">
+        </div>
+        <div>
+            <label for="pw">Repeat new password: </label>
+            <input type="password" id="pw2" name="pw2">
+        </div>
+        <div>
+            <input type="submit" value="Change">
+        </div>
+    </form>
+</body>
+
+</html>
