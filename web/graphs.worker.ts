@@ -1,5 +1,6 @@
 // @ts-ignore
-import beebrain from "../road/src/beebrain.js";
+import * as beebrain from "../road/src/beebrain.js";
+import * as bgraph from "../road/src/bgraph.js";
 // we don't bother with checking the target origin, since we don't use any
 // persistent data
 self.addEventListener("message", e => {
@@ -13,6 +14,8 @@ self.addEventListener("message", e => {
             // TODO: generate
             let graphImg = "...";
             console.log("bb",beebrain);
+            const brain = new beebrain(goal);
+            console.log("brain", brain);
             // @ts-ignore
             self.postMessage({
                 type: "graphImg",
