@@ -37,3 +37,6 @@ opt-level = "s" # optimize dependencies even in debug builds
 opt-level = "s"
 lto = "thin"
 panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-mutable-globals"]
