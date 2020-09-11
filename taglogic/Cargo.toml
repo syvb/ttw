@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 lazy_static = "1.4.0"
 fnv = "1.0.7"
-wasm-bindgen = "0.2.64"
+wasm-bindgen = "0.2.68"
 console_error_panic_hook = { version = "0.1.6", optional = true }
 
 [features]
@@ -37,3 +37,6 @@ opt-level = "s" # optimize dependencies even in debug builds
 opt-level = "s"
 lto = "thin"
 panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-mutable-globals"]
