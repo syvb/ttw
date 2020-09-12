@@ -61,7 +61,10 @@
 </p>
 
 <p>
-    TagTime Web is an <a href="https://github.com/smittyvb/ttw">open-source</a> time-tracking web app. At random points throughout the day, it asks you what you are doing.
+    TagTime Web is an <a href="https://github.com/smittyvb/ttw" target="_blank" rel="noopener">open-source</a> time-tracking web app.
+    At random points throughout the day, it asks you what you are doing.
+    This is the same idea as the <a href="https://github.com/tagtime/TagTime" target="_blank" rel="noopener">orignal Perl TagTime</a>
+    (although the implementation is different).
 </p>
 
 <p>
