@@ -101,7 +101,7 @@
         </footer>
     </Router>
     {#if config.enableSimpleAnalytics}
-        <script async defer src="https://cdn.simpleanalytics.io/hello.js"></script>
+        <script async defer src="https://scripts.simpleanalytics.com/latest.js"></script>
         <!-- not including noscript since by this point JS must be enabled -->
     {/if}
 </div>
