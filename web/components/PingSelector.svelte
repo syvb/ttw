@@ -20,7 +20,7 @@
     let excludedTags = [];
     let includeType = "some";
 
-    const PAGE_REQ_SIZE = 100;
+    export let pageReqSize = 100;
 
     let range = [];
     let paginate = backend() === MINI_BACKEND;
@@ -69,7 +69,7 @@
         } else if (backend() === MINI_BACKEND) {
             const queryStringParams = new URLSearchParams();
             queryStringParams.set("no204", "1");
-            if (curPaginating) queryStringParams.set("limit", PAGE_REQ_SIZE);
+            if (curPaginating) queryStringParams.set("limit", pageReqSize);
             if (range.length === 2) queryStringParams.set("startTime", (Number(range[0]) / 1000).toFixed(0));
             if (curPaginating && (paginateStart !== null)) {
                 queryStringParams.set("endTime", paginateStart);
@@ -86,7 +86,7 @@
                 if (res.status === 200) {
                     const data = await res.json();
                     if (curPaginating) {
-                        if (data.pings.length < PAGE_REQ_SIZE) {
+                        if (data.pings.length < pageReqSize) {
                             curPaginating = false;
                         }
                         if (data.pings.length > 0) {

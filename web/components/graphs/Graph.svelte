@@ -66,7 +66,7 @@
         Back to <Link to="/graphs">all graphs</Link>
     </div>
 
-    <PingSelector bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} open />
+    <PingSelector pageReqSize={250} bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} open />
     {#if curPaginating && !forcedLocal}
         <button class="show-more" disabled={showMoreDisabled} on:click={showMore}>Load older pings</button>
     {/if}
