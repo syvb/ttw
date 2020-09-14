@@ -259,7 +259,7 @@
     <div>
         <div>
             <label for="pint-interval">
-                Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+                Average ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
             </label>
             <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
         </div>
