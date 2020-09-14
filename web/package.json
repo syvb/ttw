@@ -25,7 +25,7 @@
     "flatpickr": "^4.6.6",
     "humanize-duration": "^3.23.1",
     "js-xxhash": "^1.0.4",
-    "moment": "^2.27.0",
+    "moment": "^2.28.0",
     "regenerator-runtime": "^0.13.7",
     "svelte-routing": "^1.4.2",
     "workbox-precaching": "^5.1.4"
