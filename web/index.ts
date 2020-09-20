@@ -1,3 +1,9 @@
+if (top !== self) {
+    try { top.location.replace(self.location.href); } catch (e) {}
+    document.body.innerHTML = `<a href="${location.href}" target="_top">TagTime Web</a>`
+    throw new Error("throwing error to prevent code exec when framed");
+}
+
 // @ts-ignore
 const taglogicPromise = import("./pkg/taglogic.js");
 // @ts-ignore
