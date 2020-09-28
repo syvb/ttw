@@ -67,6 +67,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.worker\.(j|t)s$/,
+                use: { loader: 'worker-loader' },
+            },
+            {
                 test: /\.tsx?$/,
                 use: "ts-loader",
                 exclude: /node_modules/,
@@ -111,5 +115,7 @@ module.exports = {
     },
     experiments: {
         asyncWebAssembly: true
-    }
+    },
+    // otherwise UMD modules try to use AMD
+    amd: false,
 };

@@ -37,6 +37,7 @@
 <nav>
     <Link to="/">Home</Link>
     <Link to="/cntpings">Pings</Link>
+    <Link to="/goals">Goals</Link>
     <Link to="/settings">Settings</Link>
     <a href="/graphs" target="graphs" use:link>Graphs (beta)</a>
     {#if window.loginState === "in"}

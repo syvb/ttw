@@ -5,6 +5,9 @@
     import FillPings from "./FillPings.svelte";
     import CntpingsPage from "./CntpingsPage.svelte";
     import WelcomePage from "./WelcomePage.svelte";
+    import GoalsPage from "./GoalsPage.svelte";
+    import GoalPage from "./GoalPage.svelte";
+    import NewGoalPage from "./NewGoalPage.svelte";
     import LoggedInNavbar from "./LoggedInNavbar.svelte";
     import GraphsPage from "./GraphsPage.svelte";
     import SyncStatus from "./SyncStatus.svelte";
@@ -73,6 +76,24 @@
             </Route>
             <Route path="/graphs">
                 <GraphsPage />
+            </Route>
+            <Route path="/goals">
+                <LoggedInNavbar {username} />
+                <SyncStatus />
+                <FillPings />
+                <GoalsPage />
+            </Route>
+            <Route path="/goals/:id" let:params>
+                <LoggedInNavbar {username} />
+                <SyncStatus />
+                <FillPings />
+                <GoalPage id={params.id} />
+            </Route>
+            <Route path="/goals/new">
+                <LoggedInNavbar {username} />
+                <SyncStatus />
+                <FillPings />
+                <NewGoalPage />
             </Route>
             <Route path="/graphs/day-dist">
                 <DayDistGraph />
