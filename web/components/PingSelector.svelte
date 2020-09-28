@@ -16,9 +16,9 @@
     export let pingsChanged = () => {};
     export let open = false;
 
-    let includedTags = [];
-    let excludedTags = [];
-    let includeType = "some";
+    export let includedTags = [];
+    export let excludedTags = [];
+    export let includeType = "some";
 
     export let pageReqSize = 100;
 
@@ -174,7 +174,7 @@
             <input id="cntpings-paginate" type="checkbox" bind:checked={paginate}>
             <br>
         {/if}
-        <button on:click={updateFilter}>Update</button>
+        <button on:click={updateFilter}>Update selected pings</button>
     </details>
 
 

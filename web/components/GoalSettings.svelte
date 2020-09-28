@@ -9,6 +9,9 @@
     let settingsPerInterval = goal?.perInterval ?? 0.5;
     let settingsInterval = goal?.interval ?? "daily";
     let settingsGenGraph = goal?.genGraph ?? true;
+    let settingsIncludedTags = goal?.includedTags ?? [];
+    let settingsExcludedTags = goal?.excludedTags ?? [];
+    let settingsIncludeType = goal?.includeType ?? "some";
     function genObj() {
         return {
             id: (goal === null) ? Math.random().toString(36).split(".")[1] : goal.id,
@@ -18,6 +21,9 @@
             interval: settingsInterval,
             genGraph: settingsGenGraph ? 1 : 0,
             beemGoal: "todo",
+            includedTags: settingsIncludedTags,
+            excludedTags: settingsExcludedTags,
+            includeType: settingsIncludeType,
         };
     }
     function createGoal() {
@@ -63,9 +69,9 @@
     </div>
     {#if goal == null}
         <!-- new goal -->
-        <button on:click={createGoal}>Create</button>
+        <button on:click={createGoal}>Create goal</button>
     {:else}
         <!-- existing goal -->
-        <button on:click={updateGoal}>Update</button>
+        <button on:click={updateGoal}>Update goal</button>
     {/if}
 </div>
