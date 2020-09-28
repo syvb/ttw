@@ -48,7 +48,6 @@
 
 
 <div class="app-root">
-
     <Router {url}>
         <div>
             <!-- Keep in sync with regex in ServiceWorker -->
@@ -122,4 +121,8 @@
             {@html config["extra-footer-text"] || ""}
         </footer>
     </Router>
+    {#if config.enableSimpleAnalytics}
+        <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+        <!-- not including noscript since by this point JS must be enabled -->
+    {/if}
 </div>

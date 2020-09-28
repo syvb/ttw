@@ -31,25 +31,28 @@ export async function subWithReg(reg: ServiceWorkerRegistration) {
     };
     const subscription = await reg.pushManager.subscribe(options);
     console.log("got push sub", subscription.toJSON());
-    let seed: number, avgInterval: number;
+    let seed: number, avgInterval: number, alg: number;
     if (self.pintData) {
         seed = self.pintData.seed;
         avgInterval = self.pintData.avg_interval;
+        alg = self.pintData.alg;
         // don't wait for DB update to complete
         db.keyVal.bulkPut([
             { key: "seed", value: seed },
             { key: "avgInterval", value: avgInterval },
+            { key: "alg", value: alg },
         ]);
     } else {
         const dbData = await db.keyVal.bulkGet([
-            "seed", "avgInterval",
+            "seed", "avgInterval", "alg"
         ]);
-        if (dbData[0] === undefined || dbData[1] === undefined) {
-            console.warn("Failed to sub due to a lack of seed/avgData in db.keyVal");
+        if (dbData[0] === undefined || dbData[1] === undefined || dbData[2] === undefined) {
+            console.warn("Failed to sub due to a lack of seed/avgData/alg in db.keyVal");
             return;
         }
         seed = dbData[0].value;
         avgInterval = dbData[1].value;
+        alg = dbData[2].value;
     }
     return fetch(config["api-server"] + "/internal/push/register", {
         method: "POST",
@@ -61,7 +64,7 @@ export async function subWithReg(reg: ServiceWorkerRegistration) {
             pintData: {
                 seed,
                 avg_interval: avgInterval,
-                alg: self.pintData.alg,
+                alg: alg,
             },
         }),
     });

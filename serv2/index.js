@@ -12,7 +12,6 @@ const util = require("util");
 const validate = require("./validate");
 const pushHandler = require("./pushHandler");
 const setCorsHeaders = require("./setCorsHeaders");
-const { start } = require("repl");
 const config = {
     ...require("../config.json"),
     ...require("../config-private.json")
@@ -31,16 +30,10 @@ const ARGON2_CONFIG = {
     version: 0x13,
 };
 
-let loggedOutTokens = [];
-if (fs.existsSync(__dirname + "/logged-out-tokens.txt")) {
-    loggedOutTokens = fs.readFileSync(__dirname + "/logged-out-tokens.txt", "utf-8")
-        .split("\n")
-        .filter(l => l.length >= 2);
-} else {
-    fs.writeFileSync(__dirname + "/logged-out-tokens.txt", "", "utf-8");
-}
 const globalDb = new Database("global.db");
 globalDb.exec(fs.readFileSync(__dirname + "/initGlobalDb.sql", "utf-8"));
+const authDb = new Database("auth.db");
+authDb.exec(fs.readFileSync(__dirname + "/initAuthDb.sql", "utf-8"));
 try {
     globalDb.exec("ALTER TABLE pushregs ADD COLUMN alg DEFAULT 0");
     console.log("Upgraded DB");
@@ -51,6 +44,7 @@ const globalPreped = {
     register: globalDb.prepare("INSERT INTO users (username, pw, register_date, plan) VALUES (@username, @pw, @register_date, 1)"),
     registerEmail: globalDb.prepare("INSERT INTO emails (user_id, email, token, verified) VALUES (@user_id, @email, @token, 0)"),
     login: globalDb.prepare("SELECT id, pw FROM users WHERE username = ?"),
+    changePw: globalDb.prepare("UPDATE users SET pw = @pw WHERE id = @uid"),
     uidUsername: globalDb.prepare("SELECT username FROM users WHERE id = ?"),
     registerTx: globalDb.transaction((emailToken, hashedPw, email, username) => {
         const { lastInsertRowid } = globalPreped.register.run({
@@ -66,13 +60,21 @@ const globalPreped = {
         return lastInsertRowid;
     })
 };
+const authPrepped = {
+    create: authDb.prepare("INSERT INTO tokens(user_id, token_data, created) VALUES (@uid, @token, @now)"),
+    invalidateAll: authDb.prepare("DELETE from tokens WHERE user_id = ?"),
+    invalidate: authDb.prepare("DELETE from tokens WHERE token_data = ?"),
+    checkToken: authDb.prepare("SELECT user_id FROM tokens WHERE token_data = ?"),
+}
 
 async function setAuthCookie(res, uid) {
     const randomToken = (await util.promisify(crypto.randomBytes)(192)).toString("base64").replace(/=/g, "");
     let cookie = `${uid.toString(36)}.${randomToken}`;
-    const hmac = crypto.createHmac("sha256", config["cookie-secret"]);
-    hmac.update(cookie);
-    cookie += `.${hmac.digest("base64")}`;
+    authPrepped.create.run({
+        now: Date.now(),
+        token: cookie,
+        uid,
+    });
     res.cookie("retag-auth", cookie, {
         maxAge: 86400000 * 365, // 1 year
         httpOnly: true,
@@ -95,33 +97,13 @@ function authMiddleware(req, res, next) {
         req.authUser = null;
         return next();
     }
-    const authParts = req.cookies["retag-auth"].split(".");
-    if (authParts.length !== 3) {
+    const dbInfo = authPrepped.checkToken.get(req.cookies["retag-auth"]);
+    if (!dbInfo) {
         req.authUser = null;
         res.clearCookie("retag-auth");
         return next();
     }
-    const uid = parseInt(authParts[0], 36);
-    if (Number.isNaN(uid)) {
-        req.authUser = null;
-        res.clearCookie("retag-auth");
-        return next();
-    }
-    if (loggedOutTokens.includes(authParts[1])) {
-        req.authUser = null;
-        res.clearCookie("retag-auth");
-        return next();
-    }
-    const hmac = crypto.createHmac("sha256", config["cookie-secret"]);
-    hmac.update(`${authParts[0]}.${authParts[1]}`);
-    const digest = hmac.digest("base64");
-    if (digest !== authParts[2]) {
-        req.authUser = null;
-        res.clearCookie("retag-auth");
-        return next();
-    }
-    req.authUser = uid;
-    req.authToken = authParts[1];
+    req.authUser = dbInfo.user_id;
     next();
 }
 
@@ -224,13 +206,50 @@ app.post("/internal/login", bodyParser.urlencoded({ extended: false, limit: conf
     res.redirect(config["root-domain"]);
 });
 
-app.post("/logout", authMiddleware, (req, res) => {
-    res.clearCookie("retag-auth");
-    if (req.authUser !== null) {
-        loggedOutTokens.push(req.authToken);
-        // don't wait for the writing to complete, since the updated token list is stored in memory
-        fsP.writeFile(__dirname + "/logged-out-tokens.txt", loggedOutTokens.join("\n"), "utf-8");
+const changePwForm = fs.readFileSync(__dirname + "/forms/changepw.html", "utf-8");
+function changePwFormWithError(req, error) {
+    const username = globalPreped.uidUsername.get(req.authUser).username;
+    return changePwForm.replace(/%errors%/g, `<div class="error">${error}</div>`).replace(/%main%/g, config["root-domain"]).replace(/%username%/g, username);
+}
+app.get("/internal/changepw", authMiddleware, (req, res) => {
+    if (req.authUser === null) {
+        res.redirect(302, "/internal/login");
+        return;
     }
+    const username = globalPreped.uidUsername.get(req.authUser).username;
+    res.send(changePwForm.replace(/%errors%/g, "").replace(/%main%/g, config["root-domain"]).replace(/%username%/g, username));
+});
+app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended: false, limit: config["db-max-size"] }), async (req, res) => {
+    if (req.authUser === null) {
+        // 302 since /internal/login should be GETed in this case
+        res.redirect(302, "/internal/login");
+        return;
+    }
+
+    const pw = req.body.pw;
+    if (typeof pw !== "string") {
+        return res.status(400).body(changePwFormWithError(req, "No pw specified"));
+    }
+    const pwValidationMsg = validate.pw(pw);
+    if (pwValidationMsg) return res.send(changePwFormWithError(req, pwValidationMsg));
+
+    const hashedPw = await argon2.hash(pw, ARGON2_CONFIG);
+    globalPreped.changePw.run({
+        pw: hashedPw,
+        uid: req.authUser,
+    });
+    authPrepped.invalidateAll.run(req.authUser);
+    res.redirect(302, "/internal/login");
+});
+app.get("/.well-known/change-password", (req, res) => {
+    res.redirect(302, "/internal/changepw");
+})
+
+app.post("/logout", authMiddleware, (req, res) => {
+    if (req.authUser !== null) {
+        authPrepped.invalidate.run(req.cookies["retag-auth"]);
+    }
+    res.clearCookie("retag-auth");
     res.redirect(config["root-domain"]);
 });
 

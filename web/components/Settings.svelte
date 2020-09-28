@@ -259,7 +259,7 @@
     <div>
         <div>
             <label for="pint-interval">
-                Ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+                Average ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
             </label>
             <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
         </div>
@@ -322,6 +322,11 @@
         <option selected={theme === "dark"} value="dark">Dark</option>
         <option selected={theme === "light"} value="light">Light</option>
     </select>
+
+    <h2>Account</h2>
+    <div>
+        <a href={config["api-server"] + "/internal/changepw"}>Change password</a>
+    </div>
 
     <h3 class="dz">Danger Zone</h3>
     <div>
