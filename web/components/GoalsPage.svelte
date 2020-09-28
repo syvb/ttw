@@ -48,7 +48,7 @@
     }
 </style>
 
-<h1>Goals</h1>
+<h1>Goals (beta)</h1>
 <div class="about">
     Here you can create and manage your goals.
 </div>

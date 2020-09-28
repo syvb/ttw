@@ -28,7 +28,8 @@
     "moment": "^2.28.0",
     "regenerator-runtime": "^0.13.7",
     "svelte-routing": "^1.4.2",
-    "workbox-precaching": "^5.1.4"
+    "workbox-precaching": "^5.1.4",
+    "workbox-webpack-plugin": "^5.1.4"
   },
   "scripts": {
     "build": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack",
