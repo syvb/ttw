@@ -1,7 +1,7 @@
 <script>
     import { navigate } from "svelte-routing";
     let goalsPromise = window.db.goals.toArray();
-    const toGoal = id => () => navigate("/goals/" + id);
+    const toGoal = id => () => navigate("/goals/info?id=" + encodeURIComponent(id));
     const toNew = () => navigate("/goals/new");
 </script>
 

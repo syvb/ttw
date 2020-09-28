@@ -2,9 +2,10 @@
     import { Link } from "svelte-routing";
     import { getGraph } from "../goals.ts";
     import GoalSettings from "./GoalSettings.svelte";
-    export let id; // goal ID, passed from router
+    let id = (new URLSearchParams(location.search)).get("id");
     let graphPromise = new Promise((resolve, reject) => {}); // never resolves
     let goalDataPromise = window.db.goals.get(id).then(goal => {
+        if (!goal) return null;
         graphPromise = getGraph(goal);
         return goal;
     });

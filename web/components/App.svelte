@@ -83,11 +83,11 @@
                 <FillPings />
                 <GoalsPage />
             </Route>
-            <Route path="/goals/:id" let:params>
+            <Route path="/goals/info">
                 <LoggedInNavbar {username} />
                 <SyncStatus />
                 <FillPings />
-                <GoalPage id={params.id} />
+                <GoalPage />
             </Route>
             <Route path="/goals/new">
                 <LoggedInNavbar {username} />
