@@ -18,7 +18,6 @@
             inline: true,
             defaultDate: [now, foreverAgo],
         });
-        console.log("r", range);
         picker.selectedDates = range.length === 2 ? range : [now, foreverAgo];
         picker.config.onChange.push((selectedDates, dateStr, instance) => {
             if (selectedDates.length === 2) {
