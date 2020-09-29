@@ -72,7 +72,7 @@ export function getGraph(goal: any) {
         let listener = e => {
             if (e.data.goalId === goal.id) {
                 graphsWorker.removeEventListener("message", listener);
-                resolve(e.data.graphImg);
+                resolve(e.data);
             }
         };
         graphsWorker.addEventListener("message", listener);

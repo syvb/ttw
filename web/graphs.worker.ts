@@ -13,14 +13,19 @@ self.addEventListener("message", e => {
             // TODO: generate
             let graphImg = "...";
             const brain = new beebrain(goal);
-            const stats = brain.getStats();
-            console.log("brain", brain, stats);
-            // @ts-ignore
-            self.postMessage({
+            let pmData: any = {
                 type: "graphImg",
                 goalId: goal.id,
-                graphImg,
-            });
+            };
+            const stats = brain.getStats();
+            console.log("brain", brain, stats);
+            if (stats.error) {
+                pmData.error = stats.error;
+            } else {
+                pmData.graphImg = graphImg;
+            }
+            // @ts-ignore
+            self.postMessage(pmData);
         });
     } else {
         console.warn("Ignored message with unknown type", e.data.type);

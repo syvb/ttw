@@ -27,7 +27,11 @@
                 <div>Generating graph...</div>
             {:then graph}
                 <div>
-                    graph: {graph}
+                    {#if graph.error}
+                        Graph error: {graph.error}
+                    {:else}
+                        TODO: display graph
+                    {/if}
                 </div>
             {/await}
         {/if}
