@@ -4,14 +4,15 @@
     import PingSelector from "./PingSelector.svelte";
     let dispatch = createEventDispatcher();
     export let goal = null;
-    let settingsName = goal?.name ?? "Goal name";
-    let settingsType = goal?.type ?? "max";
-    let settingsPerInterval = goal?.perInterval ?? 0.5;
-    let settingsInterval = goal?.interval ?? "daily";
-    let settingsGenGraph = goal?.genGraph ?? true;
-    let settingsIncludedTags = goal?.includedTags ?? [];
-    let settingsExcludedTags = goal?.excludedTags ?? [];
-    let settingsIncludeType = goal?.includeType ?? "some";
+    let settingsName = (goal?.name) ?? "Goal name";
+    let settingsType = (goal?.type) ?? "max";
+    let settingsPerInterval = (goal?.perInterval) ?? 0.5;
+    let settingsInterval = (goal?.interval) ?? "daily";
+    let settingsGenGraph = (goal?.genGraph) ?? true;
+    let settingsIncludedTags = (goal?.includedTags) ?? [];
+    let settingsExcludedTags = (goal?.excludedTags) ?? [];
+    let settingsIncludeType = (goal?.includeType) ?? "some";
+    let settingsRange = (goal?.range) ?? [];
     function genObj() {
         return {
             id: (goal === null) ? Math.random().toString(36).split(".")[1] : goal.id,
@@ -24,6 +25,7 @@
             includedTags: settingsIncludedTags,
             excludedTags: settingsExcludedTags,
             includeType: settingsIncludeType,
+            range: (settingsRange.length === 0) ? [new Date, new Date] : settingsRange,
         };
     }
     function createGoal() {
@@ -63,7 +65,7 @@
                     </select>: <input type="number" bind:value={settingsPerInterval}>
             </div>
             <div>
-                <PingSelector open />
+                <PingSelector open bind:includedTags={settingsIncludedTags} bind:excludedTags={settingsExcludedTags} bind:includeType={settingsIncludeType} bind:range={settingsRange} />
             </div>
         {/if}
     </div>

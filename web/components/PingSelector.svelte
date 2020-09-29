@@ -22,7 +22,7 @@
 
     export let pageReqSize = 100;
 
-    let range = [];
+    export let range = [];
     let paginate = backend() === MINI_BACKEND;
     export let curPaginating = paginate;
     let paginateStart = null;
