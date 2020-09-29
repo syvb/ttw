@@ -25,7 +25,7 @@ async function brainify(goal: any): Promise<any> {
         vfin: null, // The actual value being targeted; any real value
         rfin: null, // Final rate (slope) of the YBR before it hits the goal
         runits: "w", // Rate units for road and rfin; one of "y", "m", "w", "d", "h"
-        exprd: false, // Interpret YBR rate as fractional, not absolute, change
+        // exprd: false, // Interpret YBR rate as fractional, not absolute, change
         yaw: Math.sign(goal.perInterval), // Which side of the YBR you want to be on, +1 or -1
         dir: Math.sign(goal.perInterval), // Which direction you'll go (usually same as yaw)
         tmin: null, // Earliest date (unixtime) to plot on the x-axis:
@@ -33,7 +33,7 @@ async function brainify(goal: any): Promise<any> {
         vmin: null, // control zooming/panning; they default to the entire
         vmax: null, // plot -- from tini to past the akrasia horizon
         kyoom: false, // Cumulative; plot values as the sum of all those entered so far
-        prekyoom: 0, // Cumulative total from before the first entered datapoint
+        // prekyoom: 0, // Cumulative total from before the first entered datapoint
         odom: false, // Treat zeros as accidental odometer resets
         abslnw: null, // Override road width algorithm with a fixed absolute lane width
         edgy: false, // DEPRECATED: Put initial point on the road edge

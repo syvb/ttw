@@ -12,9 +12,9 @@ self.addEventListener("message", e => {
         e.data.goals.forEach(goal => {
             // TODO: generate
             let graphImg = "...";
-            console.log("bb",beebrain);
-            const brain = new beebrain(goal.slug, goal.params, goal.data);
-            console.log("brain", brain);
+            const brain = new beebrain(goal);
+            const stats = brain.getStats();
+            console.log("brain", brain, stats);
             // @ts-ignore
             self.postMessage({
                 type: "graphImg",
