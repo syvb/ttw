@@ -1,5 +1,7 @@
 // @ts-ignore
 import GraphsWorker from "./graphs.worker.ts";
+// @ts-ignore
+import pingFilter from "./pingFilter.ts";
 
 let cachedGraphsWorker = null;
 function getWorker() {
@@ -44,14 +46,30 @@ async function brainify(goal: any): Promise<any> {
         rosy: false, // Show the rose-colored dots and connecting line
         movingav: true, // Show moving average line superimposed on the data
         aura: false, // Show blue-green/turquoise aura/swath
-        yaxis: "time", // Label for the y-axis, eg, "kilograms"
+        yaxis: "seconds", // Label for the y-axis, eg, "kilograms"
         waterbuf: null, // Watermark on the good side of the YBR; safebuf if null
         waterbux: "", // Watermark on the bad side, ie, the pledge amount
         stathead: true, // Whether to include a label w/ stats at top of graph (DEV ONLY)
         imgsz: 760, // Image size; width (in pixels) of the graph image
         yoog: goal.name, // Username/graphname, eg, "alice/weight"
     };
-    const data = [];
+    const crit = {
+        includedTags: goal.includedTags,
+        excludedTags: goal.excludedTags,
+        includeType: goal.includeType,
+        range: goal.range,
+    };
+    const data = (await window.db.pings
+        .orderBy("time")
+        .reverse()
+        .filter(row => pingFilter(row, crit))
+        .toArray())
+        .map(({ time, interval, tags, comment }) => [
+            time, // date
+            interval, // value
+            `${tags.join(", ")}${comment ? ` (${comment})` : ""}`, // comment
+        ]);
+    console.log("data", data);
     params.tini = data[0] ? data[0][0] : Math.floor(Date.now() / 1000);
     params.road = [
         [params.tini, null, perDay],
