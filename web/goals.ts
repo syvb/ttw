@@ -56,7 +56,6 @@ async function brainify(goal: any): Promise<any> {
     params.road = [
         [params.tini, null, perDay],
     ];
-    console.log(params);
     return { slug, params, data, id: goal.id };
 }
 

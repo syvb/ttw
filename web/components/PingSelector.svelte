@@ -4,6 +4,7 @@
     import { backend, MINI_BACKEND, FULL_BACKEND } from "../backend.ts";
     import humanizeDuration from "humanize-duration";
     import { overallPingStats } from "../pings.ts";
+    import pingFilter from "../pingFilter.ts";
     const config = require("../../config.json");
 
     export let pings = [];
@@ -28,33 +29,16 @@
     let paginateStart = null;
     export let forcedLocal = false;
 
-    function pingFilter(row) {
-        if (includedTags.length > 0) {
-            let valid;
-            if (includeType === "some") {
-                valid = false;
-                row.tags.forEach(tag => {
-                    if (includedTags.includes(tag)) valid = true;
-                });
-            } else {
-                valid = includedTags.every(tag => row.tags.includes(tag));
-            }
-            if (!valid) return false;
-        }
-        if (!row.tags.every(tag => !excludedTags.includes(tag))) return false;
-        let rowDate = row.time * 1000;
-        if (range.length === 2) {
-            if (rowDate < +range[0]) return false;
-            if (rowDate > +range[1]) return false;
-        }
-        return true;
+    function getCrit() {
+        return { includedTags, excludedTags, includeType, range };
     }
 
     async function fetchFromLocal() {
+        const crit = getCrit();
         return window.db.pings
             .orderBy("time")
             .reverse()
-            .filter(pingFilter)
+            .filter(row => pingFilter(row, crit))
             .toArray();
     }
 
@@ -95,7 +79,8 @@
                         }
                     }
                     forcedLocal = false;
-                    return (append ? pings : []).concat(data.pings.filter(pingFilter));
+                    const crit = getCrit();
+                    return (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit)));
                 } else if (res.status === 403) {
                     location.href = "/";
                     forcedLocal = false;
