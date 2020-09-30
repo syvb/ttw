@@ -1,15 +1,5 @@
 // @ts-ignore
-import GraphsWorker from "./graphs.worker.ts";
-// @ts-ignore
 import pingFilter from "./pingFilter.ts";
-
-let cachedGraphsWorker = null;
-function getWorker() {
-    if (cachedGraphsWorker === null) {
-        cachedGraphsWorker = new GraphsWorker();
-    }
-    return cachedGraphsWorker;
-}
 
 // converts a db goal to a beebrain goal
 async function brainify(goal: any): Promise<any> {
@@ -78,21 +68,14 @@ async function brainify(goal: any): Promise<any> {
 }
 
 let graphCache = {};
-export function getGraph(goal: any) {
+export function getGraph(goal: any, ele: any, bgraph: any) {
     return new Promise(async (resolve, reject) => {
         if (graphCache[goal.id] !== undefined) resolve(graphCache[goal.id]);
-        let graphsWorker = getWorker();
         const brainGoal = await brainify(goal);
-        graphsWorker.postMessage({
-            type: "genGraphs",
-            goals: [brainGoal]
+        const graph = new bgraph({
+            divGraph: ele,
+            showContext: true,
         });
-        let listener = e => {
-            if (e.data.goalId === goal.id) {
-                graphsWorker.removeEventListener("message", listener);
-                resolve(e.data);
-            }
-        };
-        graphsWorker.addEventListener("message", listener);
+        graph.loadGoalJSON(goal);
     });
 }

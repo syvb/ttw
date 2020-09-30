@@ -1,17 +1,23 @@
 <script>
+    import { onMount } from "svelte";
     import { Link } from "svelte-routing";
     import { getGraph } from "../goals.ts";
     import GoalSettings from "./GoalSettings.svelte";
+
+    const bgraphPromise = import("../../road/src/bgraph.js");
+    let graphContainer;
     let id = (new URLSearchParams(location.search)).get("id");
-    let graphPromise = new Promise((resolve, reject) => {}); // never resolves
-    let goalDataPromise = window.db.goals.get(id).then(goal => {
-        if (!goal) return null;
-        graphPromise = getGraph(goal);
-        return goal;
+    let goalDataPromise = window.db.goals.get(id);
+    const mountPromise = new Promise((resolve, reject) => onMount(resolve));
+    function updateGraph(goalData, bgraph) {
+        getGraph(goalData, graphContainer, bgraph.default);
+    }
+    Promise.all([ goalDataPromise, bgraphPromise, mountPromise ]).then(([ goalData, bgraph ]) => {
+        updateGraph(goalData, bgraph);
     });
     async function update(e) {
-        graphPromise = getGraph(e.detail);
         goalDataPromise = Promise.resolve(e.detail);
+        updateGraph(e.detail, await bgraphPromise);
     }
 </script>
 
@@ -23,17 +29,7 @@
     {#if goal}
         <h1>{goal.name}</h1>
         {#if goal.genGraph}
-            {#await graphPromise}
-                <div>Generating graph...</div>
-            {:then graph}
-                <div>
-                    {#if graph.error}
-                        Graph error: {graph.error}
-                    {:else}
-                        TODO: display graph
-                    {/if}
-                </div>
-            {/await}
+            <div bind:this={graphContainer}></div>
         {/if}
         <GoalSettings on:update={update} {goal} />
     {:else}
