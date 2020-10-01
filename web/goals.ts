@@ -74,8 +74,11 @@ export function getGraph(goal: any, ele: any, bgraph: any) {
         const brainGoal = await brainify(goal);
         const graph = new bgraph({
             divGraph: ele,
-            showContext: true,
+            svgSize: { width: 800, height: 600 },
+            focusRect: { x:0, y:0, width:800, height: 453 },
+            ctxRect: { x:0, y:453, width:800, height: 100 },
+            showContext: true
         });
-        graph.loadGoalJSON(goal);
+        graph.loadGoalJSON(brainGoal);
     });
 }
