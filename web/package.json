@@ -23,7 +23,7 @@
     "chart.js": "^2.9.3",
     "dexie": "^3.0.2",
     "flatpickr": "^4.6.6",
-    "humanize-duration": "^3.23.1",
+    "humanize-duration": "^3.24.0",
     "js-xxhash": "^1.0.4",
     "moment": "^2.29.0",
     "regenerator-runtime": "^0.13.7",
