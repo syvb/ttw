@@ -1,4 +1,5 @@
 <script>
+    import { link } from "svelte-routing";
     import NotificationsPerm from "./NotificationsPerm.svelte";
     import TagEntry from "./TagEntry.svelte";
     import download from "../download.ts";
@@ -370,6 +371,10 @@
                 To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
             </details>
             <button on:click={updatePintClick}>Update</button>
+        </div>
+        <div>
+            <h2>Other pages</h2>
+            <a href="/graphs" target="graphs" use:link>Graphs (beta)</a>
         </div>
     </details>
 </main>

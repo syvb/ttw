@@ -56,7 +56,7 @@ async function brainify(goal: any): Promise<any> {
         .toArray())
         .map(({ time, interval, tags, comment }) => [
             time, // date
-            interval, // value
+            1, // value
             `${tags.join(", ")}${comment ? ` (${comment})` : ""}`, // comment
         ]);
     console.log("data", data);
