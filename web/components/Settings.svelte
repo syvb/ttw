@@ -374,7 +374,7 @@
         </div>
         <div>
             <h2>Other pages</h2>
-            <a href="/graphs" target="graphs" use:link>Graphs (beta)</a>
+            <Link to="/goals">Goals</Link>
         </div>
     </details>
 </main>
