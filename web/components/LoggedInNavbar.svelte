@@ -1,7 +1,43 @@
 <script>
-    import { Link, link } from "svelte-routing";
+    import { link } from "svelte-routing";
+    import { onMount } from "svelte";
     import config from "../../config.json";
     export let username;
+    export let url;
+    let homeLink, pingsLink, settingsLink, graphsLink;
+    let mounted = false;
+
+    function updateBar() {
+        if (!mounted) return;
+        console.log("updating navbar");
+        const pathPart = location.pathname.toLowerCase();
+        let ele = null;
+        switch (pathPart) {
+            case "/":
+                ele = homeLink;
+                break;
+            case "/cntpings":
+                ele = pingsLink;
+                break;
+            case "/settings":
+                ele = settingsLink;
+                break;
+            case "/graphs":
+                ele = graphsLink; // actually unused
+                break;
+        }
+        homeLink.classList.remove("loggedinnavbar-active");
+        pingsLink.classList.remove("loggedinnavbar-active");
+        settingsLink.classList.remove("loggedinnavbar-active");
+        graphsLink.classList.remove("loggedinnavbar-active");
+        if (ele) ele.classList.add("loggedinnavbar-active");
+    }
+
+    $: url, updateBar();
+    onMount(() => {
+        mounted = true;
+        updateBar();
+    });
 </script>
 
 <style>
@@ -10,7 +46,7 @@
     }
 
     .username {
-        font-weight: bold;
+        font-weight: 500;
     }
 
     .skip-link {
@@ -28,6 +64,29 @@
         position: static;
         margin: auto;
     }
+
+    nav {
+        padding: 8px;
+        padding-bottom: 4px;
+        margin-bottom: 4px;
+        background: rgb(0, 100, 79);
+        color: rgb(199, 241, 234);
+    }
+
+    .navlink {
+        text-decoration: none;
+        color: rgb(199, 241, 234);
+    }
+
+    :global(.dark) .navlink {
+        color: rgb(5, 49, 42);
+    }
+
+    :global(.loggedinnavbar-active) {
+        font-weight: bold;
+        /* to override the more specific .svelte-blah.navbar */
+        color: white !important;
+    }
 </style>
 
 <a class="skip-link" href="#maincontent">
@@ -35,10 +94,10 @@
 </a>
 
 <nav>
-    <Link to="/">Home</Link>
-    <Link to="/cntpings">Pings</Link>
-    <Link to="/settings">Settings</Link>
-    <a href="/graphs" target="graphs" use:link>Graphs (beta)</a>
+    <a bind:this={homeLink} class="navlink" use:link href="/">Home</a>
+    <a bind:this={pingsLink} class="navlink" use:link href="/cntpings">Pings</a>
+    <a bind:this={settingsLink} class="navlink" use:link href="/settings">Settings</a>
+    <a bind:this={graphsLink} class="navlink" href="/graphs" target="graphs" use:link>Graphs (beta)</a>
     {#if window.loginState === "in"}
         {#if username}
             Logged in as <span class="username">{username}</span>.

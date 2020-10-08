@@ -34,12 +34,11 @@
         color: white;
     }
     footer {
+        margin-left: 8px;
+        margin-right: 8px;
         margin-top: 1rem;
         border-top: 2px solid gray;
         padding-top: 1rem;
-    }
-    .app-root {
-        margin: 8px;
     }
 </style>
 
@@ -90,7 +89,7 @@
                 <MonthlyTrendGraph />
             </Route>
             <Route>
-                <LoggedInNavbar {username} />
+                <LoggedInNavbar {username} {url} />
                 Page not found.
             </Route>
         </div>

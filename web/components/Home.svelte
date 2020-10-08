@@ -3,8 +3,16 @@
     import LoggedOutHome from "./LoggedOutHome.svelte";
 </script>
 
-{#if window.loginState === "out"}
-    <LoggedOutHome />
-{:else}
-    <LoggedInHome />
-{/if}
+<style>
+    .home {
+        padding: 8px;
+    }
+</style>
+
+<div class="home">
+    {#if window.loginState === "out"}
+        <LoggedOutHome />
+    {:else}
+        <LoggedInHome />
+    {/if}
+</div>
