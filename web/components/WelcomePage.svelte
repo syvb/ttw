@@ -7,6 +7,12 @@
     }
 </script>
 
+<style>
+    #maincontent {
+        margin: 8px;
+    }
+</style>
+
 <main id="maincontent">
     <h1>Welcome to TagTime Web!</h1>
     <p>

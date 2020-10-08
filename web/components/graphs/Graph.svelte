@@ -59,6 +59,12 @@
     }
 </script>
 
+<style>
+    #maincontent {
+        margin: 8px;
+    }
+</style>
+
 <!-- Generic graph component -->
 <main id="maincontent">
     <h1><slot name="title"></slot></h1>

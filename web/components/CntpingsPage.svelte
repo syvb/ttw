@@ -108,6 +108,10 @@
         font-size: 1.1em;
         margin: 0.5rem;
     }
+
+    #maincontent {
+        margin: 8px;
+    }
 </style>
 
 <svelte:window on:resize={checkTableSize} />

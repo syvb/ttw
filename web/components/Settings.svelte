@@ -201,10 +201,15 @@
     .adv {
         padding-top: 1rem;
     }
+
+    #maincontent {
+        margin: 8px;
+    }
 </style>
 
-<h2>Settings</h2>
 <main id="maincontent">
+    <h2>Settings</h2>
+
     <div>
         Note: some settings cannot be changed while offline
     </div>
