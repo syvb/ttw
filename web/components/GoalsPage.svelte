@@ -1,5 +1,6 @@
 <script>
     import { navigate } from "svelte-routing";
+    import { beeRedir } from "../beem.ts";
     let goalsPromise = window.db.goals.toArray();
     const toGoal = id => () => navigate("/goals/info?id=" + encodeURIComponent(id));
     const toNew = () => navigate("/goals/new");
@@ -46,23 +47,33 @@
         margin-top: 2.5%;
         margin-left: 2.5%;
     }
+    #maincontent {
+        margin: 8px;
+    }
 </style>
 
-<h1>Goals (beta)</h1>
-<div class="about">
-    Here you can create and manage your goals.
-</div>
+<div id="maincontent">
+    <h1>Goals (beta)</h1>
+    <div class="about">
+        <p>
+            Here you can create and manage your goals. Currently the only point of creating goals is to sync with Beeminder.
+        </p>
+        <p>
+            <button on:click={beeRedir} title="This will redirect you to a page where you can make the final call as to if we can access your beeswax.">Authorize us to access your Beeminder account</button>
+        </p>
+    </div>
 
-<div class="goal-grid">
-    {#await goalsPromise}
-        Loading
-    {:then goals}
-        {#each goals as goal}
-            <div on:click={toGoal(goal.id)} class="goal">
-                <div style="background: magenta;" class="goal-img"></div>
-                <div class="goal-name">{goal.name}</div>
-            </div>
-        {/each}
-    {/await}
-    <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"></span></div>
+    <div class="goal-grid">
+        {#await goalsPromise}
+            Loading
+        {:then goals}
+            {#each goals as goal}
+                <div on:click={toGoal(goal.id)} class="goal">
+                    <div style="background: magenta;" class="goal-img"></div>
+                    <div class="goal-name">{goal.name}</div>
+                </div>
+            {/each}
+        {/await}
+        <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"></span></div>
+    </div>
 </div>
