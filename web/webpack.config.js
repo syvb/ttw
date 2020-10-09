@@ -1,7 +1,6 @@
 const path = require("path");
 const child_process = require("child_process");
 const CopyPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
@@ -39,10 +38,6 @@ module.exports = {
             patterns: [
                 path.resolve(__dirname, "static")
             ]
-        }),
-
-        new MiniCssExtractPlugin({
-            filename: "[name].css"
         }),
 
         new InjectManifest({
@@ -88,7 +83,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    prod ? MiniCssExtractPlugin.loader : "style-loader",
+                    "style-loader",
                     "css-loader"
                 ]
             },
