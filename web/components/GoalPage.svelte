@@ -3,6 +3,9 @@
     import { Link } from "svelte-routing";
     import { getGraph } from "../goals.ts";
     import GoalSettings from "./GoalSettings.svelte";
+
+    let id = (new URLSearchParams(location.search)).get("id");
+    let goalDataPromise = window.db.goals.get(id);
 </script>
 
 <Link to="/goals">Back to all goals</Link>
