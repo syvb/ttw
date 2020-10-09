@@ -79,10 +79,6 @@
         margin-right: .3rem;
     }
 
-    :global(.dark) .navlink {
-        color: rgb(5, 49, 42);
-    }
-
     :global(.loggedinnavbar-active) {
         font-weight: bold;
         /* to override the more specific .svelte-blah.navbar */
