@@ -2,6 +2,12 @@
     import { Link } from "svelte-routing";
 </script>
 
+<style>
+    #maincontent {
+        margin: 8px;
+    }
+</style>
+
 <main id="maincontent">
     <h1>Graphs</h1>
     <p>

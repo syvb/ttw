@@ -259,6 +259,7 @@
 
     .force-mobile .tag-entry-main {
         display: block;
+        box-sizing: border-box;
     }
 
     .force-mobile .tag {
