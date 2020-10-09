@@ -76,6 +76,7 @@
     .navlink {
         text-decoration: none;
         color: rgb(199, 241, 234);
+        margin-right: .3rem;
     }
 
     :global(.dark) .navlink {
@@ -96,8 +97,8 @@
 <nav>
     <a bind:this={homeLink} class="navlink" use:link href="/">Home</a>
     <a bind:this={pingsLink} class="navlink" use:link href="/cntpings">Pings</a>
+    <a bind:this={graphsLink} class="navlink" href="/graphs" target="graphs" use:link>Graphs</a>
     <a bind:this={settingsLink} class="navlink" use:link href="/settings">Settings</a>
-    <a bind:this={graphsLink} class="navlink" href="/graphs" target="graphs" use:link>Graphs (beta)</a>
     {#if window.loginState === "in"}
         {#if username}
             Logged in as <span class="username">{username}</span>.
