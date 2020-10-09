@@ -1,5 +1,5 @@
 <script>
-    import { link } from "svelte-routing";
+    import { Link } from "svelte-routing";
     import NotificationsPerm from "./NotificationsPerm.svelte";
     import TagEntry from "./TagEntry.svelte";
     import download from "../download.ts";
