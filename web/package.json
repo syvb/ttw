@@ -32,8 +32,8 @@
     "workbox-webpack-plugin": "^5.1.4"
   },
   "scripts": {
-    "build": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && cd ../road/ && npm install --no-save && cd ../web && webpack",
-    "start": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && cd ../road/ && npm install --no-save && cd ../web && webpack-dev-server -d --host 0.0.0.0",
+    "build": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack",
+    "start": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack-dev-server -d --host 0.0.0.0",
     "test": "cargo test && wasm-pack test --headless"
   },
   "browserslist": "> 0.25%, not dead"
