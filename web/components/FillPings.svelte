@@ -93,10 +93,10 @@
     }
     .ping-input-root {
         background: rgb(245, 214, 112);
-        width: 64.5rem;
-        max-width: 90.5vw;
-        padding: 0.33rem;
+        padding: 8px;
         margin-bottom: 1rem;
+        width: 100%;
+        box-sizing: border-box;
     }
     :global(.dark) .ping-input-root {
         background: rgb(138, 121, 0);
