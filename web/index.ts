@@ -16,6 +16,8 @@ import { pushLoadCheck } from "./push.ts";
 import "./init-db.ts";
 // @ts-ignore
 import { latestPing } from "./pings.ts";
+// @ts-ignore
+import { beemLoadCheck } from "./beem.ts";
 import "regenerator-runtime";
 
 declare global {
@@ -68,6 +70,8 @@ window.supportsAutoplay = (async () => {
 import { checkLoginStateOnInit } from "./sync.ts"; // has to be imported after DB is setup
 window.recheckPending = () => {}; // ignore calls to recheck pending until ping checking is setup
 (async () => {
+    beemLoadCheck(); // async, but start it now (usually does nothing)
+
     window.pingsPending = new Uint32Array([]);
     let username = null;
     if (localStorage["retag-auth"] === "local") {
