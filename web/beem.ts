@@ -20,7 +20,7 @@ export async function beemLoadCheck() {
     // ...?
     const beeInfo = await (await fetch(`${BEEM_URI}/api/v1/users/me.json?access_token=${token}`)).json();
     if (beeInfo.errors) {
-        alert(`There was an error logging in with Beeminder: ${beeInfo.errors.message}`)
+        alert(`There was an error logging in with Beeminder: ${beeInfo.errors.message}`);
         return;
     }
     if (beeInfo.username !== username) {
