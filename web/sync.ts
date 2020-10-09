@@ -33,12 +33,17 @@ function loadConfigData(json: ConfigData) {
     const interval = json["retag-pint-interval"] ?? (60 * 45).toString();
     const seed = json["retag-pint-seed"] ?? "12345";
     const alg = json["retag-pint-alg"] ?? "fnv";
+    const beemToken = json["retag-beem-token"] ?? "";
     if (localStorage["retag-pint-interval"] !== interval) {
         localStorage["retag-pint-interval"] = parseInt(interval, 10);
         reload = true;
     }
     if (localStorage["retag-pint-seed"] !== seed) {
         localStorage["retag-pint-seed"] = parseInt(seed, 10);
+        reload = true;
+    }
+    if (localStorage["retag-beem-token"] !== beemToken) {
+        localStorage["retag-beem-token"] = beemToken;
         reload = true;
     }
     if (localStorage["retag-pint-alg"] !== alg) {

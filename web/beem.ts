@@ -1,4 +1,7 @@
 // Utilities for working with Beeminder.
+// @ts-ignore
+import { syncConfig } from "./sync.ts";
+
 const config = require("../config.json");
 const BEEM_URI = config.overrideBeem ?? "https://www.beeminder.com";
 
@@ -26,6 +29,12 @@ export async function beemLoadCheck() {
     if (beeInfo.username !== username) {
         alert(`BTW, Beeminder thinks your username is "${beeInfo.username}", but the URL params say it's "${username}". Weird.`);
     }
+    let syncPromise = Promise.resolve();
+    if (localStorage["retag-beem-token"] !== token) {
+        localStorage["retag-beem-token"] = token;
+        syncPromise = syncConfig([ "retag-beem-token" ]);
+    }
     alert(`Sucessfully authenticated with Beeminder as ${username}.`);
+    await syncPromise;
     history.pushState(null, "Goals", location.pathname); // remove query params for reload
 }

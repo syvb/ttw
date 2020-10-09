@@ -58,9 +58,16 @@
         <p>
             Here you can create and manage your goals. Currently the only point of creating goals is to sync with Beeminder.
         </p>
-        <p>
+        <div>
             <button on:click={beeRedir} title="This will redirect you to a page where you can make the final call as to if we can access your beeswax.">Authorize us to access your Beeminder account</button>
-        </p>
+            <div>
+                {#if localStorage["retag-beem-token"]}
+                    You are currently connected with Beeminder, click the button to change the connected user.
+                {:else}
+                    You are not currently connected with Beeminder.
+                {/if}
+            </div>
+        </div>
     </div>
 
     <div class="goal-grid">
