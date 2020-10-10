@@ -38,3 +38,19 @@ export async function beemLoadCheck() {
     await syncPromise;
     history.pushState(null, "Goals", location.pathname); // remove query params for reload
 }
+
+// prepares a goal for usage with TTW
+async function prepGoal(name: string) {
+    if (!localStorage["retag-beem-token"]) throw new Error("no beem token");
+    // datasource -> integration name
+    await fetch(`${BEEM_URI}/api/v1/users/me/goals/${name}.json`, {
+        method: "PUT",
+        body: JSON.stringify({
+            datasource: config["beem-name"],
+        })
+    })
+    // set goal hhmmformat -> true, gunits -> "seconds" ...somehow?
+    // force an autodata refetch (roundabout way to force Beeminder to talk to our server)
+    // must be done *after* goal is updated
+    // TODO
+}

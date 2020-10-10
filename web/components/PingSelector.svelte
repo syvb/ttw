@@ -20,6 +20,8 @@
     export let includedTags = [];
     export let excludedTags = [];
     export let includeType = "some";
+    export let norange = false;
+    export let justcrit = false;
 
     export let pageReqSize = 100;
 
@@ -33,21 +35,26 @@
         return { includedTags, excludedTags, includeType, range };
     }
 
+    let totalUnfiltered = null;
     async function fetchFromLocal() {
         const crit = getCrit();
-        return window.db.pings
+        const allRows = await window.db.pings
             .orderBy("time")
             .reverse()
-            .filter(row => pingFilter(row, crit))
             .toArray();
+        const filteredRows = allRows.filter(row => pingFilter(row, crit));
+        return {
+            rows: filteredRows,
+            totalUnfiltered: allRows.length,
+        }
     }
 
     let overallStats = { total: 0, totalTime: 0 };
 
-    // when append = true be very careful to avoid deadlock
+    // when append = true be very careful to avoid deadlock or infinite recursion
     async function fetchDbData(append) {
         let pingsFetchPromise;
-        if (backend() === FULL_BACKEND) {
+        if ((backend() === FULL_BACKEND) || justcrit) {
             forcedLocal = false;
             pingsFetchPromise = fetchFromLocal();
         } else if (backend() === MINI_BACKEND) {
@@ -91,7 +98,8 @@
             })();
             overallStats = await overallPingStats();
         }
-        const rows = await pingsFetchPromise;
+        const { rows, totalUnfiltered: newTotalUnfiltered } = await pingsFetchPromise;
+        totalUnfiltered = newTotalUnfiltered;
         rowsTime = rows.reduce((prev, cur) => prev + (cur.interval), 0);
         pings = rows;
         loading = false;
@@ -149,9 +157,11 @@
         <TagEntry bind:tags={includedTags} />
         None of:
         <TagEntry bind:tags={excludedTags} />
-        Date range:
-        <DateRangePicker bind:range />
-        <br>
+        {#if !norange}
+            Date range:
+            <DateRangePicker bind:range />
+            <br>
+        {/if}
         {#if (backend() === MINI_BACKEND) && !forcedLocal}
             <label for="cntpings-paginate">
                 Paginate
@@ -159,24 +169,34 @@
             <input id="cntpings-paginate" type="checkbox" bind:checked={paginate}>
             <br>
         {/if}
-        <button on:click={updateFilter}>Update selected pings</button>
+        {#if !justcrit}
+            <button on:click={updateFilter}>Update selected pings</button>
+        {/if}
     </details>
-
-
-    <div>
-        Showing {pings.length} out of {overallStats ? overallStats.total : "..."}
-        {#if overallStats && (overallStats.total !== 0)}
-            pings ({((pings.length / (overallStats.total)) * 100).toFixed(2)}%).
-        {:else}
+    {#if justcrit}
+        {#if overallStats && totalUnfiltered}
+            That would match
+            {((pings.length / totalUnfiltered) * 100).toFixed(2)}%
+            of the last
+            {totalUnfiltered}
             pings.
         {/if}
-    </div>
-    <div>
-        Time: {humanizeDuration(rowsTime * 1000, { round: true })}
-    </div>
+    {:else}
+        <div>
+            Showing {pings.length} out of {overallStats ? overallStats.total : "..."}
+            {#if overallStats && (overallStats.total !== 0)}
+                pings ({((pings.length / (overallStats.total)) * 100).toFixed(2)}%).
+            {:else}
+                pings.
+            {/if}
+        </div>
+        <div>
+            Time: {humanizeDuration(rowsTime * 1000, { round: true })}
+        </div>
+    {/if}
 </div>
 
-{#if !loading}
+{#if !loading && !justcrit}
     {#if forcedLocal}
         <div class="warning-block">
             <span class="warning">Warning</span>:

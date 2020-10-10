@@ -52,7 +52,7 @@
     }
 </style>
 
-<div id="maincontent">
+<main id="maincontent">
     <h1>Goals (beta)</h1>
     <div class="about">
         <p>
@@ -83,4 +83,4 @@
         {/await}
         <div on:click={toNew} class="goal new-goal"><span class="new-goal-plus"></span></div>
     </div>
-</div>
+</main>

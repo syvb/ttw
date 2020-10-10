@@ -3,11 +3,19 @@
     import GoalSettings from "./GoalSettings.svelte";
 </script>
 
-<Link to="/goals">Back to all goals</Link>
+<style>
+    #maincontent {
+        margin: 8px;
+    }
+</style>
 
-<h1>New goal</h1>
-<p>
-    Create a new goal:
-</p>
+<main id="maincontent">
+    <Link to="/goals">Back to all goals</Link>
 
-<GoalSettings />
+    <h1>New goal</h1>
+    <p>
+        Create a new goal:
+    </p>
+
+    <GoalSettings />
+</main>
