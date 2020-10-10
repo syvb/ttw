@@ -5,10 +5,13 @@ const config = {
     ...require("../config-private.json")
 };
 const BEEM_URI = config.overrideBeem ?? "https://www.beeminder.com";
+const BEEM_UA = "TagTimeWeb/1.0 (ttw@smitop.com)"
 
 let beemEditQueue = [];
 
-async function beemEditFetch(that, uri, params) {
+async function beemEditFetch(that, uri, params = {}) {
+    params.headers = params.headers || {};
+    params.headers["User-Agent"] = BEEM_UA;
     let fResult;
     try {
         fResult = await fetch(uri, params);
@@ -26,7 +29,7 @@ class BeemCall {
     }
 }
 
-class BeemAddPoint extends BeemCall {
+class BeemUpsertPoint extends BeemCall {
     constructor(token, goalId, ping) {
         this.goalId = goalId;
         this.ping = ping;
@@ -38,19 +41,7 @@ class BeemAddPoint extends BeemCall {
         const uri = `${BEEM_URI}/api/v1/users/me/goals/${this.id}/datapoints.json?access_token=${encodeURIComponent(this.token)}&value=${encodeURIComponent((this.ping.interval / 60).toFixed(5))}&timestamp=${encodeURIComponent(this.ping.time)}&comment=${encodeURIComponent(comment)}&requestid=${encodeURIComponent(requestId)}`;
         await beemEditFetch(this, uri, {
             method: "POST"
-        })
-    }
-}
-
-class BeemEditPoint extends BeemCall {
-    constructor(token, goalId, ping, datapointId) {
-        this.goalId = goalId;
-        this.ping = ping;
-        this.datapointId = datapointId;
-        this.token = token;
-    }
-    async run() {
-
+        });
     }
 }
 
@@ -122,13 +113,13 @@ module.exports = {
             const added = pings
                 .filter(ping => pingFilter(ping, goal))
                 .map(ping => ({
-                    goal,
                     ...ping,
+                    goalId: goal,
                 }));
-            if (added.length > 0) {
-                affectedGoals.push(goal.name);
-            }
         });
         if (pingsToSend.length === 0) return;
+        pingsToSend.forEach(ping => {
+            beemEditQueue.push(new BeemUpsertPoint(token, ping.goalId, ping));
+        });
     }
 };
