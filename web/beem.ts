@@ -40,17 +40,23 @@ export async function beemLoadCheck() {
 }
 
 // prepares a goal for usage with TTW
-async function prepGoal(name: string) {
-    if (!localStorage["retag-beem-token"]) throw new Error("no beem token");
+export async function prepGoal(name: string) {
+    const token = localStorage["retag-beem-token"];
+    if (!token) throw new Error("no beem token");
     // datasource -> integration name
-    await fetch(`${BEEM_URI}/api/v1/users/me/goals/${name}.json`, {
+    name = name.toLowerCase().trim();
+    const updateUri = `${BEEM_URI}/api/v1/users/me/goals/${name}.json?access_token=${token}&datasource=${encodeURIComponent(config["beem-name"])}&hhmmformat=1&gunits=seconds`;
+    const updateRes = await fetch(updateUri, {
         method: "PUT",
-        body: JSON.stringify({
-            datasource: config["beem-name"],
-        })
-    })
-    // set goal hhmmformat -> true, gunits -> "seconds" ...somehow?
-    // force an autodata refetch (roundabout way to force Beeminder to talk to our server)
-    // must be done *after* goal is updated
-    // TODO
+    });
+    switch (updateRes.status) {
+        case 404:
+            alert("Beeminder goal doesn't exist.");
+            break;
+        case 200: case 204:
+            break;
+        default:
+            alert("Failed to update Beeminder goal.");
+    }
+    // setting goal hhmmformat -> true, gunits -> "seconds" seems impossible with the API
 }

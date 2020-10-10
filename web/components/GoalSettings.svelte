@@ -2,6 +2,7 @@
     import { navigate } from "svelte-routing";
     import { createEventDispatcher } from "svelte";
     import PingSelector from "./PingSelector.svelte";
+    import { prepGoal } from "../beem.ts";
     let dispatch = createEventDispatcher();
     export let goal = null;
     let settingsName = (goal?.name) ?? "Goal name";
@@ -10,6 +11,7 @@
     let settingsExcludedTags = (goal?.excludedTags) ?? [];
     let settingsIncludeType = (goal?.includeType) ?? "some";
     let settingsBeem = (goal?.beemGoal) ?? "";
+    let origGoalBeem = settingsBeem;
     function genObj() {
         return {
             id: (goal === null) ? Math.random().toString(36).split(".")[1] : goal.id,
@@ -25,12 +27,16 @@
     function createGoal() {
         let settings = genObj();
         db.goals.add(settings);
+        if (settingsBeem) prepGoal(settingsBeem);
+        origGoalBeem = settingsBeem;
         navigate("/goals");
     }
     async function updateGoal() {
         let settings = genObj();
         db.goals.update(settings.id, settings);
         dispatch("update", settings);
+        if (settingsBeem && (settingsBeem !== origGoalBeem)) prepGoal(settingsBeem);
+        origGoalBeem = settingsBeem;
     }
 </script>
 
