@@ -1,7 +1,6 @@
 <script>
     import { onMount } from "svelte";
     import { Link, navigate } from "svelte-routing";
-    import { getGraph } from "../goals.ts";
     import GoalSettings from "./GoalSettings.svelte";
 
     let id = (new URLSearchParams(location.search)).get("id");
