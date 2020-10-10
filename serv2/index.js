@@ -9,6 +9,7 @@ const fsP = require("fs").promises;
 const crypto = require("crypto");
 const util = require("util");
 
+const beem = require("./beem");
 const validate = require("./validate");
 const pushHandler = require("./pushHandler");
 const setCorsHeaders = require("./setCorsHeaders");
@@ -348,6 +349,7 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
     const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
     const stmt = userDb.prepare("INSERT OR REPLACE INTO pings (time, tags, interval, category, comment, last_change) VALUES (@time, @tags, @interval, @category, @comment, @last_change)");
     const now = Date.now();
+    const beemPings = [];
     const tx = userDb.transaction(() => {
         for (let i = 0; i < json.pings.length; i++) {
             const ping = json.pings[i];
@@ -356,6 +358,7 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
             if (!Array.isArray(ping.tags) || ping.tags.find(tag => typeof tag !== "string") !==  undefined) return "invalid tags";
             if (typeof ping.time !== "number") return "invalid time";
             if (typeof ping.interval !== "number") return "invalid interval";
+            // if (beeToken) beem.pingUpdated(ping, beeToken, )
             stmt.run({
                 tags: ping.tags.join(" "),
                 comment: ping.comment,
@@ -368,6 +371,10 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
         return false;
     });
     const txErr = tx();
+    const goalsData = userDb.prepare('SELECT k, v FROM meta WHERE k = "retag-beem-token" OR k = "retag-goals"').all();
+    const beeToken = goalsData.filter(({ k }) => k === "retag-beem-token")[0]?.v;
+    const beeGoals = goalsData.filter(({ k }) => k === "retag-goals")[0]?.v;
+    if (beeToken && beeGoals) beem.pingsUpdated(pings, beeToken, beeGoals)
     if (txErr) return res.status(400).send(txErr);
     res.status(200).json({
         latestUpdate: now,
@@ -488,5 +495,7 @@ app.options("/internal/mini-data", (req, res) => {
 });
 
 app.use("/internal/push", pushHandler(globalDb));
+
+app.use("/internal/beem", beem.router);
 
 app.listen(config["api-listen-port"]);

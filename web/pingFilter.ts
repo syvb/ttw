@@ -1,3 +1,4 @@
+// sync with server
 export default function pingFilter(row, crit) {
     if (crit.includedTags.length > 0) {
         let valid;
