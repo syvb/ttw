@@ -1,4 +1,5 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     import DateRangePicker from "./DateRangePicker.svelte";
     import TagEntry from "./TagEntry.svelte";
     import { backend, MINI_BACKEND, FULL_BACKEND } from "../backend.ts";
@@ -6,6 +7,8 @@
     import { overallPingStats } from "../pings.ts";
     import pingFilter from "../pingFilter.ts";
     const config = require("../../config.json");
+
+    // dispatched change event whenever anything changes, except range (not yet supported)
 
     export let pings = [];
     export let loading = true;
@@ -128,6 +131,12 @@
         curPaginating = paginate;
         fetchDbData().then(pingsChanged);
     }
+
+    const dispatcher = createEventDispatcher();
+    function critChange() {
+        if (justcrit) updateFilter();
+        dispatcher("change");
+    }
 </script>
 
 <style>
@@ -154,19 +163,19 @@
             <option value="some">At least one of:</option>
             <option value="all">All of:</option>
         </select>
-        <TagEntry bind:tags={includedTags} />
+        <TagEntry on:input={critChange} bind:tags={includedTags} />
         None of:
-        <TagEntry bind:tags={excludedTags} />
+        <TagEntry on:input={critChange} bind:tags={excludedTags} />
         {#if !norange}
             Date range:
             <DateRangePicker bind:range />
             <br>
         {/if}
-        {#if (backend() === MINI_BACKEND) && !forcedLocal}
+        {#if (backend() === MINI_BACKEND) && !forcedLocal && !justcrit}
             <label for="cntpings-paginate">
                 Paginate
             </label>
-            <input id="cntpings-paginate" type="checkbox" bind:checked={paginate}>
+            <input id="cntpings-paginate" type="checkbox" bind:checked={paginate} on:input={critChange} >
             <br>
         {/if}
         {#if !justcrit}
