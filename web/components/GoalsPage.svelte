@@ -46,6 +46,7 @@
         height: 95%;
         margin-top: 2.5%;
         margin-left: 2.5%;
+        background: #d1d9e6;
     }
     #maincontent {
         margin: 8px;
@@ -76,7 +77,7 @@
         {:then goals}
             {#each goals as goal}
                 <div on:click={toGoal(goal.id)} class="goal">
-                    <div style="background: magenta;" class="goal-img"></div>
+                    <div class="goal-img"></div>
                     <div class="goal-name">{goal.name}</div>
                 </div>
             {/each}
