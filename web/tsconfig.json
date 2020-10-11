@@ -5,7 +5,7 @@
     ],
     "compilerOptions": {
         // makes debugging easier
-        // "target": "ES2017",
+        "target": "ES2015",
         "downlevelIteration": true
     }
 }

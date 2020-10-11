@@ -1,7 +1,6 @@
 const path = require("path");
 const child_process = require("child_process");
 const CopyPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
@@ -41,10 +40,6 @@ module.exports = {
             ]
         }),
 
-        new MiniCssExtractPlugin({
-            filename: "[name].css"
-        }),
-
         new InjectManifest({
             swSrc: __dirname + "/sw.js",
             maximumFileSizeToCacheInBytes: 100 * 1000000, // 100mb
@@ -67,6 +62,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.worker\.(j|t)s$/,
+                use: { loader: 'worker-loader' },
+            },
+            {
                 test: /\.tsx?$/,
                 use: "ts-loader",
                 exclude: /node_modules/,
@@ -84,7 +83,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    prod ? MiniCssExtractPlugin.loader : "style-loader",
+                    "style-loader",
                     "css-loader"
                 ]
             },
@@ -111,5 +110,7 @@ module.exports = {
     },
     experiments: {
         asyncWebAssembly: true
-    }
+    },
+    // otherwise UMD modules try to use AMD
+    amd: false,
 };

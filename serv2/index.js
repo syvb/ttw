@@ -9,6 +9,7 @@ const fsP = require("fs").promises;
 const crypto = require("crypto");
 const util = require("util");
 
+const beem = require("./beem")(authMiddleware);
 const validate = require("./validate");
 const pushHandler = require("./pushHandler");
 const setCorsHeaders = require("./setCorsHeaders");
@@ -368,6 +369,10 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
         return false;
     });
     const txErr = tx();
+    const goalsData = userDb.prepare("SELECT k, v FROM meta WHERE k IN ('retag-beem-token', 'retag-goals')").all();
+    const beeToken = goalsData.filter(({ k }) => k === "retag-beem-token")[0]?.v;
+    const beeGoals = goalsData.filter(({ k }) => k === "retag-goals")[0]?.v;
+    if (beeToken && beeGoals) beem.pingsUpdated(json.pings, beeToken, beeGoals, req.authUser)
     if (txErr) return res.status(400).send(txErr);
     res.status(200).json({
         latestUpdate: now,
@@ -488,5 +493,7 @@ app.options("/internal/mini-data", (req, res) => {
 });
 
 app.use("/internal/push", pushHandler(globalDb));
+
+app.use("/internal/beem", beem.router);
 
 app.listen(config["api-listen-port"]);

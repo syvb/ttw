@@ -119,7 +119,7 @@
 <main id="maincontent">
     <h1>Pings</h1>
     <div>
-        Click on a row to edit it. {smaller}
+        Click on a row to edit it.
     </div>
     <PingSelector bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} />
     {#if loading !== false}

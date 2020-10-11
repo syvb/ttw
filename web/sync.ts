@@ -20,7 +20,7 @@ interface ConfigData {
     ver: string,
 }
 
-function loadConfigData(json: ConfigData) {
+async function loadConfigData(json: ConfigData) {
     console.log("Config ver", json.ver);
     if (json.ver !== "1") {
         console.warn("Using outdated config!");
@@ -33,6 +33,8 @@ function loadConfigData(json: ConfigData) {
     const interval = json["retag-pint-interval"] ?? (60 * 45).toString();
     const seed = json["retag-pint-seed"] ?? "12345";
     const alg = json["retag-pint-alg"] ?? "fnv";
+    const beemToken = json["retag-beem-token"] ?? "";
+    const goals = json["retag-goals"] ?? "[]";
     if (localStorage["retag-pint-interval"] !== interval) {
         localStorage["retag-pint-interval"] = parseInt(interval, 10);
         reload = true;
@@ -41,12 +43,25 @@ function loadConfigData(json: ConfigData) {
         localStorage["retag-pint-seed"] = parseInt(seed, 10);
         reload = true;
     }
+    if (localStorage["retag-beem-token"] !== beemToken) {
+        localStorage["retag-beem-token"] = beemToken;
+        reload = true;
+    }
     if (localStorage["retag-pint-alg"] !== alg) {
         // if it's undefined then it's the same as fnv, no need to reload
         if (!((localStorage["retag-pint-alg"] === undefined) && (alg === "fnv"))) {
             reload = true;
         }
         localStorage["retag-pint-alg"] = alg;
+    }
+    if (localStorage["retag-goals"] !== goals) {
+        if (!((localStorage["retag-goals"] === undefined) && (goals === "[]"))) {
+            reload = true;
+        }
+        let goalsJson;
+        try { goalsJson = JSON.parse(goals); } catch (e) { goalsJson = []; }
+        await window.db.goals.clear();
+        await window.db.goals.bulkAdd(goalsJson);
     }
     const afkTags = json["retag-afk-tags"] ?? "afk";
     localStorage["retag-afk-tags"] = afkTags;
@@ -267,9 +282,12 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
                 // delete synced pings
                 await window.db.pings.where("unsynced").equals("n").delete();
             }
-            loadConfigData(data.config);
+
             // if there are some pending pings the DB won't be empty
-            const dbEmpty = (await window.db.pings.count()) === 0;
+            const [ dbEmpty ] = await Promise.all([
+                window.db.pings.count().then(count => count === 0),
+                loadConfigData(data.config),
+            ])
             await updateWithPingData(data.pings, dbEmpty);
             rebuildTagIndex(); // don't wait for it to finish
             lastPingCheck = data.latestUpdate;

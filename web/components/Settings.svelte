@@ -1,4 +1,5 @@
 <script>
+    import { Link } from "svelte-routing";
     import NotificationsPerm from "./NotificationsPerm.svelte";
     import TagEntry from "./TagEntry.svelte";
     import download from "../download.ts";
@@ -6,6 +7,7 @@
     import { onMount } from "svelte";
     import { toDurString, updatePint } from "../pint-update.ts";
     import { allPings, putPings } from "../pings.ts";
+    import { beemResync } from "../beem.ts";
     import debounce from "../debounce.ts";
     import config from "../../config.json";
 
@@ -149,6 +151,15 @@
 
     function dbDownload() {
         location.href = `${config["api-server"]}/db`;
+    }
+
+    async function beemResyncClick() {
+        const err = await beemResync();
+        if (err) {
+            alert(err);
+        } else {
+            alert("Started resyncing (it can take a few minutes for the syncing to complete in the background)");
+        }
     }
 </script>
 
@@ -320,6 +331,12 @@
     <div>
         <button on:click={dbDownload}>Download SQLite database</button>
     </div>
+    <div>
+        <button on:click={beemResyncClick}>Resync with Beeminder</button>
+        <div>
+            Ensures Beeminder has all pings over the last 7 days.
+        </div>
+    </div>
 
     <h2><label for="theme-dropdown">Theme</label></h2>
     <select id="theme-dropdown" on:input={updateTheme}>
@@ -375,6 +392,10 @@
                 To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
             </details>
             <button on:click={updatePintClick}>Update</button>
+        </div>
+        <div>
+            <h2>Other pages</h2>
+            <Link to="/goals">Goals</Link>
         </div>
     </details>
 </main>

@@ -2,21 +2,20 @@
   "devDependencies": {
     "@types/gapi": "^0.0.39",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.2.0",
+    "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^4.3.0",
     "file-loader": "^6.1.0",
     "html-loader": "^1.3.1",
     "html-webpack-plugin": "^4.4.1",
-    "mini-css-extract-plugin": "^0.11.2",
     "style-loader": "^0.23.1",
     "svelte": "^3.29.0",
     "svelte-loader": "smittyvb/svelte-loader#update-virtual-modules",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
-    "webpack": "^5.0.0-beta.29",
+    "webpack": "5.0.0-beta.29",
     "webpack-cli": "^3.3.3",
     "webpack-dev-server": "^3.7.1",
-    "workbox-webpack-plugin": "^5.1.4"
+    "worker-loader": "^3.0.2"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
   "dependencies": {
@@ -28,7 +27,8 @@
     "moment": "^2.29.1",
     "regenerator-runtime": "^0.13.7",
     "svelte-routing": "^1.4.2",
-    "workbox-precaching": "^5.1.4"
+    "workbox-precaching": "^5.1.4",
+    "workbox-webpack-plugin": "^5.1.4"
   },
   "scripts": {
     "build": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack",
