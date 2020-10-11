@@ -371,7 +371,7 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
         return false;
     });
     const txErr = tx();
-    const goalsData = userDb.prepare('SELECT k, v FROM meta WHERE k = "retag-beem-token" OR k = "retag-goals"').all();
+    const goalsData = userDb.prepare('SELECT k, v FROM meta WHERE k IN ("retag-beem-token", "retag-goals")').all();
     const beeToken = goalsData.filter(({ k }) => k === "retag-beem-token")[0]?.v;
     const beeGoals = goalsData.filter(({ k }) => k === "retag-goals")[0]?.v;
     if (beeToken && beeGoals) beem.pingsUpdated(pings, beeToken, beeGoals)
