@@ -9,7 +9,7 @@ const fsP = require("fs").promises;
 const crypto = require("crypto");
 const util = require("util");
 
-const beem = require("./beem");
+const beem = require("./beem")(authMiddleware);
 const validate = require("./validate");
 const pushHandler = require("./pushHandler");
 const setCorsHeaders = require("./setCorsHeaders");

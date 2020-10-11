@@ -7,6 +7,7 @@
     import { onMount } from "svelte";
     import { toDurString, updatePint } from "../pint-update.ts";
     import { allPings, putPings } from "../pings.ts";
+    import { beemResync } from "../beem.ts";
     import debounce from "../debounce.ts";
     import config from "../../config.json";
 
@@ -150,6 +151,15 @@
 
     function dbDownload() {
         location.href = `${config["api-server"]}/db`;
+    }
+
+    async function beemResyncClick() {
+        const err = await beemResync();
+        if (err) {
+            alert(err);
+        } else {
+            alert("Started resyncing (it can take a few minutes for the syncing to complete in the background)");
+        }
     }
 </script>
 
@@ -320,6 +330,12 @@
     </div>
     <div>
         <button on:click={dbDownload}>Download SQLite database</button>
+    </div>
+    <div>
+        <button on:click={beemResyncClick}>Resync with Beeminder</button>
+        <div>
+            Ensures Beeminder has all pings over the last 7 days.
+        </div>
     </div>
 
     <h2><label for="theme-dropdown">Theme</label></h2>

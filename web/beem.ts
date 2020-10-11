@@ -60,3 +60,15 @@ export async function prepGoal(name: string) {
     }
     // setting goal hhmmformat -> true, gunits -> "seconds" seems impossible with the API
 }
+
+export async function beemResync() {
+    const token = localStorage["retag-beem-token"];
+    if (!token) return "Not logged in with Beeminder";
+    const url = `${config["api-server"]}/internal/beem/resync`;
+    const res = await fetch(url, {
+        method: "PATCH",
+        credentials: "include",
+    });
+    if (res.status === 204 || res.status === 200) return;
+    return await res.text();
+}
