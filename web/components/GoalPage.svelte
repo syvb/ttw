@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { Link, navigate } from "svelte-routing";
     import GoalSettings from "./GoalSettings.svelte";
+    import { goalsChanged } from "../goals.ts";
 
     let id = (new URLSearchParams(location.search)).get("id");
     let goalDataPromise = window.db.goals.get(id);
@@ -9,6 +10,7 @@
     async function deleteGoal() {
         if (!confirm("Are you sure you want to delete this goal? If you have an associated Beeminder goal, the Beeminder goal won't be deleted.")) return;
         await window.db.goals.delete(id);
+        goalsChanged();
         navigate("/goals");
     }
 </script>

@@ -90,17 +90,21 @@
                     }
                     forcedLocal = false;
                     const crit = getCrit();
-                    return (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit)));
+                    return {
+                        rows: (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit))),
+                        totalUnfiltered: totalUnfiltered + data.pings.length,
+                    };
                 } else if (res.status === 403) {
                     location.href = "/";
                     forcedLocal = false;
-                    return [];
+                    return { rows: [], totalUnfiltered: 0 };
                 } else {
                     alert("Failed to load pings from server. Try again later.");
                 }
             })();
             overallStats = await overallPingStats();
         }
+        console.log(await pingsFetchPromise)
         const { rows, totalUnfiltered: newTotalUnfiltered } = await pingsFetchPromise;
         totalUnfiltered = newTotalUnfiltered;
         rowsTime = rows.reduce((prev, cur) => prev + (cur.interval), 0);

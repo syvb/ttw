@@ -3,6 +3,7 @@
     import { createEventDispatcher } from "svelte";
     import PingSelector from "./PingSelector.svelte";
     import { prepGoal } from "../beem.ts";
+    import { goalsChanged } from "../goals.ts";
     let dispatch = createEventDispatcher();
     export let goal = null;
     let settingsName = (goal?.name) ?? "Goal name";
@@ -27,6 +28,7 @@
     function createGoal() {
         let settings = genObj();
         db.goals.add(settings);
+        goalsChanged();
         if (settingsBeem) prepGoal(settingsBeem);
         origGoalBeem = settingsBeem;
         navigate("/goals");
@@ -34,6 +36,7 @@
     async function updateGoal() {
         let settings = genObj();
         db.goals.update(settings.id, settings);
+        goalsChanged();
         dispatch("update", settings);
         if (settingsBeem && (settingsBeem !== origGoalBeem)) prepGoal(settingsBeem);
         origGoalBeem = settingsBeem;
