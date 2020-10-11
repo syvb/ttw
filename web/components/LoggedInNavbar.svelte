@@ -68,7 +68,6 @@
     nav {
         padding: 8px;
         padding-bottom: 4px;
-        margin-bottom: 4px;
         background: rgb(0, 100, 79);
         color: rgb(199, 241, 234);
     }

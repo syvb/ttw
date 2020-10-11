@@ -23,6 +23,7 @@
     .sync-status-root {
         margin-bottom: 0.25rem;
         margin-left: 8px;
+        margin-top: 8px;
     }
 </style>
 

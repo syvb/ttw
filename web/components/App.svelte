@@ -52,22 +52,19 @@
             <!-- Keep in sync with regex in ServiceWorker -->
             <Route path="/settings">
                 <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
+                <FillPings /><SyncStatus />
                 <Settings />
             </Route>
             <Route path="/">
                 {#if window.loginState !== "out"}
                     <LoggedInNavbar {username} />
-                    <SyncStatus />
-                    <FillPings />
+                    <FillPings /><SyncStatus />
                 {/if}
                 <Home />
             </Route>
             <Route path="/cntpings">
                 <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
+                <FillPings /><SyncStatus />
                 <CntpingsPage />
             </Route>
             <Route path="/welcome">
@@ -78,20 +75,17 @@
             </Route>
             <Route path="/goals">
                 <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
+                <FillPings /><SyncStatus />
                 <GoalsPage />
             </Route>
             <Route path="/goals/info">
                 <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
+                <FillPings /><SyncStatus />
                 <GoalPage />
             </Route>
             <Route path="/goals/new">
                 <LoggedInNavbar {username} />
-                <SyncStatus />
-                <FillPings />
+                <FillPings /><SyncStatus />
                 <NewGoalPage />
             </Route>
             <Route path="/graphs/day-dist">
