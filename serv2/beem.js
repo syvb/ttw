@@ -31,17 +31,19 @@ class BeemCall {
 
 class BeemUpsertPoint extends BeemCall {
     constructor(token, goalId, ping) {
+        super();
         this.goalId = goalId;
         this.ping = ping;
         this.token = token;
     }
     async run() {
-        const requestId = ping.time.toString(36);
-        const comment = `[${requestId}] ${ping.tags.join(" ")}${ping.comment ? (" " + ping.comment) : ""}`;
-        const uri = `${BEEM_URI}/api/v1/users/me/goals/${this.id}/datapoints.json?access_token=${encodeURIComponent(this.token)}&value=${encodeURIComponent((this.ping.interval / 60).toFixed(5))}&timestamp=${encodeURIComponent(this.ping.time)}&comment=${encodeURIComponent(comment)}&requestid=${encodeURIComponent(requestId)}`;
-        await beemEditFetch(this, uri, {
+        const requestId = this.ping.time.toString(36);
+        const comment = `[${requestId}] ${this.ping.tags.join(" ")}${this.ping.comment ? (" " + this.ping.comment) : ""}`;
+        const uri = `${BEEM_URI}/api/v1/users/me/goals/${this.goalId}/datapoints.json?access_token=${encodeURIComponent(this.token)}&value=${encodeURIComponent((this.ping.interval / 60).toFixed(5))}&timestamp=${encodeURIComponent(this.ping.time)}&comment=${encodeURIComponent(comment)}&requestid=${encodeURIComponent(requestId)}`;
+        const editRes = await beemEditFetch(this, uri, {
             method: "POST"
         });
+        console.log(await editRes.json());
     }
 }
 
@@ -105,7 +107,6 @@ module.exports = {
     pingsUpdated: async (pings, token, goalData) => {
         try { goalData = JSON.parse(goalData); } catch (e) { return; }
         let pingsToSend = []; // each ping + goal combo
-        let affectedGoals = [];
         // const pointId = ping.time.toString(36);
         goalData.forEach(goal => {
             if (typeof goal !== "object") return;
@@ -114,8 +115,9 @@ module.exports = {
                 .filter(ping => pingFilter(ping, goal))
                 .map(ping => ({
                     ...ping,
-                    goalId: goal,
+                    goalId: goal.beemGoal,
                 }));
+            pingsToSend = pingsToSend.concat(added);
         });
         if (pingsToSend.length === 0) return;
         pingsToSend.forEach(ping => {
