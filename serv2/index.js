@@ -357,6 +357,7 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
             if (!Array.isArray(ping.tags) || ping.tags.find(tag => typeof tag !== "string") !==  undefined) return "invalid tags";
             if (typeof ping.time !== "number") return "invalid time";
             if (typeof ping.interval !== "number") return "invalid interval";
+            if (ping.time > (Date.now() + 45000)) return "Your clock is ahead, please ensure your system time is valid.";
             stmt.run({
                 tags: ping.tags.join(" "),
                 comment: ping.comment,
