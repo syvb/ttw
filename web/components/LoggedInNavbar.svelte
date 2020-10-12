@@ -4,7 +4,7 @@
     import config from "../../config.json";
     export let username;
     export let url;
-    let homeLink, pingsLink, settingsLink, graphsLink;
+    let homeLink, pingsLink, settingsLink, graphsLink, goalsLink;
     let mounted = false;
 
     function updateBar() {
@@ -24,6 +24,9 @@
                 break;
             case "/graphs":
                 ele = graphsLink; // actually unused
+                break;
+            case "/goals": case "/goals/new": case "/goals/info":
+                ele = goalsLink;
                 break;
         }
         homeLink.classList.remove("loggedinnavbar-active");
@@ -93,6 +96,7 @@
     <a bind:this={homeLink} class="navlink" use:link href="/">Home</a>
     <a bind:this={pingsLink} class="navlink" use:link href="/cntpings">Pings</a>
     <a bind:this={graphsLink} class="navlink" href="/graphs" target="graphs" use:link>Graphs</a>
+    <a bind:this={goalsLink} class="navlink" use:link href="/goals">Goals</a>
     <a bind:this={settingsLink} class="navlink" use:link href="/settings">Settings</a>
     {#if window.loginState === "in"}
         {#if username}

@@ -393,9 +393,5 @@
             </details>
             <button on:click={updatePintClick}>Update</button>
         </div>
-        <div>
-            <h2>Other pages</h2>
-            <Link to="/goals">Goals</Link>
-        </div>
     </details>
 </main>
