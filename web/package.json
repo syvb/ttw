@@ -13,7 +13,7 @@
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "5.0.0-beta.29",
-    "webpack-cli": "^3.3.3",
+    "webpack-cli": "^4.0.0",
     "webpack-dev-server": "^3.7.1",
     "worker-loader": "^3.0.2"
   },
@@ -32,7 +32,7 @@
   },
   "scripts": {
     "build": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack",
-    "start": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack-dev-server -d --host 0.0.0.0",
+    "start": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack serve --host 0.0.0.0",
     "test": "cargo test && wasm-pack test --headless"
   },
   "browserslist": "> 0.25%, not dead"
