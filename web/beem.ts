@@ -72,3 +72,10 @@ export async function beemResync() {
     if (res.status === 204 || res.status === 200) return;
     return await res.text();
 }
+
+export async function allBeemGoals() {
+    const res = await fetch(`https://www.beeminder.com/api/v1/users/me/goals.json?access_token=${localStorage["retag-beem-token"]}`);
+    const goals = await res.json();
+    if (!Array.isArray(goals)) return [];
+    return goals;
+}
