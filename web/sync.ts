@@ -182,6 +182,9 @@ export async function syncPings() {
                 }
                 localStorage["retag-auth"] = "out";
                 location.href = "/";
+            } else if (res.status === 400) {
+                const text = await res.text();
+                alert(text);
             }
             // once the server sends back the pings to us they will be marked as synced
         }
