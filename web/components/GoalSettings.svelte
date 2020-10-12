@@ -4,6 +4,7 @@
     import PingSelector from "./PingSelector.svelte";
     import { prepGoal } from "../beem.ts";
     import { goalsChanged } from "../goals.ts";
+    import { beemResync } from "../beem.ts";
     let dispatch = createEventDispatcher();
     export let goal = null;
     let settingsName = (goal?.name) ?? "Goal name";
@@ -25,11 +26,16 @@
             beemGoal: settingsBeem,
         };
     }
-    function createGoal() {
+    async function createGoal() {
         let settings = genObj();
         db.goals.add(settings);
         goalsChanged();
-        if (settingsBeem) prepGoal(settingsBeem);
+        if (settingsBeem) {
+            await Promise.all([
+                prepGoal(settingsBeem),
+                beemResync(),
+            ]);
+        }
         origGoalBeem = settingsBeem;
         navigate("/goals");
     }
@@ -38,7 +44,12 @@
         db.goals.update(settings.id, settings);
         goalsChanged();
         dispatch("update", settings);
-        if (settingsBeem && (settingsBeem !== origGoalBeem)) prepGoal(settingsBeem);
+        if (settingsBeem && (settingsBeem !== origGoalBeem)) {
+            await Promise.all([
+                prepGoal(settingsBeem),
+                beemResync(),
+            ]);
+        }
         origGoalBeem = settingsBeem;
     }
 </script>
