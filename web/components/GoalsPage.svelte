@@ -70,6 +70,7 @@
         margin-top: 2.5%;
         margin-left: 2.5%;
         background: #d1d9e6;
+        text-align: center;
     }
 
     .goal-img > img {
