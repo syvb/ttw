@@ -215,7 +215,7 @@
             <span class="warning">Warning</span>:
             Unable to connect to the server to download latest pings.
             The displayed pings might be out of sync.
-            This is probably due to a lack of connection to the Internet.
+            Make sure you're connected to the Internet.
         </div>
     {/if}
     {#if curPaginating && !forcedLocal}
