@@ -108,7 +108,7 @@
             Loading
         {:then goals}
             {#each goals as goal}
-                <div on:click={toGoal(goal.id)} class="goal">
+                <div on:click={toGoal(goal.goal.id)} class="goal">
                     <div class="goal-img">
                         {#await goal.imgPromise}
                             ...
