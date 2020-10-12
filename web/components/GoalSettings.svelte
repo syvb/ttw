@@ -54,7 +54,7 @@
     }
 </script>
 
-<div>
+<main id="maincontent">
     <div>
         <label for="goal-settings-name">Name: </label>
         <input type="text" id="goal-settings-name" bind:value={settingsName}>
@@ -73,4 +73,4 @@
         <!-- existing goal -->
         <button on:click={updateGoal}>Update goal</button>
     {/if}
-</div>
+</main>
