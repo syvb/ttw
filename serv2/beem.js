@@ -34,6 +34,10 @@ class BeemCall {
     }
 }
 
+function intervalToTime(int) {
+    return int / 3600; // seconds -> hours
+}
+
 class BeemUpsertPoint extends BeemCall {
     constructor(token, goalId, ping, uid) {
         super();
@@ -45,7 +49,7 @@ class BeemUpsertPoint extends BeemCall {
     async run() {
         const requestId = this.ping.time.toString(36);
         const comment = `${this.ping.tags.join(" ")}${this.ping.comment ? (" " + this.ping.comment) : ""} [${this.uid.toString(16)}]`;
-        const uri = `${BEEM_URI}/api/v1/users/me/goals/${this.goalId}/datapoints.json?access_token=${encodeURIComponent(this.token)}&value=${encodeURIComponent((this.ping.interval / 60).toFixed(5))}&timestamp=${encodeURIComponent(this.ping.time)}&comment=${encodeURIComponent(comment)}&requestid=${encodeURIComponent(requestId)}`;
+        const uri = `${BEEM_URI}/api/v1/users/me/goals/${this.goalId}/datapoints.json?access_token=${encodeURIComponent(this.token)}&value=${encodeURIComponent((intervalToTime(this.ping.interval)).toFixed(5))}&timestamp=${encodeURIComponent(this.ping.time)}&comment=${encodeURIComponent(comment)}&requestid=${encodeURIComponent(requestId)}`;
         const editRes = await beemEditFetch(this, uri, {
             method: "POST"
         });
@@ -65,7 +69,7 @@ class BeemBulkUpsertPoint extends BeemCall {
             const requestId = ping.time.toString(36);
             const comment = `${ping.tags.join(" ")}${ping.comment ? (" " + ping.comment) : ""} [${this.uid.toString(16)}]`;
             return {
-                value: ping.interval / 60,
+                value: intervalToTime(ping.interval),
                 timestamp: ping.time,
                 comment,
                 requestid: requestId,

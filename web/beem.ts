@@ -45,7 +45,7 @@ export async function prepGoal(name: string) {
     if (!token) throw new Error("no beem token");
     // datasource -> integration name
     name = name.toLowerCase().trim();
-    const updateUri = `${BEEM_URI}/api/v1/users/me/goals/${name}.json?access_token=${token}&datasource=${encodeURIComponent(config["beem-name"])}&hhmmformat=1&gunits=minutes`;
+    const updateUri = `${BEEM_URI}/api/v1/users/me/goals/${name}.json?access_token=${token}&datasource=${encodeURIComponent(config["beem-name"])}&hhmmformat=1&gunits=hours`;
     const updateRes = await fetch(updateUri, {
         method: "PUT",
     });
