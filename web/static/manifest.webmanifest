@@ -13,12 +13,22 @@
         {
             "name": "Dashboard",
             "url": "/",
-            "description": "Go to your TagTime Web dashboard."
+            "description": "Go to your TagTime Web dashboard"
         },
         {
             "name": "Settings",
             "url": "/settings",
-            "description": "Manage your TagTime Web settings."
+            "description": "Manage your TagTime Web settings"
+        },
+        {
+            "name": "Ping history",
+            "url": "/cntpings",
+            "description": "Manage historical pings"
+        },
+        {
+            "name": "Graphs",
+            "url": "/graphs",
+            "description": "View graphs generated from your pings"
         }
     ],
     "icons": [
