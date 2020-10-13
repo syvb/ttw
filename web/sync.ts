@@ -62,6 +62,7 @@ async function loadConfigData(json: ConfigData) {
         try { goalsJson = JSON.parse(goals); } catch (e) { goalsJson = []; }
         await window.db.goals.clear();
         await window.db.goals.bulkAdd(goalsJson);
+        localStorage["retag-goals"] = goals;
     }
     const afkTags = json["retag-afk-tags"] ?? "afk";
     localStorage["retag-afk-tags"] = afkTags;
