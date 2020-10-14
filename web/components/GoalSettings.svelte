@@ -29,11 +29,11 @@
     async function createGoal() {
         let settings = genObj();
         db.goals.add(settings);
-        goalsChanged();
+        const goalsChangedPromise = goalsChanged();
         if (settingsBeem) {
             await Promise.all([
                 prepGoal(settingsBeem),
-                beemResync(),
+                goalsChangedPromise.then(() => beemResync()),
             ]);
         }
         origGoalBeem = settingsBeem;
@@ -42,12 +42,12 @@
     async function updateGoal() {
         let settings = genObj();
         db.goals.update(settings.id, settings);
-        goalsChanged();
+        const goalsChangedPromise = goalsChanged();
         dispatch("update", settings);
         if (settingsBeem && (settingsBeem !== origGoalBeem)) {
             await Promise.all([
                 prepGoal(settingsBeem),
-                beemResync(),
+                goalsChangedPromise.then(() => beemResync()),
             ]);
         }
         origGoalBeem = settingsBeem;
