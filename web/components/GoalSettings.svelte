@@ -7,12 +7,15 @@
     import { beemResync } from "../beem.ts";
     let dispatch = createEventDispatcher();
     export let goal = null;
-    let settingsName = (goal?.name) ?? "Goal name";
-    let settingsType = (goal?.type) ?? "max";
-    let settingsIncludedTags = (goal?.includedTags) ?? [];
-    let settingsExcludedTags = (goal?.excludedTags) ?? [];
-    let settingsIncludeType = (goal?.includeType) ?? "some";
-    let settingsBeem = (goal?.beemGoal) ?? "";
+    let settingsName, settingsType, settingsIncludedTags, settingsExcludedTags, settingsIncludeType, settingsBeem;
+    if (goal) {
+        settingsName = goal.name || "Goal name";
+        settingsType = goal.type || "max";
+        settingsIncludedTags = goal.includedTags || [];
+        settingsExcludedTags = goal.excludedTags || [];
+        settingsIncludeType = goal.includeType || "some";
+        settingsBeem = goal.beemGoal || "";
+    }
     let origGoalBeem = settingsBeem;
     function genObj() {
         return {
