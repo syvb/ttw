@@ -15,7 +15,7 @@
     "webpack": "5.0.0-beta.29",
     "webpack-cli": "^4.0.0",
     "webpack-dev-server": "^3.7.1",
-    "worker-loader": "^3.0.2"
+    "worker-loader": "^3.0.5"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
   "dependencies": {
