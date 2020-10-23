@@ -247,7 +247,7 @@
                 And a &ldquo;broken chord&rdquo; is a chord but broken up and maybe with some notes repeated.
                 Audio is from <a href="https://cynicmusic.com/" rel="noopener">The Cynic Project</a>.
             {:else if pingNoise === "d2"}
-                Sounds like a doorbell. Ding-dong! Audio is from
+                Sounds like a doorbell. Ding-dong! Very confusing if this device is near a door. Audio is from
                 <a href="https://freesound.org/people/MatthewWong/" rel="noopener" title="Don't get too excited about clicking this link. MatthewWong's only upload to freesound.org is this doorbell sound. Which you've already heard if you're hovering over this link.">MatthewWong</a>.
             {:else if pingNoise === "d3"}
                 Sounds a bit futuristic (but not too futuristic).
