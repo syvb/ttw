@@ -62,11 +62,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.worker\.(j|t)s$/,
-                use: { loader: 'worker-loader' },
-            },
-            {
-                test: /\.m?(j|t)sx?$/,
+                test: /\.(tsx?|mjs)?$/,
                 use: "ts-loader",
                 exclude: /node_modules/,
             },

@@ -12,10 +12,9 @@
     "svelte-loader": "smittyvb/svelte-loader#update-virtual-modules",
     "ts-loader": "^8.0.6",
     "typescript": "^4.0.3",
-    "webpack": "5.0.0-beta.29",
+    "webpack": "^5",
     "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.7.1",
-    "worker-loader": "^3.0.5"
+    "webpack-dev-server": "^3.7.1"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
   "dependencies": {
