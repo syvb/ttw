@@ -66,7 +66,7 @@ module.exports = {
                 use: { loader: 'worker-loader' },
             },
             {
-                test: /\.tsx?$/,
+                test: /\.m?(j|t)sx?$/,
                 use: "ts-loader",
                 exclude: /node_modules/,
             },
