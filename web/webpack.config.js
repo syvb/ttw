@@ -23,6 +23,7 @@ module.exports = {
         path: dist,
         filename: "[name].[contenthash].js",
         chunkFilename: "js/[name].[chunkhash].js",
+        publicPath: "/",
     },
     devServer: {
         contentBase: dist,
