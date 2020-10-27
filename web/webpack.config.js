@@ -101,7 +101,7 @@ module.exports = {
                 ],
             },
             {
-                test: /\.m?js/,
+                test: /node_modules\/svelte\/.*\.mjs$/,
                 resolve: {
                     fullySpecified: false
                 }
