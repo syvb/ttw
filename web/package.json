@@ -1,6 +1,5 @@
 {
   "devDependencies": {
-    "@types/gapi": "^0.0.39",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
