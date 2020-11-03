@@ -15,6 +15,7 @@
         curInput = newCur;
         suggestions = [];
     };
+    export let autofocus = false;
 
     let dispatch = createEventDispatcher();
     let completedTags = [];
@@ -275,7 +276,9 @@
                 {tag}<span class="ws">{"\t "}</span>
             </span>
         {/each}
-        <input type="text" class="rest-tags" bind:value={curInput} bind:this={restInputEle} on:input={restInput} on:keydown={restKeydown}>
+        <!-- ignoring a11y warning here since it doesn't seem to be much of an issue in this case -->
+        <!-- svelte-ignore a11y-autofocus -->
+        <input type="text" class="rest-tags" bind:value={curInput} bind:this={restInputEle} on:input={restInput} on:keydown={restKeydown} {autofocus}>
     </div>
     {#if suggestions.length > 0}
         <ul class="autocomplete">

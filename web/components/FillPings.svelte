@@ -123,7 +123,7 @@
                 </div>
             {/if}
             <TaggingHelp />
-            <TagEntry lastTags={lastPingTags} bind:tags={onePingTags} on:inputComplete={setTags} class="ping-input one-ping" />
+            <TagEntry lastTags={lastPingTags} bind:tags={onePingTags} on:inputComplete={setTags} class="ping-input one-ping" autofocus />
         {:else if pending.length > 0}
             You have multiple pending pings, please fill them in.
             {#if lastPingTags}
