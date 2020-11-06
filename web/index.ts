@@ -70,6 +70,8 @@ window.supportsAutoplay = (async () => {
 import { checkLoginStateOnInit } from "./sync.ts"; // has to be imported after DB is setup
 window.recheckPending = () => {}; // ignore calls to recheck pending until ping checking is setup
 (async () => {
+    if (location.search === "?prolongLoading") await new Promise(resolve => setTimeout(resolve, 3000));
+
     beemLoadCheck(); // async, but start it now (usually does nothing)
 
     window.pingsPending = new Uint32Array([]);

@@ -34,11 +34,12 @@
             if ((__theme === "default") && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) __theme = "dark";
             if (__theme === "default") __theme = "light";
             document.body.classList.add(__theme);
+            window.loadStart = Date.now();
         </script>
         <noscript>
             Sorry, Javascript is required to use TagTime Web.
         </noscript>
-        <div id="loading-msg" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:100vh;background-color:white;">
+        <div id="loading-msg" style="display: flex;flex-direction: column;justify-content: center;align-items: center;text-align: center;min-height: 100vh;background-color: white;position: absolute;width: 100vw;height: 10vh;pointer-events: none;transition: 0.2s opacity;opacity: 1;">
             <!-- misc/loader/clock-min.svg -->
             <svg style="width:10rem;height:10rem;max-width:90vw;max-height:90vh;display:block;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="946 946 108 108"><defs/><circle cx="1000" cy="1000" r="50" fill="#fff" stroke="#000" stroke-width="8"/><circle cx="1000" cy="1000" r="6"/><svg x="946" y="946"><path fill="none" stroke="#000" stroke-width="6" d="M53.5 53.5V14" class="loader-hand" style="animation:rot 2s linear infinite"/><path fill="none" stroke="#000" stroke-width="6" d="M53.5 53.5H82" class="loader-hand" style="animation:rot 6.5s linear infinite"/></svg><style>.loader-hand{transform-origin:50% 50%}@keyframes rot{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style></svg>
             <span style="text-align:center;font-size:1.8rem;margin-top: 0.4rem;color:black;">Loading</span>

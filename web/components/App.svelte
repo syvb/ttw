@@ -20,7 +20,16 @@
     export let url = "";
     export let username;
     export let buildInfo;
-    document.getElementById("loading-msg").style.display = "none";
+    const loadTime = Date.now() - (window.loadStart || 0);
+    console.log("loaded in", loadTime);
+    if (loadTime < 300) {
+        // make transition faster if we load really quick
+        // document.getElementById("loading-msg").style.transition = "0.2s opacity";
+    }
+    document.getElementById("loading-msg").style.opacity = 0;
+    setTimeout(() => {
+        document.getElementById("loading-msg").style.display = "none";
+    }, 350);
 </script>
 
 <style>
