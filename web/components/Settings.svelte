@@ -221,9 +221,11 @@
 <main id="maincontent">
     <h2>Settings</h2>
 
-    <div>
-        Note: some settings cannot be changed while offline
-    </div>
+    {#if !navigator.onLine}
+        <div>
+            Note: some settings cannot be changed while offline
+        </div>
+    {/if}
     <h3>Ping notifications</h3>
     <div>
         <NotificationsPerm />
