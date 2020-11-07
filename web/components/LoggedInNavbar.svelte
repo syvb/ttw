@@ -70,7 +70,8 @@
 
     nav {
         padding: 8px;
-        padding-bottom: 4px;
+        padding-bottom: 10px;
+        padding-right: 0.5rem;
         background: rgb(0, 100, 79);
         color: rgb(199, 241, 234);
     }
@@ -86,6 +87,10 @@
         /* to override the more specific .svelte-blah.navbar */
         color: white !important;
     }
+
+    .auth-info {
+        float: right;
+    }
 </style>
 
 <a class="skip-link" href="#maincontent">
@@ -99,11 +104,13 @@
     <a bind:this={goalsLink} class="navlink" use:link href="/goals">Goals</a>
     <a bind:this={settingsLink} class="navlink" use:link href="/settings">Settings</a>
     {#if window.loginState === "in"}
-        {#if username}
-            Logged in as <span class="username">{username}</span>.
-        {/if}
-        <form class="signout-form" action={`${config["api-server"]}/logout`} method="POST">
-            <input type="submit" value="Sign out">
-        </form>
+        <span class="auth-info">
+            {#if username}
+                Logged in as <span class="username">{username}</span>.
+            {/if}
+            <form class="signout-form" action={`${config["api-server"]}/logout`} method="POST">
+                <input type="submit" value="Sign out">
+            </form>
+        </span>
     {/if}
 </nav>
