@@ -7,7 +7,7 @@
     "html-loader": "^1.3.1",
     "html-webpack-plugin": "^4.4.1",
     "style-loader": "^0.23.1",
-    "svelte": "^3.29.4",
+    "svelte": "^3.29.6",
     "svelte-loader": "smittyvb/svelte-loader#update-virtual-modules",
     "ts-loader": "^8.0.8",
     "typescript": "^4.0.5",
