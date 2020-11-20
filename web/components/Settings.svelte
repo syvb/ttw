@@ -296,7 +296,7 @@
         </div>
     </div>
     <div>
-        Default tags when <abbr title="Away From Keyboard">AFK</abbr>:
+        Default tags when multiple pending:
         <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
     </div>
 
