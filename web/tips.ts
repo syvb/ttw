@@ -9,7 +9,7 @@ You can switch between dark mode and light mode in Settings.
 You can change the default AFK tags in settings.
 Tags are converted to lowercase.
 On most recent browsers, you can use TagTime Web offline.
-You can export your tags as a SQLite database in Settings.
+You can export your tags as a SQLite database in Settings, and run SQL queries against it.
 You can enable notifications from Settings to get a push notification when it's ping time.
 When entering tags, you can click on a tag to remove it.
 You can connect TagTime Web to Beeminder in the Goals tab.
