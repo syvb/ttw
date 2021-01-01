@@ -1,4 +1,5 @@
 <script>
+    import { STR } from "../strings.ts";
     import { Link } from "svelte-routing";
     import NotificationsPerm from "./NotificationsPerm.svelte";
     import TagEntry from "./TagEntry.svelte";
@@ -289,7 +290,7 @@
             {/if}
         </div>
         <div>
-            Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
+            ${STR.reloadNote}
         </div>
         <div>
             <button on:click={updatePintClick}>Update</button>
@@ -308,7 +309,7 @@
             This overides your interval, seed (in advanced settings), and algorithm (in advanced settings) to the universal schedule with just one click.
         </div>
         <div>
-            Note: To prevent incorrect ping timing, reload all open TagTime Web tabs after changing this setting (while connected to the Internet).
+            ${STR.reloadNote}
         </div>
         <div>
             <button on:click={useUnivSched}>

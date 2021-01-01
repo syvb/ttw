@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -5,6 +6,8 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
 const webpack = require("webpack");
+
+const config = require("../config.json");
 
 const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
@@ -32,7 +35,7 @@ module.exports = {
         new CleanWebpackPlugin(),
 
         new HtmlWebpackPlugin({
-            template: __dirname + "/index.html",
+            templateContent: fs.readFileSync(__dirname + "/index.html", "utf-8").replaceAll("APPNAME", config["app-name"]),
         }),
 
         new CopyPlugin({

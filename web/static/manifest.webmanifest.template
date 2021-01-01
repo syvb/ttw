@@ -1,8 +1,8 @@
 {
-    "name": "TagTime Web",
-    "short_name": "TagTime",
+    "name": "APPNAME",
+    "short_name": "APPNAME",
     "categories": ["time", "productivity"],
-    "description": "TagTime Web is a time-tracking web app. At random points throughout the day, it asks you what you are doing.",
+    "description": "It's a time-tracking web app. At random points throughout the day, it asks you what you are doing.",
     "dir": "ltr",
     "lang": "en",
     "start_url": "/",
@@ -13,12 +13,12 @@
         {
             "name": "Dashboard",
             "url": "/",
-            "description": "Go to your TagTime Web dashboard"
+            "description": "Go to your dashboard"
         },
         {
             "name": "Settings",
             "url": "/settings",
-            "description": "Manage your TagTime Web settings"
+            "description": "Manage your settings"
         },
         {
             "name": "Ping history",

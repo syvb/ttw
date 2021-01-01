@@ -1,6 +1,9 @@
+// @ts-ignore
+import { STR } from "./strings.ts";
+
 if (top !== self) {
     try { top.location.replace(self.location.href); } catch (e) {}
-    document.body.innerHTML = `<a href="${location.href}" target="_top">TagTime Web</a>`
+    document.body.innerHTML = `<a href="${location.href}" target="_top">${STR.appName}</a>`
     throw new Error("throwing error to prevent code exec when framed");
 }
 

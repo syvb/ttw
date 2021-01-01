@@ -1,5 +1,6 @@
 <script>
     import { Link } from "svelte-routing";
+    import { STR } from "../strings.ts";
     if (localStorage["retag-seen-welcome"] === "1") {
         location.replace("/");
     } else {
@@ -14,7 +15,7 @@
 </style>
 
 <main id="maincontent">
-    <h1>Welcome to TagTime Web!</h1>
+    <h1>${STR.welcome}</h1>
     <p>
         Thanks for signing up!
     </p>
