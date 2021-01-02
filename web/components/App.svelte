@@ -129,7 +129,7 @@
         </div>
         <footer>
             {buildInfo} |
-            <a href="/disclaimer.txt">Attribution notices</a>
+            <a href="/disclaimer.txt">Legal notices</a>
             {@html config["extra-footer-text"] || ""}
         </footer>
     </Router>
