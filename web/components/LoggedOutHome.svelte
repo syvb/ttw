@@ -49,7 +49,7 @@
     }
 </style>
 
-<h1>${STR.appName}</h1>
+<h1>{STR.appName}</h1>
 
 <div class="tagline">
     Time tracking that samples you randomly

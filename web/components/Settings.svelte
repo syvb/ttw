@@ -290,7 +290,7 @@
             {/if}
         </div>
         <div>
-            ${STR.reloadNote}
+            {STR.reloadNote}
         </div>
         <div>
             <button on:click={updatePintClick}>Update</button>
@@ -309,7 +309,7 @@
             This overides your interval, seed (in advanced settings), and algorithm (in advanced settings) to the universal schedule with just one click.
         </div>
         <div>
-            ${STR.reloadNote}
+            {STR.reloadNote}
         </div>
         <div>
             <button on:click={useUnivSched}>

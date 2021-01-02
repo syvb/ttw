@@ -15,7 +15,7 @@
 </style>
 
 <main id="maincontent">
-    <h1>${STR.welcome}</h1>
+    <h1>{STR.welcome}</h1>
     <p>
         Thanks for signing up!
     </p>
