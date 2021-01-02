@@ -15,7 +15,7 @@
         color: rgb(133, 6, 6);
     }
     .statcircle-pending {
-        color: rgb(156, 156, 0);
+        color: rgb(198, 157, 21);
     }
     .statcircle-synced {
         color: rgb(0, 104, 0);
