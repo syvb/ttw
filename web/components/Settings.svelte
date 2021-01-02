@@ -341,14 +341,14 @@
         </div>
     </div>
 
-    <h2><label for="theme-dropdown">Theme</label></h2>
+    <h3><label for="theme-dropdown">Theme</label></h3>
     <select id="theme-dropdown" on:input={updateTheme}>
         <option selected={theme === "default"} value="default">Browser default</option>
         <option selected={theme === "dark"} value="dark">Dark</option>
         <option selected={theme === "light"} value="light">Light</option>
     </select>
 
-    <h2>Account</h2>
+    <h3>Account</h3>
     <div>
         <a href={config["api-server"] + "/internal/changepw"}>Change password</a>
     </div>
