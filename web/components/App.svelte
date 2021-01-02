@@ -45,12 +45,22 @@
         background: black;
         color: white;
     }
+    :global(.app-root) {
+        /* creates a new context that top/bottom/left/right is evaluated to */
+        position: relative;
+        /* just enough room left for the footer */
+        min-height: calc(100vh - 4rem - 1px);
+        padding-bottom: 1rem;
+    }
     footer {
         margin-left: 8px;
         margin-right: 8px;
         margin-top: 1rem;
         border-top: 2px solid gray;
         padding-top: 1rem;
+        position: absolute;
+        bottom: -3rem;
+        padding-bottom: 1rem;
     }
 </style>
 
