@@ -41,10 +41,11 @@ try {
 } catch (e) {}
 const globalPreped = {
     emailCheck: globalDb.prepare("SELECT 1 FROM emails WHERE LOWER(email) = LOWER(?) AND verified = 1 LIMIT 1"),
-    usernameCheck: globalDb.prepare("SELECT 1 FROM users WHERE username = ? LIMIT 1"),
+    usernameCheck: globalDb.prepare("SELECT id FROM users WHERE username = ? LIMIT 1"),
     register: globalDb.prepare("INSERT INTO users (username, pw, register_date, plan) VALUES (@username, @pw, @register_date, 1)"),
     registerEmail: globalDb.prepare("INSERT INTO emails (user_id, email, token, verified) VALUES (@user_id, @email, @token, 0)"),
-    login: globalDb.prepare("SELECT id, pw FROM users WHERE username = ?"),
+    // it used to be possible to register multiple accounts with the same name
+    login: globalDb.prepare("SELECT id, pw FROM users WHERE username = ? ORDER BY id LIMIT 1"),
     changePw: globalDb.prepare("UPDATE users SET pw = @pw WHERE id = @uid"),
     uidUsername: globalDb.prepare("SELECT username FROM users WHERE id = ?"),
     registerTx: globalDb.transaction((emailToken, hashedPw, email, username) => {
