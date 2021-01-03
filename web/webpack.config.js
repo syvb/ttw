@@ -35,7 +35,7 @@ module.exports = {
         new CleanWebpackPlugin(),
 
         new HtmlWebpackPlugin({
-            templateContent: fs.readFileSync(__dirname + "/index.html", "utf-8").replaceAll("APPNAME", config["app-name"]),
+            templateContent: fs.readFileSync(__dirname + "/index.html", "utf-8").replace(/APPNAME/g, config["app-name"]),
         }),
 
         new CopyPlugin({
