@@ -24,7 +24,6 @@ export default function onSecond(time: number, cb: () => void) {
         cb,
     });
     let timeUntilCallback = Math.ceil(time - Date.now());
-    console.log(timeUntilCallback)
     setTimeout(checkCallbacks, timeUntilCallback);
     checkCallbacks();
 }
