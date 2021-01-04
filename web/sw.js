@@ -39,6 +39,9 @@ self.addEventListener("pushsubscriptionchange", function (event) {
 
 async function handleNotificationClick() {
     console.log("Notification clicked");
+    if (!clients.matchAll) {
+        console.log("but we don't support matchAll so not focusing");
+    }
     const clients = await self.clients.matchAll({ includeUncontrolled: true, type: "window" });
     if (clients.length > 0) {
         clients[0].focus();
