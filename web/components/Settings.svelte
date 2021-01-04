@@ -267,7 +267,7 @@
             {#await window.supportsAutoplay then supported}
                 {#if !supported && (pingNoise !== "n")}
                     <div class="autoplay-warning">
-                        Note: Your browser might not support playing ping noises in some circumstances.
+                        Note: Your browser doesn't support automatically playing audio. (it might be that you need to tap on the page before audio can play)
                     </div>
                 {/if}
             {/await}
