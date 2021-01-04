@@ -2,7 +2,6 @@ import { precacheAndRoute } from "workbox-precaching";
 import { subWithReg } from "./push.ts";
 import "./init-db.ts";
 import { latestPing } from "./pings.ts";
-import "regenerator-runtime";
 
 const manifest = self.__WB_MANIFEST.filter(page => !page.url.includes("logo/") && !page.url.includes(".git") && !page.url.includes("robots.txt") && !page.url.includes("stackedit.css") && !page.url.includes(".png") && !page.url.includes("disclaimer.txt"));
 precacheAndRoute(

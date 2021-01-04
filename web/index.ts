@@ -21,7 +21,6 @@ import "./init-db.ts";
 import { latestPing } from "./pings.ts";
 // @ts-ignore
 import { beemLoadCheck } from "./beem.ts";
-import "regenerator-runtime";
 
 declare global {
     interface Window {
