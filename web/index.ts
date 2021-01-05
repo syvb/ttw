@@ -7,8 +7,7 @@ if (top !== self) {
     throw new Error("throwing error to prevent code exec when framed");
 }
 
-// @ts-ignore
-const taglogicPromise = import("./pkg/taglogic.js");
+const taglogicPromise = require("./pkg/taglogic");
 // @ts-ignore
 import App from "./components/App.svelte";
 // @ts-ignore
