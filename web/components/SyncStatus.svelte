@@ -1,8 +1,10 @@
 <script>
-    let anyPendingSync = false;
+    if (window.anyPendingSync === undefined) window.anyPendingSync = false;
+    let pending = window.anyPendingSync;
     function pingsPendingSyncChange(e) {
         console.log("Any pending?", e.detail.anyPending);
-        anyPendingSync = e.detail.anyPending;
+        window.anyPendingSync = e.detail.anyPending;
+        pending = window.anyPendingSync;
     }
 
     let online = navigator.onLine;
@@ -27,13 +29,13 @@
 <span class="sync-status-root">
     <span
         class="statcircle"
-        class:statcircle-offline={!online && anyPendingSync}
-        class:statcircle-pending={online && anyPendingSync}
-        class:statcircle-synced={!anyPendingSync}
-    >⬤</span>
-    {#if !online && anyPendingSync}
+        class:statcircle-offline={!online && pending}
+        class:statcircle-pending={online && pending}
+        class:statcircle-synced={!pending}
+    ></span>
+    {#if !online && pending}
         Offline
-    {:else if online && anyPendingSync}
+    {:else if online && pending}
         Pending sync...
     {:else}
         Synced
