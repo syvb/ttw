@@ -13,7 +13,7 @@
     "typescript": "^4.0.5",
     "webpack": "^5",
     "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.7.1",
+    "webpack-dev-server": "^3.11.1",
     "worker-loader": "^3.0.5"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
