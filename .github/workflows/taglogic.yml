@@ -16,7 +16,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -27,7 +27,7 @@ jobs:
 
       - name: Run cargo test
         # fork that supports working-directory
-        uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
+        uses: marcopolo/cargo#a527bf4d534717ff4424a84446c5d710f8833139
         working-directory: taglogic
         with:
           command: test
@@ -48,7 +48,7 @@ jobs:
           components: rustfmt
 
       - name: Run cargo fmt
-        uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
+        uses: marcopolo/cargo#a527bf4d534717ff4424a84446c5d710f8833139
         working-directory: taglogic
         with:
           command: fmt
