@@ -1,0 +1,55 @@
+on: [push, pull_request]
+
+name: Build/test taglogic
+
+jobs:
+  test:
+    name: taxlogic tests (no WASM)
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+
+      - run: cd taglogic
+
+      - name: Run cargo test
+        # fork that supports working-directory
+        uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
+        with:
+          command: test
+          working-directory: taglogic
+
+  formatted:
+    name: Formatted with rustfmt
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt
+
+      - name: Run cargo fmt
+        uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
+        with:
+          working-directory: taglogic
+          command: fmt
+          args: --all -- --check

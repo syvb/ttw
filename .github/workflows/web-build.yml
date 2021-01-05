@@ -1,0 +1,37 @@
+on: [push, pull_request]
+
+name: Build frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node: [ '10', '12', '14' ]
+    name: Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Install wasm-pack
+        # fork that supports working-directory
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: wasm-pack
+      - run: cp config.example.json config.json
+      - name: Install node dependencies
+        run: yarn
+        working-directory: web
+      - name: Build
+        run: NODE_ENV=production yarn build
+        working-directory: web
