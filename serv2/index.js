@@ -8,6 +8,7 @@ const fs = require("fs");
 const fsP = require("fs").promises;
 const crypto = require("crypto");
 const util = require("util");
+const https = require("https");
 
 const beem = require("./beem")(authMiddleware);
 const validate = require("./validate");
@@ -498,4 +499,17 @@ app.use("/internal/push", pushHandler(globalDb));
 
 app.use("/internal/beem", beem.router);
 
-app.listen(config["api-listen-port"]);
+
+if (config["https-crt"]) {
+    const httpsConfig = {
+        key: fs.readFileSync(config["https-key"]),
+        cert: fs.readFileSync(config["https-crt"]),
+    };
+    if (config["https-ca"]) {
+        httpsConfig.ca = fs.readFileSync(config["https-ca"]);
+    }
+    const server = https.createServer(httpsConfig, app);
+    server.listen(config["api-listen-port"]);
+} else {
+    app.listen(config["api-listen-port"]);
+}
