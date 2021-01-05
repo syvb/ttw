@@ -5,7 +5,7 @@
     "css-loader": "^5.0.1",
     "file-loader": "^6.2.0",
     "html-loader": "^1.3.1",
-    "html-webpack-plugin": "^4.4.1",
+    "html-webpack-plugin": "^4.5.1",
     "style-loader": "^0.23.1",
     "svelte": "^3.29.7",
     "svelte-loader": "smittyvb/svelte-loader#update-virtual-modules",
