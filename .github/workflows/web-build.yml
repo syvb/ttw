@@ -26,7 +26,8 @@ jobs:
         # fork that supports working-directory
         uses: actions-rs/cargo@v1
         with:
-          command: install wasm-pack
+          command: install
+          args: wasm-pack
       - run: cp config.example.json config.json
       - name: Install node dependencies
         run: yarn
