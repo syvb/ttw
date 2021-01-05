@@ -13,14 +13,22 @@
 </script>
 
 <style>
+    .statcircle {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        position: relative;
+        top: 0.2rem;
+    }
     .statcircle-offline {
-        color: #f30000;
+        background: #f30000;
     }
     .statcircle-pending {
-        color: #fdce34;
+        background: #fdce34;
     }
     .statcircle-synced {
-        color: #09da00;
+        background: #09da00;
     }
 </style>
 
@@ -32,7 +40,7 @@
         class:statcircle-offline={!online && pending}
         class:statcircle-pending={online && pending}
         class:statcircle-synced={!pending}
-    ></span>
+    > </span>
     {#if !online && pending}
         Offline
     {:else if online && pending}
