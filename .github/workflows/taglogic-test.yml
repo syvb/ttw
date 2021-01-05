@@ -27,5 +27,6 @@ jobs:
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
+        working-directory: taglogic
         with:
           command: test

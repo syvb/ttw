@@ -16,8 +16,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - run: cd web
       - name: Install node dependencies
         run: yarn
+        working-directory: web
       - name: Build
         run: NODE_ENV=production yarn build
+        working-directory: web
