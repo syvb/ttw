@@ -24,7 +24,7 @@
     "humanize-duration": "^3.23.1",
     "js-xxhash": "^1.0.4",
     "moment": "^2.29.1",
-    "svelte-routing": "^1.4.2",
+    "svelte-routing": "^1.5.0",
     "workbox-precaching": "^5.1.4",
     "workbox-webpack-plugin": "^5.1.4"
   },
