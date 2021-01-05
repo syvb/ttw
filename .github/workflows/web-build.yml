@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+      - run: cp config.example.json config.json
       - name: Install node dependencies
         run: yarn
         working-directory: web
