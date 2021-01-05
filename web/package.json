@@ -13,7 +13,7 @@
     "typescript": "^4.0.5",
     "webpack": "^5",
     "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.7.1",
+    "webpack-dev-server": "^3.11.1",
     "worker-loader": "^3.0.5"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
@@ -24,7 +24,7 @@
     "humanize-duration": "^3.23.1",
     "js-xxhash": "^1.0.4",
     "moment": "^2.29.1",
-    "svelte-routing": "^1.4.2",
+    "svelte-routing": "^1.5.0",
     "workbox-precaching": "^5.1.4",
     "workbox-webpack-plugin": "^5.1.4"
   },
