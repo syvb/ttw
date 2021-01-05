@@ -2,15 +2,13 @@
     import { Router, Link, Route } from "svelte-routing";
     import Home from "./Home.svelte";
     import Settings from "./Settings.svelte";
-    import FillPings from "./FillPings.svelte";
     import CntpingsPage from "./CntpingsPage.svelte";
     import WelcomePage from "./WelcomePage.svelte";
     import GoalsPage from "./GoalsPage.svelte";
     import GoalPage from "./GoalPage.svelte";
     import NewGoalPage from "./NewGoalPage.svelte";
-    import LoggedInNavbar from "./LoggedInNavbar.svelte";
+    import LoggedInTop from "./LoggedInTop.svelte";
     import GraphsPage from "./GraphsPage.svelte";
-    import SyncStatus from "./SyncStatus.svelte";
     import DayDistGraph from "./graphs/DayDist.svelte";
     import PingsScatterGraph from "./graphs/PingsScatter.svelte";
     import DailyTrendGraph from "./graphs/DailyTrend.svelte";
@@ -70,20 +68,17 @@
         <div>
             <!-- Keep in sync with regex in ServiceWorker -->
             <Route path="/settings">
-                <LoggedInNavbar {username} />
-                <FillPings /><SyncStatus />
+                <LoggedInTop {username} {url} />
                 <Settings />
             </Route>
             <Route path="/">
                 {#if window.loginState !== "out"}
-                    <LoggedInNavbar {username} />
-                    <FillPings /><SyncStatus />
+                    <LoggedInTop {username} {url} />
                 {/if}
                 <Home />
             </Route>
             <Route path="/cntpings">
-                <LoggedInNavbar {username} />
-                <FillPings /><SyncStatus />
+                <LoggedInTop {username} {url} />
                 <CntpingsPage />
             </Route>
             <Route path="/welcome">
@@ -93,18 +88,15 @@
                 <GraphsPage />
             </Route>
             <Route path="/goals">
-                <LoggedInNavbar {username} />
-                <FillPings /><SyncStatus />
+                <LoggedInTop {username} {url} />
                 <GoalsPage />
             </Route>
             <Route path="/goals/info">
-                <LoggedInNavbar {username} />
-                <FillPings /><SyncStatus />
+                <LoggedInTop {username} {url} />
                 <GoalPage />
             </Route>
             <Route path="/goals/new">
-                <LoggedInNavbar {username} />
-                <FillPings /><SyncStatus />
+                <LoggedInTop {username} {url} />
                 <NewGoalPage />
             </Route>
             <Route path="/graphs/day-dist">
@@ -123,7 +115,7 @@
                 <MonthlyTrendGraph />
             </Route>
             <Route>
-                <LoggedInNavbar {username} {url} />
+                <LoggedInTop {username} {url} />
                 Page not found.
             </Route>
         </div>

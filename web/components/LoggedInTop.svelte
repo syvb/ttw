@@ -1,6 +1,8 @@
 <script>
     import { link } from "svelte-routing";
     import { onMount } from "svelte";
+    import SyncStatus from "./SyncStatus.svelte";
+    import FillPings from "./FillPings.svelte";
     import config from "../../config.json";
     export let username;
     export let url;
@@ -29,11 +31,11 @@
                 ele = goalsLink;
                 break;
         }
-        homeLink.classList.remove("loggedinnavbar-active");
-        pingsLink.classList.remove("loggedinnavbar-active");
-        settingsLink.classList.remove("loggedinnavbar-active");
-        graphsLink.classList.remove("loggedinnavbar-active");
-        if (ele) ele.classList.add("loggedinnavbar-active");
+        homeLink.classList.remove("loggedintop-active");
+        pingsLink.classList.remove("loggedintop-active");
+        settingsLink.classList.remove("loggedintop-active");
+        graphsLink.classList.remove("loggedintop-active");
+        if (ele) ele.classList.add("loggedintop-active");
     }
 
     $: url, updateBar();
@@ -72,7 +74,7 @@
         padding: 8px;
         padding-bottom: 10px;
         padding-right: 0.5rem;
-        background: rgb(0, 100, 79);
+        background: #005644;
         color: rgb(199, 241, 234);
     }
 
@@ -82,7 +84,7 @@
         margin-right: .3rem;
     }
 
-    :global(.loggedinnavbar-active) {
+    :global(.loggedintop-active) {
         font-weight: bold;
         /* to override the more specific .svelte-blah.navbar */
         color: white !important;
@@ -90,6 +92,11 @@
 
     .auth-info {
         float: right;
+    }
+
+    nav :global(.sync-status-root) {
+        float: right;
+        margin-right: 1rem;
     }
 </style>
 
@@ -113,4 +120,7 @@
             </form>
         </span>
     {/if}
+    <SyncStatus />
 </nav>
+
+<FillPings />

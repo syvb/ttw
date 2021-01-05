@@ -12,24 +12,19 @@
 
 <style>
     .statcircle-offline {
-        color: rgb(133, 6, 6);
+        color: #f30000;
     }
     .statcircle-pending {
-        color: rgb(198, 157, 21);
+        color: #fdce34;
     }
     .statcircle-synced {
-        color: rgb(0, 104, 0);
-    }
-    .sync-status-root {
-        margin-bottom: 0.25rem;
-        margin-left: 8px;
-        margin-top: 8px;
+        color: #09da00;
     }
 </style>
 
 <svelte:window on:pings-pending-sync-change={pingsPendingSyncChange} />
 
-<div class="sync-status-root">
+<span class="sync-status-root">
     <span
         class="statcircle"
         class:statcircle-offline={!online && anyPendingSync}
@@ -43,4 +38,4 @@
     {:else}
         Synced
     {/if}
-</div>
+</span>
