@@ -20,7 +20,7 @@
   "dependencies": {
     "chart.js": "^2.9.4",
     "dexie": "^3.0.2",
-    "flatpickr": "^4.6.6",
+    "flatpickr": "^4.6.9",
     "humanize-duration": "^3.23.1",
     "js-xxhash": "^1.0.4",
     "moment": "^2.29.1",
