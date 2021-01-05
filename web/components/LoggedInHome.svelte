@@ -24,6 +24,18 @@
     }
 </script>
 
+<style>
+    .bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-size: cover;
+        z-index: -10;
+    }
+</style>
+
 <svelte:window on:pingUpdate={pingUpdate} />
 
 <div>
@@ -33,3 +45,5 @@
 <NotificationsPerm alwaysShow={false} />
 
 <Tip />
+
+<div class="bg" style="background-image: url({localStorage['retag-bg']});"></div>
