@@ -1,0 +1,22 @@
+on: [push, pull_request]
+
+name: Build frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node: [ '10', '12', '14' ]
+    name: Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install node dependencies
+        run: yarn
+      - name: Build
+        run: NODE_ENV=production yarn build
