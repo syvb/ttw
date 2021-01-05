@@ -10,7 +10,7 @@
     "svelte": "^3.29.7",
     "svelte-loader": "smittyvb/svelte-loader#update-virtual-modules",
     "ts-loader": "^8.0.13",
-    "typescript": "^4.0.5",
+    "typescript": "^4.1.3",
     "webpack": "^5",
     "webpack-cli": "^4.1.0",
     "webpack-dev-server": "^3.11.1",
