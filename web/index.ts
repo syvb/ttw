@@ -70,6 +70,8 @@ window.supportsAutoplay = (async () => {
         supported = false;
     }
     audEle.pause();
+    audEle.src = "about:blank";
+    URL.revokeObjectURL(objURL);
     return supported;
 })();
 
