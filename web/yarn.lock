@@ -4930,7 +4930,8 @@ svelte-dev-helper@^1.1.9:
 
 svelte-loader@smittyvb/svelte-loader#update-virtual-modules:
   version "2.13.6"
-  resolved "https://codeload.github.com/smittyvb/svelte-loader/tar.gz/1794d5147f4e1d6773bb3ce16b1d86f7767a4447"
+  uid "1d50ad9555a80138f7a3d52f1c47b59496058abd"
+  resolved "https://codeload.github.com/smittyvb/svelte-loader/tar.gz/1d50ad9555a80138f7a3d52f1c47b59496058abd"
   dependencies:
     loader-utils "^1.1.0"
     svelte-dev-helper "^1.1.9"
