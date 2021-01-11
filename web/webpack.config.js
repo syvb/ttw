@@ -6,6 +6,8 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
 const webpack = require("webpack");
+const SveltePlugin = require('svelte-loader').plugin;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const config = require("../config.json");
 
@@ -54,7 +56,13 @@ module.exports = {
 
         new webpack.DefinePlugin({
             __BUILD_INFO__: JSON.stringify(buildInfo),
-        })
+        }),
+
+        new MiniCssExtractPlugin({
+            filename: '[name].css'
+        }),
+
+        new SveltePlugin(),
     ],
     resolve: {
         alias: {
@@ -79,7 +87,7 @@ module.exports = {
                 use: {
                     loader: "svelte-loader",
                     options: {
-                        emitCss: false,
+                        emitCss: true,
                         hotReload: true
                     }
                 }
@@ -87,7 +95,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    "style-loader",
+                    MiniCssExtractPlugin.loader,
                     "css-loader"
                 ]
             },
