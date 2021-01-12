@@ -4883,7 +4883,8 @@ svelte-dev-helper@^1.1.9:
 
 svelte-loader@non25/svelte-loader#wvm-as-dep:
   version "3.0.0"
-  resolved "https://codeload.github.com/non25/svelte-loader/tar.gz/c9db6218c54214d39d9327791793024ce7656dda"
+  uid "0e4f941800d6af6a97b3b7fd297ab12ff825c22f"
+  resolved "https://codeload.github.com/non25/svelte-loader/tar.gz/0e4f941800d6af6a97b3b7fd297ab12ff825c22f"
   dependencies:
     loader-utils "^1.1.0"
     svelte-dev-helper "^1.1.9"
