@@ -4,6 +4,7 @@
     import { updateTagIndexWithPings } from "../tagIndex.ts";
     import { afterUpdate } from "svelte";
     import { putPings } from "../pings.ts";
+    import { STR } from "../strings.ts";
 
     let allPingInputs;
     let onePingTags = [];
@@ -85,6 +86,7 @@
     function defaultPingComplete(e) {
         if (allPingInputs.children[0]) allPingInputs.children[0].children[0].focusInner();
     }
+    $: document.title = (pending.length > 0 ? "*** " : "") + STR.appName;
 </script>
 
 <style>
