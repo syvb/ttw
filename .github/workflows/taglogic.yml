@@ -4,7 +4,7 @@ name: Build/test taglogic
 
 jobs:
   test:
-    name: taxlogic tests (no WASM)
+    name: taglogic tests (no WASM)
     runs-on: ubuntu-20.04
     strategy:
       matrix:
