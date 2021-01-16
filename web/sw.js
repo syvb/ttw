@@ -3,7 +3,11 @@ import { subWithReg } from "./push.ts";
 import "./init-db.ts";
 import { latestPing } from "./pings.ts";
 
-const manifest = self.__WB_MANIFEST.filter(page => !page.url.includes("logo/") && !page.url.includes(".git") && !page.url.includes("robots.txt") && !page.url.includes("stackedit.css") && !page.url.includes(".png") && !page.url.includes("disclaimer.txt"));
+const manifest = self.__WB_MANIFEST.filter(page => !page.url.includes("logo/") && !page.url.includes(".git") && !page.url.includes("robots.txt") && !page.url.includes("stackedit.css") && !page.url.includes(".png") && !page.url.includes("disclaimer.txt")).concat([
+    { url: "media/d1.mp3", revision: "1" },
+    { url: "media/d2.mp3", revision: "1" },
+    { url: "media/d3.mp3", revision: "1" },
+]);
 precacheAndRoute(
     manifest,
     {
