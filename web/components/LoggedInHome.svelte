@@ -46,4 +46,4 @@
 
 <Tip />
 
-<div class="bg" style="background-image: url({localStorage['retag-bg']});"></div>
+<div class="bg" style={localStorage['retag-bg'] ? `background-image: url(${localStorage['retag-bg']});` : ""}></div>
