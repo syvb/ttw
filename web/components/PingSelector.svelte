@@ -156,6 +156,10 @@
     :global(.dark) .warning-block {
         background: #696900;
     }
+
+    summary {
+        cursor: pointer;
+    }
 </style>
 
 <div>

@@ -217,6 +217,10 @@
     #maincontent {
         margin: 8px;
     }
+
+    summary {
+        cursor: pointer;
+    }
 </style>
 
 <main id="maincontent">
