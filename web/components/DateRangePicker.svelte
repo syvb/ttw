@@ -3,22 +3,24 @@
 
     const flatpickrPromise = import("flatpickr");
     const now = new Date();
-    const foreverAgo = new Date();
-    foreverAgo.setFullYear(foreverAgo.getFullYear() - 1);
+    const longTimeAgo = new Date();
+    longTimeAgo.setFullYear(longTimeAgo.getFullYear() - 1);
+    let defaultRange = [now, longTimeAgo];
     export let range = [];
     let pickerEle;
+    let picker = null;
     onMount(async () => {
         const flatpickr = (await flatpickrPromise).default;
-        const picker = flatpickr(pickerEle, {
+        picker = flatpickr(pickerEle, {
             mode: "range",
             appendTo: pickerEle,
             time_24hr: true,
             allowInput: true,
             enableTime: true,
             inline: true,
-            defaultDate: [now, foreverAgo],
+            defaultDate: defaultRange,
         });
-        picker.selectedDates = range.length === 2 ? range : [now, foreverAgo];
+        picker.selectedDates = range.length === 2 ? range : [now, longTimeAgo];
         picker.config.onChange.push((selectedDates, dateStr, instance) => {
             if (selectedDates.length === 2) {
                 range = selectedDates;
@@ -27,7 +29,20 @@
         picker.changeYear(now.getFullYear());
     });
     function rangeSelect(rangeType, qual) {
-        // TODO...
+        return () => {
+            let range = [];
+            if (rangeType === "rel") {
+                const curNow = new Date();
+                const beginning = new Date();
+                beginning.setDate(beginning.getDate() - qual);
+                range = [curNow, beginning];
+            }
+            if (picker) {
+                picker.setDate(range, true);
+            } else {
+                defaultRange = range;
+            }
+        };
     }
 </script>
 
@@ -36,6 +51,7 @@
         display: inline-block;
         border-radius: 21px;
         background: #005644;
+        color: white;
         cursor: pointer;
 
         padding-top: 2px;
@@ -44,6 +60,9 @@
         padding-right: 6px;
 
         margin-bottom: 0.5rem;
+    }
+    :global(.dark) .sugg {
+        color: black;
     }
     .suggs {
         width: 307.875px; /* flatpickr calendar width */
