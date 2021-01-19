@@ -36,6 +36,24 @@
                 const beginning = new Date();
                 beginning.setDate(beginning.getDate() - qual);
                 range = [curNow, beginning];
+            } else if (rangeType === "calRel") {
+                const start = new Date();
+                const end = new Date();
+                switch (qual) {
+                    case "year":
+                        start.setMonth(0);
+                        end.setMonth(11);
+                        // fallthrough
+                    case "month":
+                        start.setDate(1);
+                        end.setMonth(end.getMonth() + 1);
+                        end.setDate(0);
+                        // fallthrough
+                    case "today":
+                        start.setHours(0, 0, 0, 0);
+                        end.setHours(23, 59, 59, 999);
+                }
+                range = [start, end];
             }
             if (picker) {
                 picker.setDate(range, true);
@@ -72,7 +90,6 @@
 <div>
     <div class="suggs">
         <span class="sugg" on:click={rangeSelect("calRel", "today")}>Today</span>
-        <span class="sugg" on:click={rangeSelect("calRel", "week")}>This week</span>
         <span class="sugg" on:click={rangeSelect("calRel", "month")}>This month</span>
         <span class="sugg" on:click={rangeSelect("calRel", "year")}>This year</span>
         <span class="sugg" on:click={rangeSelect("rel", 30)}>Last 30 days</span>
