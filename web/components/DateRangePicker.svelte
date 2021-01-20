@@ -79,9 +79,6 @@
 
         margin-bottom: 0.5rem;
     }
-    :global(.dark) .sugg {
-        color: black;
-    }
     .suggs {
         width: 307.875px; /* flatpickr calendar width */
     }
