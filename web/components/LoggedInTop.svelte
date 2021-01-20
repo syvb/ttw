@@ -15,6 +15,7 @@
         const pathPart = location.pathname.toLowerCase();
         let ele = null;
         switch (pathPart) {
+            case "/app":
             case "/":
                 ele = homeLink;
                 break;
@@ -105,7 +106,7 @@
 </a>
 
 <nav>
-    <a bind:this={homeLink} class="navlink" use:link href="/">Home</a>
+    <a bind:this={homeLink} class="navlink" use:link href="/app">Home</a>
     <a bind:this={pingsLink} class="navlink" use:link href="/cntpings">Pings</a>
     <a bind:this={graphsLink} class="navlink" href="/graphs" target="graphs" use:link>Graphs</a>
     <a bind:this={goalsLink} class="navlink" use:link href="/goals">Goals</a>

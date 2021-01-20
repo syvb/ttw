@@ -2,7 +2,7 @@
     import { Link } from "svelte-routing";
     import { STR } from "../strings.ts";
     if (localStorage["retag-seen-welcome"] === "1") {
-        location.replace("/");
+        location.replace("/app");
     } else {
         localStorage["retag-seen-welcome"] = "1";
     }
@@ -23,5 +23,5 @@
         By default, you will get pinged every 45 minutes.
         However, you can change this in <a href="/settings">your settings</a>.
     </p>
-    <a href="/">Get started!</a>
+    <a href="/app">Get started!</a>
 </main>

@@ -32,7 +32,7 @@
         } catch (e) {
             clearFail();
         }
-        location.href = "/";
+        location.href = "/app";
     }
 
     const DAY_NAMES = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];

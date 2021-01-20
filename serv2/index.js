@@ -206,7 +206,7 @@ app.post("/internal/login", bodyParser.urlencoded({ extended: false, limit: conf
     if (!valid) return res.send(loginFormWithError("Incorrect password"));
 
     await setAuthCookie(res, dbData.id);
-    res.redirect(config["root-domain"]);
+    res.redirect(config["root-domain"] + "/app");
 });
 
 const changePwForm = fs.readFileSync(__dirname + "/forms/changepw.html", "utf-8");

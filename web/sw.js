@@ -13,7 +13,7 @@ precacheAndRoute(
     {
         urlManipulation: ({ url }) => {
             console.log("checking", url);
-            if (url.pathname.match(/^\/(settings|cntpings|welcome|graphs(\/.+)?)\/?$/)) {
+            if (url.pathname.match(/^\/(app|settings|cntpings|welcome|graphs(\/.+)?)\/?$/)) {
                 console.log("match");
                 return [new URL("/index.html", location.href)];
             }
@@ -53,7 +53,7 @@ async function handleNotificationClick() {
             id: "tag-focus",
         });
     } else {
-        clients.openWindow("/").then(windowClient => windowClient ? windowClient.focus() : null);
+        clients.openWindow("/app").then(windowClient => windowClient ? windowClient.focus() : null);
     }
 }
 self.addEventListener("notificationclick", async event => {

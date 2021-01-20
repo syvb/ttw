@@ -157,7 +157,7 @@ export async function syncConfig(changes = []) {
             pendingConfigChanges = [];
             pendingConfigChangesTime = null;
             const body = await res.json();
-            if (body.reload) location.href = "/";
+            if (body.reload) location.href = "/app";
             return;
         }
     }

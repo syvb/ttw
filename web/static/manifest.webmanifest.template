@@ -5,14 +5,14 @@
     "description": "It's a time-tracking web app. At random points throughout the day, it asks you what you are doing.",
     "dir": "ltr",
     "lang": "en",
-    "start_url": "/",
+    "start_url": "/app",
     "display": "standalone",
     "theme_color": "rgb(245, 214, 112)",
     "background_color": "rgb(138, 121, 0)",
     "shortcuts": [
         {
             "name": "Dashboard",
-            "url": "/",
+            "url": "/app",
             "description": "Go to your dashboard"
         },
         {

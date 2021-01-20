@@ -1,6 +1,5 @@
 <script>
-    import { Router, Link, Route } from "svelte-routing";
-    import Home from "./Home.svelte";
+    import { Router, Link, Route, navigate } from "svelte-routing";
     import Settings from "./Settings.svelte";
     import CntpingsPage from "./CntpingsPage.svelte";
     import WelcomePage from "./WelcomePage.svelte";
@@ -14,6 +13,8 @@
     import DailyTrendGraph from "./graphs/DailyTrend.svelte";
     import WeeklyTrendGraph from "./graphs/WeeklyTrend.svelte";
     import MonthlyTrendGraph from "./graphs/MonthlyTrend.svelte";
+    import LoggedInHome from "./LoggedInHome.svelte";
+    import LoggedOutHome from "./LoggedOutHome.svelte";
     import config from "../../config.json";
     export let url = "";
     export let username;
@@ -28,6 +29,15 @@
     setTimeout(() => {
         document.getElementById("loading-msg").style.display = "none";
     }, 350);
+    if (window.loginState === "out") {
+        if (location.pathname !== "/"  && location.pathname == "") {
+            navigate("/app");
+        }
+    } else {
+        if (location.pathname === "/" || location.pathname === "") {
+            navigate("/app");
+        }
+    }
 </script>
 
 <style>
@@ -60,6 +70,9 @@
         bottom: -3rem;
         padding-bottom: 1rem;
     }
+    .home {
+        padding: 8px;
+    }
 </style>
 
 
@@ -67,15 +80,16 @@
     <Router {url}>
         <div>
             <!-- Keep in sync with regex in ServiceWorker -->
+            <Route path="/">
+                <div class="home"><LoggedOutHome /></div>
+            </Route>
+            <Route path="/app">
+                <LoggedInTop {username} {url} />
+                <div class="home"><LoggedInHome /></div>
+            </Route>
             <Route path="/settings">
                 <LoggedInTop {username} {url} />
                 <Settings />
-            </Route>
-            <Route path="/">
-                {#if window.loginState !== "out"}
-                    <LoggedInTop {username} {url} />
-                {/if}
-                <Home />
             </Route>
             <Route path="/cntpings">
                 <LoggedInTop {username} {url} />
