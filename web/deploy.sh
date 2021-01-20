@@ -6,6 +6,7 @@ rm .gitkeep
 mkdir graphs
 mkdir graphs/trend
 mkdir goals
+cp index.html app.html
 cp index.html settings.html
 cp index.html cntpings.html
 cp index.html welcome.html
