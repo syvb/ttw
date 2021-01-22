@@ -108,7 +108,7 @@ window.recheckPending = () => {}; // ignore calls to recheck pending until ping 
             algBoolValue = true;
             break;
         default:
-            alert("Unsupported interval algorithm. Try reloading. If that doesn't work, try clearing your cache or filing a bug report at http://github.com/smittyvb/ttw.");
+            alert("Unsupported interval algorithm. Try reloading. If that doesn't work, try clearing your cache or filing a bug report at https://github.com/smittyvb/ttw/issues.");
     }
     window.pintData = taglogic.new_ping_interval_data(
         localStorage["retag-pint-seed"] ? parseInt(localStorage["retag-pint-seed"], 10) : 12345,
