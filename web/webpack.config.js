@@ -6,7 +6,6 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
 const webpack = require("webpack");
-const SveltePlugin = require('svelte-loader').plugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const config = require("../config.json");
@@ -61,8 +60,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css'
         }),
-
-        new SveltePlugin(),
     ],
     resolve: {
         alias: {
