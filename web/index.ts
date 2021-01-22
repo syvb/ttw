@@ -31,12 +31,10 @@ declare global {
         loginState: "in" | "local" | "out",
         supportsAutoplay: Promise<boolean>,
         lastTag: any,
-        API_SERVER: string,
         miniData: any,
     }
 }
 
-window.API_SERVER = "http://localhost:8081";
 window.lastTag = null;
 
 if (navigator.serviceWorker) {
