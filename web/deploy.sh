@@ -20,7 +20,7 @@ cp app.html goals/info.html
 cp app.html goals/new.html
 # While index.html does serve 404s, the reason this is used instead of a static
 # page is just in case it turns out I missed a page.
-cp index.html 404.html
+cp app.html 404.html
 cp -r ../media .
 surge ./ --domain ttw.smitop.com # change to desired front end domain
 cd ..
