@@ -6,19 +6,18 @@ rm .gitkeep
 mkdir graphs
 mkdir graphs/trend
 mkdir goals
-cp index.html app.html
-cp index.html settings.html
-cp index.html cntpings.html
-cp index.html welcome.html
-cp index.html graphs.html
-cp index.html graphs/day-dist.html
-cp index.html graphs/pings-scatter.html
-cp index.html graphs/trend/daily.html
-cp index.html graphs/trend/weekly.html
-cp index.html graphs/trend/monthly.html
-cp index.html goals.html
-cp index.html goals/info.html
-cp index.html goals/new.html
+cp app.html settings.html
+cp app.html cntpings.html
+cp app.html welcome.html
+cp app.html graphs.html
+cp app.html graphs/day-dist.html
+cp app.html graphs/pings-scatter.html
+cp app.html graphs/trend/daily.html
+cp app.html graphs/trend/weekly.html
+cp app.html graphs/trend/monthly.html
+cp app.html goals.html
+cp app.html goals/info.html
+cp app.html goals/new.html
 # While index.html does serve 404s, the reason this is used instead of a static
 # page is just in case it turns out I missed a page.
 cp index.html 404.html
