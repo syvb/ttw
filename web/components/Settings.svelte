@@ -18,7 +18,7 @@
 
     const clearFail = () => alert("All data on this device has been deleted. However, there was an error deleting data from the server. As such, the data from the server may be re-synced once server communication is possible again. Please try deleting data again later.");
     async function deleteAllData(event) {
-        const reallySure = confirm("Do you *really* want to delete everything? This will clear all data from your device and from the server.");
+        const reallySure = confirm("Do you *really* want to delete everything? This will clear all data from your device and from the server. You might want to download your data first.");
         if (!reallySure) return;
         localStorage.clear();
         try { await window.db.delete(); } catch (e) { console.log("Error clearing DB", e); }
