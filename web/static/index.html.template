@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APPNAME</title>
+    <meta name="application-name" content="APPNAME">
+    <meta name="description"
+        content="A time-tracking web app. At random points throughout the day, it asks you what you are doing.">
+    <meta name="theme-color" content="rgb(245, 214, 112)">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/logo/ttw180.png">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 1rem;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .tagline {
+            font-weight: bold;
+            font-size: 2.2rem;
+        }
+
+        .scr {
+            margin-left: 1.5rem;
+        }
+
+        @media (max-width: 580px) {
+            .scr {
+                width: 90vw;
+                margin-left: 5vw;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .scr {
+                width: 98vw;
+                margin-left: 0.5vw;
+            }
+        }
+
+        .scr-graph {
+            display: block;
+            width: 1250px;
+            margin-left: 1.5rem;
+        }
+
+        @media (max-width: 1300px) {
+            .scr-graph {
+                width: 90vw;
+                margin-left: 5vw;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: black;
+                color: white;
+            }
+            a {
+                color: #8a8aff;
+            }
+            a:visited {
+                color: #C07FFF;
+            }
+        }
+
+        .app-root {
+            /* creates a new context that top/bottom/left/right is evaluated to */
+            position: relative;
+            /* just enough room left for the footer */
+            min-height: calc(100vh - 4rem - 1px);
+            padding-bottom: 1rem;
+        }
+
+        footer {
+            margin-left: 8px;
+            margin-right: 8px;
+            margin-top: 1rem;
+            border-top: 2px solid gray;
+            padding-top: 1rem;
+            position: absolute;
+            bottom: -3rem;
+            padding-bottom: 1rem;
+        }
+
+        .home {
+            padding: 8px;
+        }
+    </style>
+    <script>
+        if (localStorage["retag-auth"] && localStorage["retag-auth"] !== "out") {
+            location.pathname = "/app";
+        }
+    </script>
+</head>
+
+<body class="light">
+    <div class="app-root">
+        <div>
+            <div class="home">
+                <h1>APPNAME</h1>
+                <div class="tagline">Time tracking that samples you randomly</div>
+                <noscript>
+                    You can look at this page without Javascript, but be warned that logging in will fail without Javascript.
+                </noscript>
+                <p><a href="BACKSERV/internal/login">Login</a>
+                    or
+                    <a href="BACKSERV/internal/register">Sign up</a></p>
+                <p>
+                    APPNAME is an <a href="https://github.com/smittyvb/ttw" target="_blank" rel="noopener">open-source</a>
+                    time-tracking web app.
+                    At random points throughout the day, it asks you what you are doing.
+                    This is the same idea as the <a href="https://github.com/tagtime/TagTime" target="_blank"
+                        rel="noopener">orignal Perl TagTime</a>
+                    (although the implementation is different).
+                </p>
+
+                <p>
+                    Here's what it looks like when you get a ping:
+                </p>
+
+                <p>
+                    <img src="scrping.png" alt="What a ping looks like" class="scr" />
+                </p>
+
+                <p>
+                    From there, you can enter tags:
+                </p>
+
+                <p>
+                    <img src="scrautocomplete.png" alt="Entering tags" class="scr" />
+                </p>
+
+                <p>
+                    Once you've responded to enough tags, graphs can be generated from your data:
+                </p>
+
+                <p>
+                    <img src="scrdailytrend.png" alt="Daily trend" class="scr-graph" />
+                    <img src="scrmatrix.png" alt="Matrix of pings" class="scr-graph" />
+                </p>
+
+                <p>
+                    <a href="https://www.youtube.com/watch?v=cJpE018QEkQ">Learn more about stochastic time tracking.</a>
+                </p>
+
+                <p>
+                    APPNAME was made by <a href="https://smitop.com/">Smitop</a> (<a href="mailto:ttw@smitop.com">ttw@smitop.com</a>).
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

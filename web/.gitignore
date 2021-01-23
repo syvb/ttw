@@ -5,4 +5,5 @@ pkg/
 static/disclaimer.txt
 static/privacy.html
 static/manifest.webmanifest
+static/index.html
 stats.json

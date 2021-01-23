@@ -36,7 +36,8 @@ module.exports = {
         new CleanWebpackPlugin(),
 
         new HtmlWebpackPlugin({
-            templateContent: fs.readFileSync(__dirname + "/index.html", "utf-8").replace(/APPNAME/g, config["app-name"] || "TagTime Web"),
+            templateContent: fs.readFileSync(__dirname + "/app.html", "utf-8").replace(/APPNAME/g, config["app-name"] || "TagTime Web"),
+            filename: "app.html",
         }),
 
         new CopyPlugin({
@@ -117,8 +118,11 @@ module.exports = {
         ],
     },
     devServer: {
-        index: "index.html",
-        historyApiFallback: true,
+        // index: "/app.html",
+        historyApiFallback: {
+            index: "/app.html",
+            verbose: true,
+        },
     },
     optimization: {
         splitChunks: false

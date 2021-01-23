@@ -14,7 +14,6 @@
     import WeeklyTrendGraph from "./graphs/WeeklyTrend.svelte";
     import MonthlyTrendGraph from "./graphs/MonthlyTrend.svelte";
     import LoggedInHome from "./LoggedInHome.svelte";
-    import LoggedOutHome from "./LoggedOutHome.svelte";
     import config from "../../config.json";
     export let url = "";
     export let username;
@@ -30,9 +29,7 @@
         document.getElementById("loading-msg").style.display = "none";
     }, 350);
     if (window.loginState === "out") {
-        if (location.pathname !== "/"  && location.pathname == "") {
-            navigate("/app");
-        }
+        location.pathname = "/";
     } else {
         if (location.pathname === "/" || location.pathname === "") {
             navigate("/app");
@@ -81,7 +78,7 @@
         <div>
             <!-- Keep in sync with regex in ServiceWorker -->
             <Route path="/">
-                <div class="home"><LoggedOutHome /></div>
+                Loading...
             </Route>
             <Route path="/app">
                 <LoggedInTop {username} {url} />
