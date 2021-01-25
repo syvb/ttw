@@ -48,7 +48,6 @@ module.exports = {
 
         new InjectManifest({
             swSrc: __dirname + "/sw.js",
-            maximumFileSizeToCacheInBytes: 100 * 1000000, // 100mb
         }),
 
         // ignore Moment locales
