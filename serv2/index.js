@@ -78,12 +78,17 @@ async function setAuthCookie(res, uid) {
         token: cookie,
         uid,
     });
-    res.cookie("retag-auth", cookie, {
+    const cookieData = {
         maxAge: 86400000 * 365, // 1 year
         httpOnly: true,
-        sameSite: "None",
         secure: !!config["secure-cookie"],
-    });
+    };
+    if (config["cookie-domain"]) {
+        cookieData.domain = config["cookie-domain"];
+    } else {
+        cookieData.sameSite = "None";
+    }
+    res.cookie("retag-auth", cookie, );
 }
 
 const app = express();
