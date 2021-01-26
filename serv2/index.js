@@ -85,10 +85,11 @@ async function setAuthCookie(res, uid) {
     };
     if (config["cookie-domain"]) {
         cookieData.domain = config["cookie-domain"];
+        cookieData.sameSite = "Lax";
     } else {
         cookieData.sameSite = "None";
     }
-    res.cookie("retag-auth", cookie, );
+    res.cookie("retag-auth", cookie, cookieData);
 }
 
 const app = express();
