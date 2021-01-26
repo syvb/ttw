@@ -7,5 +7,6 @@
     "contact-email": "ttw@smitop.com",
     "extra-homepage-text": "This instance is run by <a href='https://smitop.com'>Smitop</a>.",
     "extra-footer-text": "| <a href=\"/privacy.html\">Privacy policy</a> | <a href=\"mailto:ttw@smitop.com\">Contact: ttw@smitop.com</a>",
-    "secure-cookie": true
+    "secure-cookie": true,
+    "cookie-domain": "localhost"
 }
