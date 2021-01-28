@@ -96,9 +96,11 @@
         }
     </style>
     <script>
+        // @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt Apache-2.0
         if (localStorage["retag-auth"] && localStorage["retag-auth"] !== "out") {
             location.pathname = "/app";
         }
+        // @license-end
     </script>
 </head>
 
