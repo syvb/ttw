@@ -208,7 +208,11 @@
             {/if}
         </div>
         <div>
-            Time: {humanizeDuration(rowsTime * 1000, { round: true })}
+            Time: {(rowsTime * 3600000).toFixed(1)} hours
+            <!-- only humanize if over a day of pings -->
+            {#if rowsTime > 86400000}
+                ({humanizeDuration(rowsTime * 1000, { round: true })})
+            {/if}
         </div>
     {/if}
 </div>
