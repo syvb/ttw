@@ -162,6 +162,11 @@
             alert("Started resyncing (it can take a few minutes for the syncing to complete in the background)");
         }
     }
+
+    function updateTab() {
+        // todo...
+    }
+    updateTab();
 </script>
 
 <style>
@@ -223,6 +228,8 @@
     }
 </style>
 
+<svelte:window on:hashchange={updateTab} />
+
 <main id="maincontent">
     <h2>Settings</h2>
 
@@ -231,6 +238,15 @@
             Note: some settings cannot be changed while offline
         </div>
     {/if}
+
+    <div class="sidebar">
+        <a href="#ping-notifs">Pings and notifications</a>
+        <a href="#import-export">Imports/Exports</a>
+        <a href="#theme">Theme</a>
+        <a href="#account">Account</a>
+        <a href="#advanced">Advanced</a>
+    </div>
+
     <h3>Ping notifications</h3>
     <div>
         <NotificationsPerm />
