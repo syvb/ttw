@@ -302,6 +302,10 @@
     .inner > :global(.tab.active) {
         display: block;
     }
+
+    .imex-table td {
+        padding-bottom: 0.5rem;
+    }
 </style>
 
 <svelte:window on:hashchange={updateTab} />
@@ -440,27 +444,51 @@
 
         <div class="tab tab-import-export">
             <h3>Import/export</h3>
-            <div>
-                <label for="tt-import" class="tt-import-btn">
-                    <button on:click={doTtImport} disabled={tagtimeImportPending}>
-                        Import from TagTime
-                    </button>
-                </label>
-                (Only adds pings, does not remove or overwrite existing pings. Invalid lines are ignored. Does not import interval settings. Assumes TagTime used the currently active interval)
-                <input id="tt-import" class="tt-import" aria-hidden="true" type="file" on:change={tagtimeImport} bind:this={ttImportButton} disabled={tagtimeImportPending}>
-            </div>
-            <div>
-                <button on:click={tagtimeExport} disabled={tagtimeExportPending}>Export as TagTime log</button>
-            </div>
-            <div>
-                <button on:click={dbDownload}>Download SQLite database</button>
-            </div>
-            <div>
-                <button on:click={beemResyncClick}>Resync with Beeminder</button>
-                <div>
-                    Ensures Beeminder has all pings over the last 7 days.
-                </div>
-            </div>
+            <table class="imex-table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="tt-import" class="tt-import-btn">
+                                <button on:click={doTtImport} disabled={tagtimeImportPending}>
+                                    Import from TagTime
+                                </button>
+                            </label>
+                            <input id="tt-import" class="tt-import" aria-hidden="true" type="file" on:change={tagtimeImport} bind:this={ttImportButton} disabled={tagtimeImportPending}>
+                        </td>
+                        <td>
+                            Only adds pings, does not remove or overwrite existing pings. Invalid lines are ignored. Does not import interval settings. Assumes TagTime used the currently active interval.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button on:click={tagtimeExport} disabled={tagtimeExportPending}>Export as TagTime log</button>
+                        </td>
+                        <td>
+                            This format is widely supported in the TagTime ecosystem.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button on:click={dbDownload}>Download SQLite database</button>
+                        </td>
+                        <td>
+                            This is how your pings are internally repersented.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button on:click={beemResyncClick} disabled={!localStorage["retag-beem-token"]}>Resync with Beeminder</button>
+                        </td>
+                        <td>
+                            {#if localStorage["retag-beem-token"]}
+                                Ensures Beeminder has all pings over the last 7 days.
+                            {:else}
+                                Connect to Beeminder in the Goals tab first.
+                            {/if}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="tab tab-theme">
