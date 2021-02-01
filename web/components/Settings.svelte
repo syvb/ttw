@@ -238,10 +238,6 @@
         width: 10em;
     }
 
-    .adv-settings {
-        display: inline;
-    }
-
     #maincontent {
         margin: 8px;
     }
@@ -328,7 +324,7 @@
         {/if}
 
         <div class="tab tab-ping-notifs">
-            <h3>Pings and notifications</h3>
+            <h3>Notifications</h3>
             <div>
                 <NotificationsPerm />
             </div>
@@ -375,6 +371,14 @@
                 </div>
             </div>
 
+            <h3>Pinging</h3>
+            <div>
+                {STR.reloadNote}
+            </div>
+            <div>
+                Default tags when multiple pending:
+                <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
+            </div>
             <div>
                 <div>
                     <label for="pint-interval">
@@ -389,26 +393,12 @@
                         Click the below button to use the universal schedule.
                     {/if}
                 </div>
-                <div>
-                    {STR.reloadNote}
-                </div>
-                <div>
-                    <button on:click={updatePintClick}>Update</button>
-                </div>
             </div>
-            <div>
-                Default tags when multiple pending:
-                <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
-            </div>
-
             <div>
                 <div>
                     Click the button to use the
                     <a href="https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282">universal schedule</a>.
-                    This overides your interval, seed (in advanced settings), and algorithm (in advanced settings) to the universal schedule with just one click.
-                </div>
-                <div>
-                    {STR.reloadNote}
+                    This changes your interval, seed, and algorithm to the universal schedule with just one click.
                 </div>
                 <div>
                     <button on:click={useUnivSched}>
@@ -424,7 +414,6 @@
                 <div>
                     Note that if the box below is checked, performance will be worse if the seed isn't 1184097393. (due to lookup tables)
                 </div>
-                <button on:click={updatePintClick}>Update</button>
             </div>
             <div>
                 <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
@@ -438,12 +427,13 @@
                     You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
                     To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
                 </details>
-                <button on:click={updatePintClick}>Update</button>
+            </div>
+            <div>
+                <button on:click={updatePintClick}>Update pinging settings</button>
             </div>
         </div>
 
         <div class="tab tab-import-export">
-            <h3>Import/export</h3>
             <table class="imex-table">
                 <tbody>
                     <tr>
@@ -492,7 +482,7 @@
         </div>
 
         <div class="tab tab-theme">
-            <h3><label for="theme-dropdown">Theme</label></h3>
+            <label for="theme-dropdown">Theme: </label>
             <select id="theme-dropdown" on:input={updateTheme}>
                 <option selected={theme === "default"} value="default">Browser default {(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "(dark)" : "(light)"}</option>
                 <option selected={theme === "dark"} value="dark">Dark</option>
@@ -501,7 +491,6 @@
         </div>
 
         <div class="tab tab-account">
-            <h3>Account</h3>
             <div>
                 <a href={config["api-server"] + "/internal/changepw"}>Change password</a>
             </div>
@@ -516,7 +505,6 @@
         </div>
 
         <div class="tab tab-advanced">
-            <summary><h3 class="adv-settings">Advanced</h3></summary>
             <div>
                 You probably don't want to touch any of the settings here.
             </div>
