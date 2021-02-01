@@ -160,7 +160,6 @@
         }
     }
 
-    let innerEle;
     const TABS = [
         "ping-notifs",
         "import-export",
@@ -179,11 +178,11 @@
             tab = "ping-notifs";
         }
         TABS.forEach(curTab => {
-            const ele = innerEle.getElementsByClassName("tab-" + curTab)[0];
+            const eles = [...document.getElementsByClassName("tab-" + curTab)];
             if (curTab === tab) {
-                ele.classList.add("active");
+                eles.forEach(ele => ele.classList.add("active"));
             } else {
-                ele.classList.remove("active");
+                eles.forEach(ele => ele.classList.remove("active"));
             }
         });
     }
@@ -278,9 +277,21 @@
         background: #d4faf1;
     }
 
+    /* .active is manipulated in JS, this is needed to supress dead style removal */
+    .sidebar > :global(a.active) {
+        background: #005644;
+        color: white;
+    }
+
     :global(.dark) .sidebar > a {
         color: white;
         background: #003c2f;
+    }
+
+    :global(.dark) .sidebar > :global(a.active) {
+        background: #00aa86 !important;
+        border-color: #00aa86;
+        color: black;
     }
 
     .inner > .tab {
@@ -298,14 +309,14 @@
 <main id="maincontent">
     <div class="sidebar">
         <h2>Settings</h2>
-        <a href="/settings#ping-notifs">Pings and notifications</a>
-        <a href="/settings#import-export">Imports/Exports</a>
-        <a href="/settings#theme">Theme</a>
-        <a href="/settings#account">Account</a>
-        <a href="/settings#advanced">Advanced</a>
+        <a class="tab-ping-notifs" href="/settings#ping-notifs">Pings and notifications</a>
+        <a class="tab-import-export" href="/settings#import-export">Imports/Exports</a>
+        <a class="tab-theme" href="/settings#theme">Theme</a>
+        <a class="tab-account" href="/settings#account">Account</a>
+        <a class="tab-advanced" href="/settings#advanced">Advanced</a>
     </div>
 
-    <div class="inner" bind:this={innerEle}>
+    <div class="inner">
         {#if !navigator.onLine}
             <div>
                 Note: some settings cannot be changed while offline
@@ -473,7 +484,7 @@
             <div>
                 Note: This will not delete your account. To delete your account, <a href={"mailto:" + config["contact-email"]}>contact support</a>.
             </div>
-    
+
         </div>
 
         <div class="tab tab-advanced">
