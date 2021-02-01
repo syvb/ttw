@@ -258,6 +258,9 @@
         width: 13rem;
         position: sticky;
         top: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
     }
 
     .sidebar > a {
@@ -271,6 +274,7 @@
         margin-bottom: 0.5rem;
         cursor: pointer;
         background: #d4faf1;
+        height: fit-content;
     }
 
     /* .active is manipulated in JS, this is needed to supress dead style removal */
@@ -288,6 +292,25 @@
         background: #00aa86 !important;
         border-color: #00aa86;
         color: black;
+    }
+
+    @media (max-width: 820px) {
+        .sidebar {
+            flex-direction: row;
+            width: 100%;
+            height: unset;
+        }
+        .sidebar > a {
+            margin-right: 0.5rem;
+        }
+        h2 {
+            margin-right: 0.5rem;
+            line-height: 1.6;
+        }
+        .inner {
+            margin: 0;
+            position: static;
+        }
     }
 
     .inner > .tab {
