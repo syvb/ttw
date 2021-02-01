@@ -30,6 +30,11 @@
     .statcircle-synced {
         background: #09da00;
     }
+    @media (max-width: 430px) {
+        .status-text {
+            display: none;
+        }
+    }
 </style>
 
 <svelte:window on:pings-pending-sync-change={pingsPendingSyncChange} />
@@ -41,11 +46,13 @@
         class:statcircle-pending={online && pending}
         class:statcircle-synced={!pending}
     > </span>
-    {#if !online && pending}
-        Offline
-    {:else if online && pending}
-        Pending sync...
-    {:else}
-        Synced
-    {/if}
+    <span class="status-text">
+        {#if !online && pending}
+            Offline
+        {:else if online && pending}
+            Syncing
+        {:else}
+            Synced
+        {/if}
+    </span>
 </span>

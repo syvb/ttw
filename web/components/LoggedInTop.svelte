@@ -99,6 +99,21 @@
         float: right;
         margin-right: 1rem;
     }
+
+    @media (max-width: 460px) {
+        .navlink {
+            margin-right: 0.15rem;
+        }
+        nav :global(.sync-status-root) {
+            margin-right: 0.333rem;
+        }
+    }
+
+    @media (max-width: 365px) {
+        nav {
+            height: 2rem;
+        }
+    }
 </style>
 
 <a class="skip-link" href="#maincontent">
