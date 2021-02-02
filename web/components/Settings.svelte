@@ -396,63 +396,65 @@
 
             <h3>Pinging</h3>
             <div>
-                {STR.reloadNote}
-            </div>
-            <div>
                 Default tags when multiple pending:
                 <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
             </div>
             <div>
                 <div>
-                    <label for="pint-interval">
-                        Average ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+                    {STR.reloadNote}
+                </div>
+                <div>
+                    <div>
+                        <label for="pint-interval">
+                            Average ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+                        </label>
+                        <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
+                    </div>
+                    <div>
+                        {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
+                            Note: You are are using the original TagTime algorithm but not the universal schedule.
+                            Performance will be degraded and notifications will not be sent (due to the lack of lookup tables).
+                            Click the below button to use the universal schedule.
+                        {/if}
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        Click the button to use the
+                        <a href="https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282">universal schedule</a>.
+                        This changes your interval, seed, and algorithm to the universal schedule with just one click.
+                    </div>
+                    <div>
+                        <button on:click={useUnivSched}>
+                            Use the universal schedule
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label for="pint-seed">
+                        Ping seed (changing this will disable notifications, see above warning for interval):
                     </label>
-                    <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
+                    <input type="number" id="pint-seed" bind:value={pintSeed}>
+                    <div>
+                        Note that if the box below is checked, performance will be worse if the seed isn't 1184097393. (due to lookup tables)
+                    </div>
                 </div>
                 <div>
-                    {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
-                        Note: You are are using the original TagTime algorithm but not the universal schedule.
-                        Performance will be degraded and notifications will not be sent (due to the lack of lookup tables).
-                        Click the below button to use the universal schedule.
-                    {/if}
+                    <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
+                    <label for="pint-tt-alg">
+                        Use original TagTime algorithm (beta, see below)
+                    </label>
+                    <details>
+                        <summary>Read this before changing the above checkbox!</summary>
+                        You should check this box if you want compatability with the original TagTime.
+                        Checking this checkbox will enable using the algorithm used by the original TagTime.
+                        You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
+                        To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
+                    </details>
                 </div>
-            </div>
-            <div>
                 <div>
-                    Click the button to use the
-                    <a href="https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282">universal schedule</a>.
-                    This changes your interval, seed, and algorithm to the universal schedule with just one click.
+                    <button on:click={updatePintClick}>Update pinging settings</button>
                 </div>
-                <div>
-                    <button on:click={useUnivSched}>
-                        Use the universal schedule
-                    </button>
-                </div>
-            </div>
-            <div>
-                <label for="pint-seed">
-                    Ping seed (changing this will disable notifications, see above warning for interval):
-                </label>
-                <input type="number" id="pint-seed" bind:value={pintSeed}>
-                <div>
-                    Note that if the box below is checked, performance will be worse if the seed isn't 1184097393. (due to lookup tables)
-                </div>
-            </div>
-            <div>
-                <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
-                <label for="pint-tt-alg">
-                    Use original TagTime algorithm (beta, see below)
-                </label>
-                <details>
-                    <summary>Read this before changing the above checkbox!</summary>
-                    You should check this box if you want compatability with the original TagTime.
-                    Checking this checkbox will enable using the algorithm used by the original TagTime.
-                    You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
-                    To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
-                </details>
-            </div>
-            <div>
-                <button on:click={updatePintClick}>Update pinging settings</button>
             </div>
         </div>
 
