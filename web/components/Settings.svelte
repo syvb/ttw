@@ -383,7 +383,6 @@
                     {/if}
                 </div>
                 <div class="ding-info">
-                    Select a ping noise to hear it.
                     {#await window.supportsAutoplay then supported}
                         {#if !supported && (pingNoise !== "n")}
                             <div class="autoplay-warning">
