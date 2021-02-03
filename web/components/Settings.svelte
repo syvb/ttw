@@ -484,7 +484,7 @@
                                     Import from TagTime
                                 </button>
                             </label>
-                            <input id="tt-import" class="tt-import" aria-hidden="true" type="file" on:change={tagtimeImport} bind:this={ttImportButton} disabled={tagtimeImportPending}>
+                            <input id="tt-import" class="tt-import" aria-hidden="true" tabindex="-1" type="file" on:change={tagtimeImport} bind:this={ttImportButton} disabled={tagtimeImportPending}>
                         </td>
                         <td>
                             Only adds pings, does not remove or overwrite existing pings. Invalid lines are ignored. Does not import interval settings. Assumes TagTime used the currently active interval.
