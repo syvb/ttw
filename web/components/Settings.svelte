@@ -54,6 +54,7 @@
         const rows = await allPings();
         if (rows === null) {
             alert("Failed to fetch pings from server. Ensure you are connected to the Internet.");
+            tagtimeExportPending = false;
             return;
         }
         const data = rows
