@@ -187,7 +187,6 @@
         "advanced",
     ];
     function updateTab() {
-        console.log("hash change");
         const hash = location.hash.slice(1);
         let tab;
         if (TABS.includes(hash)) {
