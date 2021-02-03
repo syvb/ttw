@@ -132,12 +132,30 @@
     let pintAvgInterval = toDurString(window.pintData.avg_interval);
     let pintSeed = window.pintData.seed.toString();
     let pintAlgChecked = localStorage["retag-pint-alg"] === "tagtime";
-    function updatePintClick() {
-        updatePint(pintAvgInterval, pintSeed, pintAlgChecked);
+    let pintChangePending = false;
+    const SCHEDS = {
+        "ttw-univ-sched": ["45:00", "12345", false],
+        "univ-sched": ["45:00", "11193462", true],
+    };
+    function curSchedType() {
+        const schedIds = Object.keys(SCHEDS);
+        for (let i = 0; i < schedIds.length; i++) {
+            const sched = SCHEDS[schedIds[i]];
+            if (sched[0] === pintAvgInterval && sched[1] === pintSeed && sched[2] === pintAlgChecked) return schedIds[i];
+        }
+        return "custom";
     }
-
-    function useUnivSched() {
-        updatePint("45:00", "1184097393", true);
+    let pingAlgDropdownVal = curSchedType();
+    function pingAlgDropdownSelect() {
+        const preset = SCHEDS[pingAlgDropdownVal];
+        if (preset) {
+            pintChangePending = true;
+            updatePint(preset[0], preset[1], preset[2]);
+        }
+    }
+    function updatePintClick() {
+        pintChangePending = true;
+        updatePint(pintAvgInterval, pintSeed, pintAlgChecked);
     }
 
     let afkTags = (localStorage["retag-afk-tags"] || "afk").split(" ");
@@ -398,61 +416,60 @@
                 Default tags when multiple pending:
                 <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
             </div>
-            <div>
+            <div class="pint-alg">
+                <div>
+                    Pinging algorithm:
+                    <!-- svelte-ignore a11y-no-onchange -->
+                    <select bind:value={pingAlgDropdownVal} on:change={pingAlgDropdownSelect} disabled={pintChangePending}>
+                        <option value="ttw-univ-sched">Standard (TTW2)</option>
+                        <option value="univ-sched">Original (TagTime)</option>
+                        <option value="custom">Custom...</option>
+                    </select>
+                </div>
+                {#if pingAlgDropdownVal === "custom"}
+                    <div class="pint-customization">
+                        <div>
+                            <div>
+                                <label for="pint-interval">
+                                    Average ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
+                                </label>
+                                <input type="text" id="pint-interval" bind:value={pintAvgInterval} disabled={pintChangePending}>
+                            </div>
+                            <div>
+                                {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
+                                    Note: You are are using the original TagTime algorithm but not the universal schedule.
+                                    Performance will be degraded and notifications will not be sent (due to the lack of lookup tables).
+                                    Click the below button to use the universal schedule.
+                                {/if}
+                            </div>
+                        </div>
+                        <div>
+                            <label for="pint-seed">
+                                Ping seed (changing this will disable notifications, see above warning for interval):
+                            </label>
+                            <input type="number" id="pint-seed" bind:value={pintSeed} disabled={pintChangePending}>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked} disabled={pintChangePending}>
+                            <label for="pint-tt-alg">
+                                Use original TagTime algorithm
+                            </label>
+                            <details>
+                                <summary>Read this before changing the above checkbox!</summary>
+                                You should check this box if you want compatability with the original TagTime.
+                                Checking this checkbox will enable using the algorithm used by the original TagTime.
+                                You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
+                                If you use the TagTime algorithm but not a seed of 11193462 and a gap of 45:00, then
+                                performance will suffer and notifications won't work.
+                            </details>
+                        </div>
+                        <div>
+                            <button on:click={updatePintClick}>Update pinging settings</button>
+                        </div>
+                    </div>
+                {/if}
                 <div>
                     {STR.reloadNote}
-                </div>
-                <div>
-                    <div>
-                        <label for="pint-interval">
-                            Average ping interval (format like 45:12 for a ping every 45 minutes and 12 seconds, changing this will disable notifications):
-                        </label>
-                        <input type="text" id="pint-interval" bind:value={pintAvgInterval}>
-                    </div>
-                    <div>
-                        {#if pintAlgChecked && (!(pintAvgInterval.trim() === "45:00" || pintAvgInterval.trim() === "45:0") || (pintSeed !== "1184097393"))}
-                            Note: You are are using the original TagTime algorithm but not the universal schedule.
-                            Performance will be degraded and notifications will not be sent (due to the lack of lookup tables).
-                            Click the below button to use the universal schedule.
-                        {/if}
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        Click the button to use the
-                        <a href="https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282">universal schedule</a>.
-                        This changes your interval, seed, and algorithm to the universal schedule with just one click.
-                    </div>
-                    <div>
-                        <button on:click={useUnivSched}>
-                            Use the universal schedule
-                        </button>
-                    </div>
-                </div>
-                <div>
-                    <label for="pint-seed">
-                        Ping seed (changing this will disable notifications, see above warning for interval):
-                    </label>
-                    <input type="number" id="pint-seed" bind:value={pintSeed}>
-                    <div>
-                        Note that if the box below is checked, performance will be worse if the seed isn't 1184097393. (due to lookup tables)
-                    </div>
-                </div>
-                <div>
-                    <input type="checkbox" id="pint-tt-alg" bind:checked={pintAlgChecked}>
-                    <label for="pint-tt-alg">
-                        Use original TagTime algorithm (beta, see below)
-                    </label>
-                    <details>
-                        <summary>Read this before changing the above checkbox!</summary>
-                        You should check this box if you want compatability with the original TagTime.
-                        Checking this checkbox will enable using the algorithm used by the original TagTime.
-                        You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
-                        To use the universal schdule, check the above checkbox, set the ping inverval to 45:00, and set the seed to 11193462 (or click the above button to do that for you).
-                    </details>
-                </div>
-                <div>
-                    <button on:click={updatePintClick}>Update pinging settings</button>
                 </div>
             </div>
         </div>
