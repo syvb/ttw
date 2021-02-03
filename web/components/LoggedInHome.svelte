@@ -38,12 +38,14 @@
 
 <svelte:window on:pingUpdate={pingUpdate} />
 
-<div>
-    Last tag: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)}).
+<div id="maincontent">
+    <div>
+        Last tag: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)}).
+    </div>
+
+    <NotificationsPerm alwaysShow={false} />
+
+    <Tip />
+
+    <div class="bg" style={localStorage['retag-bg'] ? `background-image: url(${localStorage['retag-bg']});` : ""}></div>
 </div>
-
-<NotificationsPerm alwaysShow={false} />
-
-<Tip />
-
-<div class="bg" style={localStorage['retag-bg'] ? `background-image: url(${localStorage['retag-bg']});` : ""}></div>
