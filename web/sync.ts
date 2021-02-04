@@ -6,6 +6,9 @@ import { unsub } from "./push.ts";
 import { unsyncedPings, putPings, Ping } from "./pings.ts";
 //@ts-ignore
 import { backend, FULL_BACKEND, MINI_BACKEND } from "./backend.ts";
+// @ts-ignore
+import { whenIdle } from "./idle.ts";
+
 const config = require("../config.json");
 
 let lastPingCheck = (typeof localStorage === "undefined") ? null : (localStorage["retag-last-sync-time"] || null);
@@ -89,7 +92,7 @@ async function updateWithPingData(pings: Ping[], dbEmpty: boolean): Promise<void
             filePromises.push(filePromise);
         });
         await Promise.all(filePromises);
-        setTimeout(() => {
+        whenIdle(() => {
             if (anyNonNew) { // some pings changed
                 rebuildTagIndex(); // just rebuild everything for now
             } else {
@@ -103,7 +106,7 @@ async function updateWithPingData(pings: Ping[], dbEmpty: boolean): Promise<void
         } else {
             await window.db.pings.bulkPut(pings.map(ping => ({ ...ping, unsynced: "n" })));
         }
-        setTimeout(() => rebuildTagIndex(), 2000);
+        whenIdle(() => rebuildTagIndex(), 2000);
     }
     externalDbUpdate();
     if (self.recheckPending) self.recheckPending();
@@ -282,7 +285,6 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
             if (backend() === MINI_BACKEND) {
                 localStorage["retag-mini-pings"] = data.totalPings;
                 localStorage["retag-mini-missing"] = data.totalPings - data.pings.length;
-                rebuildTagIndex(); // don't wait for it to finish
                 // delete synced pings
                 await window.db.pings.where("unsynced").equals("n").delete();
             }
@@ -293,7 +295,6 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
                 loadConfigData(data.config),
             ])
             await updateWithPingData(data.pings, dbEmpty);
-            rebuildTagIndex(); // don't wait for it to finish
             lastPingCheck = data.latestUpdate;
             localStorage["retag-last-sync-time"] = lastPingCheck;
             localStorage["retag-username"] = data.username;
@@ -341,6 +342,7 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
     if (status === "out" && location.pathname !== "/") {
         location.pathname = "/";
     }
+    whenIdle(() => rebuildTagIndex(), 2500);
     return {
         status,
         username,
