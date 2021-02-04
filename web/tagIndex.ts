@@ -49,6 +49,7 @@ function scoreMatch(search: string, match: { count: number; tag: string; }): num
 }
 
 export async function searchTagIndex(search: string, num: number): Promise<string[]> {
+    search = search.toLowerCase();
     let matching = await db.tags
         .limit(100)
         .filter(tag => tag.tag.includes(search))
