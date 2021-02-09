@@ -29,6 +29,7 @@ jobs:
           command: install
           args: wasm-pack
       - run: cp config.example.json config.json
+      - run: cp config-private.example.json config-private.json
       - name: Install dependencies
         run: yarn
         working-directory: serv2
