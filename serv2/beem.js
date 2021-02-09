@@ -115,12 +115,12 @@ module.exports = authMiddleware => {
         if (req.authUser === null) return res.status(403).send("log in");
         const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
         const goalsData = userDb.prepare("SELECT k, v FROM meta WHERE k IN ('retag-beem-token', 'retag-goals')").all();
-        const beeToken = goalsData.filter(({ k }) => k === "retag-beem-token")[0]?.v;
-        const beeGoals = goalsData.filter(({ k }) => k === "retag-goals")[0]?.v;
+        const beeToken = goalsData.filter(({ k }) => k === "retag-beem-token")[0];
+        const beeGoals = goalsData.filter(({ k }) => k === "retag-goals")[0];
         if (beeToken && beeGoals) {
             const stmt = userDb.prepare("SELECT time, tags, interval, comment FROM pings WHERE time > ?");
             const pings = stmt.all((Date.now() / 1000) - RESYNC_FRAME);
-            mod.pingsUpdated(pings, beeToken, beeGoals, req.authUser);
+            mod.pingsUpdated(pings, beeToken.v, beeGoals.v, req.authUser);
             res.status(204).send();
         } else {
             res.status(400).send("expected retag-beem-token and retag-goals in config");
