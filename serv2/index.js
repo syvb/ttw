@@ -159,20 +159,23 @@ app.post("/internal/register", bodyParser.urlencoded({ extended: false, limit: c
     const emailValidationMsg = validate.email(email);
     if (emailValidationMsg) return res.send(registerFormWithError(emailValidationMsg));
 
+    const [ emailToken, hashedPw ] = await Promise.all([
+        util.promisify(crypto.randomBytes)(64),
+        argon2.hash(pw, ARGON2_CONFIG), // automatically deals with salt
+    ]);
+
+    // do this right before we add the user to prevent dupe signups when double clicking signup
     const usernameCheck = globalPreped.usernameCheck.get(username);
     if (usernameCheck !== undefined) {
         return res.send(registerFormWithError("Username already exists"))
     }
 
+    // we currently don't check emails so this is effectively a no-op for now
     const emailCheck = globalPreped.emailCheck.get(username);
     if (emailCheck !== undefined) {
         return res.send(registerFormWithError("Email already used. Try logging in."))
     }
 
-    const [ emailToken, hashedPw ] = await Promise.all([
-        util.promisify(crypto.randomBytes)(64),
-        argon2.hash(pw, ARGON2_CONFIG), // automatically deals with salt
-    ]);
     const uid = globalPreped.registerTx(emailToken.toString("base64"), hashedPw, email, username);
     const setCookiePromise = setAuthCookie(res, uid);
     const userDb = new Database(`${USER_DB_DIR}/${uid.toString(36)}.db`);
