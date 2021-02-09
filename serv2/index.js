@@ -120,6 +120,12 @@ app.get("/", (req, res) => {
     res.send("This is the TagTimeWeb backend.");
 });
 
+const formsScript = fs.readFileSync(__dirname + "/forms/forms.js", "utf-8");
+app.get("/internal/forms.js", (req, res) => {
+    res.contentType("text/javascript");
+    res.send(formsScript);
+});
+
 const registerForm = fs.readFileSync(__dirname + "/forms/register.html", "utf-8");
 function registerFormWithError(error) {
     return registerForm.replace(/%main%/g, config["root-domain"]).replace(/%errors%/g, `<div class="error">${error}</div>`);
