@@ -4886,10 +4886,10 @@ svelte-routing@^1.5.0:
   resolved "https://registry.yarnpkg.com/svelte-routing/-/svelte-routing-1.5.0.tgz#a518cf67d8c09dd30a04cf6f9473ce5612fd4c8b"
   integrity sha512-4ftcSO2x5kzCUWQKm9Td6/C+t7lRjMEo72utRO0liS/aWZuRwAXOBl3y+hWZw8tV+DTGElqaAAyi44AuWXcVBg==
 
-svelte@^3.32.1:
-  version "3.32.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.32.1.tgz#c4b6e35517d0ed77e652cc8964ef660afa2f70f3"
-  integrity sha512-j1KmD2ZOU0RGq1/STDXjwfh0/eJ/Deh2NXyuz1bpR9eOcz9yImn4CGxXdbSAN7cMTm9a7IyPUIbuBCzu/pXK0g==
+svelte@^3.32.2:
+  version "3.32.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.32.2.tgz#c3a370b951ea2e0730dfd314b5fa57fd93ece399"
+  integrity sha512-Zxh1MQQl/+vnToKbU1Per+PoMN8Jb2MeKJcGxiOsCGR677hXw7jkMfbnNXq33+dxIzV/HfA4xtoSPJrqeB0VUg==
 
 tapable@^1.0.0:
   version "1.1.3"
