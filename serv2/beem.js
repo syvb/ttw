@@ -7,7 +7,7 @@ const config = {
     ...require("../config.json"),
     ...require("../config-private.json")
 };
-const BEEM_URI = config.overrideBeem ?? "https://www.beeminder.com";
+const BEEM_URI = config.overrideBeem || "https://www.beeminder.com";
 const BEEM_UA = "TagTimeWeb/1.0 (ttw@smitop.com)";
 const RESYNC_FRAME = 86400 * 7; // 7 days
 const USER_DB_DIR = config["user-db-dir"] ? config["user-db-dir"] : (__dirname + "/user-dbs");
