@@ -1,0 +1,39 @@
+on: [push, pull_request]
+
+name: Build serv2
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node: [ '12', '14' ]
+    name: serv2 on Node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Install wasm-pack
+        # fork that supports working-directory
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: wasm-pack
+      - run: cp config.example.json config.json
+      - name: Install dependencies
+        run: yarn
+        working-directory: serv2
+      - name: Verify source is valid
+        run: node --check *.js forms/*.js
+        working-directory: serv2
+      - name: Try running
+        run: SERV2_TEST_MODE=1 ./run.sh

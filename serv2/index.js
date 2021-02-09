@@ -511,8 +511,9 @@ app.use("/internal/push", pushHandler(globalDb));
 
 app.use("/internal/beem", beem.router);
 
-
-if (config["https-crt"]) {
+if (process.env["SERV2_TEST_MODE"]) {
+    process.exit(0);
+} else if (config["https-crt"]) {
     const httpsConfig = {
         key: fs.readFileSync(config["https-key"]),
         cert: fs.readFileSync(config["https-crt"]),
