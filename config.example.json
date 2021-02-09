@@ -3,7 +3,7 @@
     "api-listen-port": 8081,
     "root-domain": "http://localhost:8080",
     "db-max-size": 41943040,
-    "vapid-public": "BGc8XZ0n_89iq74FvZEZlIiA8YwcgPQmcJycKbjq_pUXP-bQMWiAlnGb2tMzspm8zn7QlLCfFAbFjoTQ20nm-ns",
+    "vapid-public": "BN3U2jx8tbB437KQ2-nW0G2Xa-84heeYw1LPkcz2A-j3q0S8sEQln5khXhQl3SjCW7xYCJazw10fHRQ7q2hCTc4",
     "contact-email": "ttw@smitop.com",
     "extra-homepage-text": "This instance is run by <a href='https://smitop.com'>Smitop</a>.",
     "extra-footer-text": "| <a href=\"/privacy.html\">Privacy policy</a> | <a href=\"mailto:ttw@smitop.com\">Contact: ttw@smitop.com</a>",
