@@ -1,5 +1,5 @@
 {
     "cookie-secret": "<random string>",
-    "vapid-private": "<generate with generation script>",
+    "vapid-private": "-pugSYtf5qNLnATszbwNoEOtXB5PxoKA2OxrE0T7VKw",
     "beem-secret": "<get from Beeminder>"
 }
