@@ -16,4 +16,5 @@ db.version(3).stores({
     tags: "tag,count",
     keyVal: "key,val", // added in v2
 });
+// versons 1, 2 were development versions and were never used in a production enviroment
 self.db = db;
