@@ -21,4 +21,15 @@ db.version(3).stores({
     keyVal: "key,val", // added in v2
 });
 // versons 1, 2 were development versions and were never used in a production enviroment
+
+self.addEventListener("unhandledrejection", e => {
+    console.log("unhandled promise rejection!", e);
+    if ((typeof e === "object") &&
+        (typeof e.reason === "object") &&
+        (typeof e.reason.name === "string") &&
+        (e.reason.name === "OpenFailedError")) {
+        alert("There was an error setting up the database, probably because your browser is in private browsing mode. Make sure you aren't in private browsing mode.");
+    }
+});
+
 self.db = db;
