@@ -21,6 +21,7 @@ You can use filtering options in the Pings/Goals/Graphs tab to include pings tha
 You can change the default AFK tags in settings.
 Tags are converted to lowercase.
 On most recent browsers, you can use ${STR.appName} offline.
+${STR.appname} will automatically sync up when you are reconnected to the Internet if you answer pings offline.
 You can export your tags as a SQLite database in Settings, and run SQL queries against it.
 You can enable notifications from Settings to get a push notification when it's ping time.
 When entering tags, you can click on a tag to remove it.
