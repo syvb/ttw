@@ -1,5 +1,9 @@
 const Dexie = require("dexie").default;
 
+if (!window.indexedDB) {
+    alert("Your browser is outdated and doesn't support indexedDB. Please update your browser.");
+}
+
 const db: any = new Dexie("retag");
 db.version(5).stores({
     // non-indexed priperties: type
