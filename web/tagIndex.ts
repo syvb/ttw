@@ -3,13 +3,16 @@ import { eachLocalPing } from "./pings.ts";
 
 export async function rebuildTagIndex() {
     const clearPromise = window.db.tags.clear();
+    const now = Date.now() / 1000;
     let tagData = {};
-    await eachLocalPing((row: { tags: string[]; }) => {
+    await eachLocalPing((row: { tags: string[]; time: number; }) => {
         row.tags.forEach((tag: string) => {
+            // weight by time away tag was, will be negative
+            const weight = row.time - now;
             if (tagData[tag] === undefined) {
-                tagData[tag] = 1;
+                tagData[tag] = weight;
             } else {
-                tagData[tag]++;
+                tagData[tag] += weight;
             }
         });
     });
