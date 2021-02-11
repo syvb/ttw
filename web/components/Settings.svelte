@@ -115,7 +115,6 @@
         }
         console.log(allPings);
         await putPings(allPings);
-        await rebuildTagIndex();
         alert(`Imported ${allPings.length} pings.`);
         endImport();
         location.reload();
