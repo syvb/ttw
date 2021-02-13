@@ -1,6 +1,8 @@
 const Dexie = require("dexie").default;
 
-if (!window.indexedDB) {
+if (!self.indexedDB) {
+    // alert won't work in Worker but we shouldn't get here in a worker as the SW is only loaded
+    // after the DB is setup
     alert("Your browser is outdated and doesn't support indexedDB. Please update your browser.");
 }
 
