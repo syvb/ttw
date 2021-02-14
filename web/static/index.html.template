@@ -14,17 +14,40 @@
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
             margin: 0;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 0.5rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .auth-links {
+            margin-top: 0.25rem;
+        }
+
+        .auth-link {
+            margin-left: 1rem;
+            font-size: 1rem;
+            color: black;
+            border-radius: 4px;
+            border: 2px solid #e0e0e0;
+            text-decoration: none;
+            padding: 0.5rem .8rem 0.4rem;
         }
 
         h1 {
-            font-size: 3rem;
-            margin: 1rem;
-            margin-left: 0;
-            margin-right: 0;
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 400;
+            text-align: left;
         }
 
         .tagline {
-            font-weight: bold;
             font-size: 2.2rem;
         }
 
@@ -48,19 +71,12 @@
 
         .scr-graph {
             display: block;
-            width: 1250px;
+            max-width: 100%;
             margin-left: 1.5rem;
         }
 
-        @media (max-width: 1300px) {
-            .scr-graph {
-                width: 90vw;
-                margin-left: 5vw;
-            }
-        }
-
         @media (prefers-color-scheme: dark) {
-            body {
+            body, .auth-link {
                 background: black;
                 color: white;
             }
@@ -78,17 +94,12 @@
             /* just enough room left for the footer */
             min-height: calc(100vh - 4rem - 1px);
             padding-bottom: 1rem;
+            text-align: center;
+            max-width: 55rem;
         }
 
-        footer {
-            margin-left: 8px;
-            margin-right: 8px;
-            margin-top: 1rem;
-            border-top: 2px solid gray;
-            padding-top: 1rem;
-            position: absolute;
-            bottom: -3rem;
-            padding-bottom: 1rem;
+        p {
+            font-size: 1.1rem;
         }
 
         .home {
@@ -108,14 +119,19 @@
     <div class="app-root">
         <div>
             <div class="home">
-                <h1>APPNAME</h1>
-                <div class="tagline">Time tracking that samples you randomly</div>
+                <header>
+                    <nav>
+                        <h1>APPNAME</h1>
+                        <div class="auth-links">
+                            <a class="auth-link" href="BACKSERV/internal/login">Login</a>
+                            <a class="auth-link" href="BACKSERV/internal/register">Sign up</a>
+                        </div>
+                    </nav>
+                    <div class="tagline">Time tracking that samples you randomly</div>
+                </header>
                 <noscript>
                     You can look at this page without Javascript, but be warned that logging in will fail without Javascript.
                 </noscript>
-                <p><a href="BACKSERV/internal/login">Login</a>
-                    or
-                    <a href="BACKSERV/internal/register">Sign up</a></p>
                 <p>
                     APPNAME is an <a href="https://github.com/smittyvb/ttw" target="_blank" rel="noopener">open-source</a>
                     time-tracking web app.
@@ -154,9 +170,11 @@
                     <a href="https://www.youtube.com/watch?v=cJpE018QEkQ">Learn more about stochastic time tracking.</a>
                 </p>
 
-                <p>
-                    APPNAME was made by <a href="https://smitop.com/">Smitop</a> (<a href="mailto:ttw@smitop.com">ttw@smitop.com</a>).
-                </p>
+                <footer>
+                    <p>
+                        APPNAME was made by <a href="https://smitop.com/">Smitop</a> (<a href="mailto:ttw@smitop.com">ttw@smitop.com</a>).
+                    </p>
+                </footer>
             </div>
         </div>
     </div>
