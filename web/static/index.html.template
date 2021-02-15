@@ -82,6 +82,35 @@
             background: #92eedb;
         }
 
+        .card-stack {
+            display: flex;
+        }
+
+        .card {
+            display: flex;
+            flex-flow: column;
+            border: 2px solid #005644;
+            background: #d6f8f1;
+            border-radius: 8px;
+            margin-left: 1rem;
+        }
+
+        .card > img {
+            /* stop corners from hitting boundary */
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        @media (max-width: 940px) {
+            .card-stack {
+                flex-flow: column;
+            }
+            .card {
+                margin-left: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
         @media (max-width: 580px) {
             .scr {
                 width: 90vw;
@@ -94,12 +123,6 @@
                 width: 98vw;
                 margin-left: 0.5vw;
             }
-        }
-
-        .scr-graph {
-            display: block;
-            max-width: 100%;
-            margin-left: 1.5rem;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -217,10 +240,16 @@
                     from your data:
                 </p>
 
-                <p>
-                    <img src="scrdailytrend.png" alt="Daily trend" class="scr-graph" />
-                    <img src="scrmatrix.png" alt="Matrix of pings" class="scr-graph" />
-                </p>
+                <div class="card-stack">
+                    <div class="card">
+                        <img src="scrdailytrend.png" alt="Daily trend" class="scr-graph" />
+                        <div>View daily, weekly, and montly graphs</div>
+                    </div>
+                    <div class="card">
+                        <img src="scrmatrix.png" alt="Matrix of pings" class="scr-graph" />
+                        <div>See a punch-card style graph of when you do certain tags the most</div>
+                    </div>
+                </div>
 
                 <h2>History</h2>
                 <p>
