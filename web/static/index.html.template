@@ -30,6 +30,11 @@
             margin-top: 0.25rem;
         }
 
+        .mid-page-authlinks {
+            margin-top: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
         .auth-link {
             margin-left: 1rem;
             font-size: 1rem;
@@ -47,12 +52,34 @@
             text-align: left;
         }
 
+        h3 {
+            margin: 0;
+            margin-top: 0.5rem;
+        }
+
         .tagline {
-            font-size: 2.2rem;
+            font-size: 2.7rem;
+            font-weight: bold;
         }
 
         .scr {
             margin-left: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+        }
+
+        .step-num {
+            border-radius: 50%;
+            border: 2px solid #005644;
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            font-size: 2rem;
+            background: #92eedb;
         }
 
         @media (max-width: 580px) {
@@ -136,18 +163,38 @@
                     APPNAME is an <a href="https://github.com/smittyvb/ttw" target="_blank" rel="noopener">open-source</a>
                     time-tracking web app.
                     At random points throughout the day, it asks you what you are doing.
-                    This is the same idea as the <a href="https://github.com/tagtime/TagTime" target="_blank"
-                        rel="noopener">orignal Perl TagTime</a>
-                    (although the implementation is different).
                 </p>
 
+                <div class="auth-links mid-page-authlinks">
+                    <a class="auth-link" href="BACKSERV/internal/login">Login</a>
+                    <a class="auth-link" href="BACKSERV/internal/register">Sign up</a>
+                </div>
+
+                <h2>How it works</h2>
                 <p>
-                    Here's what it looks like when you get a ping:
+                    <a href="https://www.youtube.com/watch?v=cJpE018QEkQ">Stochastic time tracking</a>
+                    is a system that sends you a ping at random intervals. While it's not very
+                    accurate at a small scale, it is very valuable for obtaining long-term insights
+                    as to how you spend your time.
+                </p>
+
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3>Get a ping</h3>
+                </div>
+
+                <p>
+                    Here's what APPNAME looks like when you get a ping:
                 </p>
 
                 <p>
                     <img src="scrping.png" alt="What a ping looks like" class="scr" />
                 </p>
+
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3>Respond</h3>
+                </div>
 
                 <p>
                     From there, you can enter tags:
@@ -157,8 +204,14 @@
                     <img src="scrautocomplete.png" alt="Entering tags" class="scr" />
                 </p>
 
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3>Use your data</h3>
+                </div>
+
                 <p>
-                    Once you've responded to enough tags, graphs can be generated from your data:
+                    Once you've responded to enough tags, many types of graphs can be generated
+                    from your data:
                 </p>
 
                 <p>
@@ -166,8 +219,13 @@
                     <img src="scrmatrix.png" alt="Matrix of pings" class="scr-graph" />
                 </p>
 
+                <h2>History</h2>
                 <p>
-                    <a href="https://www.youtube.com/watch?v=cJpE018QEkQ">Learn more about stochastic time tracking.</a>
+                    <a href="https://github.com/tagtime/TagTime" target="_blank" rel="noopener">TagTime</a>
+                    was initially written in Perl. APPNAME is a complete, modern, re-implementation
+                    that works in web browsers. This isn't the only re-implementation though: check
+                    out <a href="http://doc.beeminder.com/tagtime" target="_blank" rel="noopener">this comprehensive list</a>
+                    for more.
                 </p>
 
                 <footer>
