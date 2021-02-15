@@ -107,6 +107,9 @@
                 background: black;
                 color: white;
             }
+            .step-num {
+                color: black;
+            }
             a {
                 color: #8a8aff;
             }
