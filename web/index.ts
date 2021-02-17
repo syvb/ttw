@@ -21,6 +21,8 @@ import { latestPing } from "./pings.ts";
 // @ts-ignore
 import { beemLoadCheck } from "./beem.ts";
 
+const SW_CHECK_INTERVAL = 43200000; // 12 hours
+
 declare global {
     interface Window {
         pintData: any,
@@ -214,7 +216,12 @@ window.recheckPending = () => {}; // ignore calls to recheck pending until ping 
         { key: "alg", value: window.pintData.alg },
     ]);
     if ("serviceWorker" in navigator) {
-        await navigator.serviceWorker.register("./sw.js");
+        const reg = await navigator.serviceWorker.register("./sw.js");
+        const swCheck = async () => {
+            await reg.update();
+            setTimeout(swCheck, SW_CHECK_INTERVAL);
+        };
+        setTimeout(swCheck, SW_CHECK_INTERVAL);
         pushLoadCheck();
     }
 })();
