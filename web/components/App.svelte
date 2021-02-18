@@ -35,6 +35,19 @@
             navigate("/app");
         }
     }
+
+    let swPending = false;
+    navigator.serviceWorker.ready.then(reg => {
+        function checkInstalling() {
+            swPending = !!reg.waiting;
+            console.log("swPending", swPending);
+            if (reg.installing) {
+                reg.installing.onstatechange = checkInstalling;
+            }
+        }
+        reg.addEventListener("updatefound", checkInstalling);
+        checkInstalling();
+    });
 </script>
 
 <style>
@@ -82,7 +95,7 @@
             </Route>
             <Route path="/app">
                 <LoggedInTop {username} {url} />
-                <div class="home"><LoggedInHome /></div>
+                <div class="home"><LoggedInHome {swPending} /></div>
             </Route>
             <Route path="/settings">
                 <LoggedInTop {username} {url} />

@@ -28,6 +28,25 @@ async function onActivate() {
     await subWithReg(self.registration);
 }
 
+function wait(time) {
+    return new Promise((resolve, _reject) => setTimeout(resolve, time));
+}
+
+self.addEventListener("message", event => {
+    event.waitUntil((async () => {
+        if (event.data === "earlyClaim") {
+            await self.skipWaiting();
+            const clients = await self.clients.matchAll({type: "window"});
+            await Promise.all(clients.map((tab, i) =>
+                // reload with a delay to stop both tabs from accessing the DB on load at the same time
+                wait(i * 500).then(() => tab.navigate(tab.url))
+            ));
+        } else {
+            console.warn("Unknown message recieved in SW", event.data);
+        }
+    })());
+})
+
 self.addEventListener("activate", event => {
     event.waitUntil(onActivate());
 });

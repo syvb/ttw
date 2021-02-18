@@ -1,6 +1,8 @@
 <script>
     import NotificationsPerm from "./NotificationsPerm.svelte";
+    import UpdateNotifier from "./UpdateNotifier.svelte";
     import Tip from "./Tip.svelte";
+    export let swPending;
     let lastTagTime = new Date(window.taglogic.last_ping_u32(Math.floor(Date.now() / 1000), window.pintData) * 1000);
     function pingUpdate(e) {
         console.assert(typeof e.lastPing === "number", "lastPing should be a number");
@@ -46,6 +48,8 @@
     <NotificationsPerm alwaysShow={false} />
 
     <Tip />
+
+    <UpdateNotifier {swPending} />
 
     <div class="bg" style={localStorage['retag-bg'] ? `background-image: url(${localStorage['retag-bg']});` : ""}></div>
 </div>
