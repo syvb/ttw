@@ -539,7 +539,7 @@
                 <button on:click={deleteAllData} class="delete-button">Delete all data</button>
             </div>
             <div>
-                Note: This will not delete your account. To delete your account, <a href={"mailto:" + config["contact-email"]}>contact support</a>.
+                You probably want to export your data in the Imports/Exports tab first. This will not delete your account. To delete your account, <a href={"mailto:" + config["contact-email"]}>contact support</a>.
             </div>
 
         </div>
