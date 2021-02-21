@@ -1,4 +1,4 @@
-# Configuring Retag
+# Configuring
 
 There are two config files that you should create in order to run this, `config.json` and `config-private.json`.
 `config.json` is used by the front-end, and both are used by the backend.

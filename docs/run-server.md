@@ -1,4 +1,4 @@
-# Running a Retag server
+# Running a server
 
 Want to run your own Retag server? This is the documentation file for you!
 
