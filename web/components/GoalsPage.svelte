@@ -87,7 +87,7 @@
     <div class="about">
         <p>
             Here you can create and manage your goals. Currently the only point of creating goals is to sync with
-            Beeminder.
+            Beeminder. <a href="https://www.youtube.com/watch?v=oZ1R3oxGN90" taget="_blank">Here's a tutorial</a> on setting this up.
         </p>
         <div>
             <button on:click={beeRedir}
