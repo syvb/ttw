@@ -513,7 +513,7 @@
                             {#if localStorage["retag-beem-token"]}
                                 Ensures Beeminder has all pings over the last 7 days.
                             {:else}
-                                Connect to Beeminder in the Goals tab first.
+                                Connect to Beeminder in the <Link to="/goals">Goals tab</Link> to enable syncing with it.
                             {/if}
                         </td>
                     </tr>
