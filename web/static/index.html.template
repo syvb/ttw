@@ -158,11 +158,21 @@
         .home {
             padding: 8px;
         }
+
+        #unsupported {
+            display: none;
+        }
     </style>
     <script>
         // @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt Apache-2.0
         if (localStorage["retag-auth"] && localStorage["retag-auth"] !== "out") {
             location.pathname = "/app";
+        }
+        var supported = typeof window.WebAssembly !== "undefined";
+        if (!supported) {
+            onload = function() {
+                document.getElementById("unsupported").style.display = "block";
+            };
         }
         // @license-end
     </script>
@@ -171,6 +181,9 @@
 <body class="light">
     <div class="app-root">
         <div>
+            <div id="unsupported">
+                Your browser doesn't support APPNAME, so logging in won't work.
+            </div>
             <div class="home">
                 <header>
                     <nav>
