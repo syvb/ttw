@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 
 mod hash;
 pub mod tt;
+pub mod bool;
 
 #[wasm_bindgen]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
