@@ -18,6 +18,13 @@ impl BinaryOp {
             _ => None,
         }
     }
+    pub fn from_text(text: &str) -> Option<Self> {
+        match text {
+            "and" => Some(Self::And),
+            "or" => Some(Self::Or),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -34,17 +41,18 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
     enum ParseState {
         AnyExpected,
         InName,
-        InBinOp(BinaryOp),
+        /// Currently in a binary operation repersented with symbols instead of words.
+        InSymbolBinOp(BinaryOp),
     }
 
     let mut state = ParseState::AnyExpected;
     let mut tokens = Vec::new();
     let mut cur_name = String::new();
     for c in s.chars() {
-        if let ParseState::InBinOp(op) = state {
+        if let ParseState::InSymbolBinOp(op) = state {
+            state = ParseState::AnyExpected;
             if c == op.as_char() {
-                // continuning the last bin op
-                state = ParseState::AnyExpected;
+                // continuning the last bin op (| and || are treated the same)
                 continue;
             }
         }
@@ -56,7 +64,12 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
                 _ => false,
             };
             if end_cur_token {
-                tokens.push(Token::Name { text: cur_name });
+                let lower = cur_name.to_ascii_lowercase();
+                if let Some(op) = BinaryOp::from_text(&lower) {
+                    tokens.push(Token::BinaryOp(op));
+                } else {
+                    tokens.push(Token::Name { text: cur_name });
+                }
                 cur_name = String::new();
                 state = ParseState::AnyExpected;
             } else {
@@ -71,11 +84,11 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
                 '!' => tokens.push(Token::Invert),
                 '&' => {
                     tokens.push(Token::BinaryOp(BinaryOp::And));
-                    state = ParseState::InBinOp(BinaryOp::And);
+                    state = ParseState::InSymbolBinOp(BinaryOp::And);
                 },
                 '|' => {
                     tokens.push(Token::BinaryOp(BinaryOp::Or));
-                    state = ParseState::InBinOp(BinaryOp::Or);
+                    state = ParseState::InSymbolBinOp(BinaryOp::Or);
                 },
                 // ignore whitespace
                 _ if c.is_whitespace() => {},
@@ -107,6 +120,7 @@ mod test {
             Token::Name { text: "xyz".to_string() },
             Token::BinaryOp(BinaryOp::Or),
             Token::Name { text: "dwf".to_string() },
+            Token::CloseBracket,
             Token::BinaryOp(BinaryOp::Or),
             Token::OpenBracket,
             Token::Invert,
