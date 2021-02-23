@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use wasm_bindgen::prelude::*;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum BinaryOp {
@@ -230,6 +231,7 @@ enum ExprData {
     HasNodes(AstNode),
 }
 
+#[wasm_bindgen]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Expr(ExprData); // wrap internal implementation details
 
@@ -246,6 +248,7 @@ impl Expr {
         }
         Ok(Self(ExprData::HasNodes(ast)))
     }
+
     pub fn matches(&self, tags: &[&str]) -> bool {
         match &self.0 {
             ExprData::Empty => true,
@@ -358,47 +361,81 @@ mod test {
 
     #[test]
     fn simple_and_matching() {
-        assert!(Expr::from_string("a & b & c").unwrap().matches(&["a", "b", "c"]));
+        assert!(Expr::from_string("a & b & c")
+            .unwrap()
+            .matches(&["a", "b", "c"]));
         assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "c"]));
         assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "b"]));
         assert!(!Expr::from_string("a & b & c").unwrap().matches(&["c", "b"]));
-        assert!(Expr::from_string("a & b & c").unwrap().matches(&["a", "b", "c", "d"]));
-        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "c", "d"]));
-        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "b", "d"]));
-        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["c", "b", "d"]));
+        assert!(Expr::from_string("a & b & c")
+            .unwrap()
+            .matches(&["a", "b", "c", "d"]));
+        assert!(!Expr::from_string("a & b & c")
+            .unwrap()
+            .matches(&["a", "c", "d"]));
+        assert!(!Expr::from_string("a & b & c")
+            .unwrap()
+            .matches(&["a", "b", "d"]));
+        assert!(!Expr::from_string("a & b & c")
+            .unwrap()
+            .matches(&["c", "b", "d"]));
     }
 
     #[test]
     fn simple_or_matching() {
-        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b", "c"]));
+        assert!(Expr::from_string("a | b | c")
+            .unwrap()
+            .matches(&["a", "b", "c"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "c"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["c", "b"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["c"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["b"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["a"]));
-        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b", "c", "d"]));
-        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "c", "d"]));
-        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b", "d"]));
-        assert!(Expr::from_string("a | b | c").unwrap().matches(&["c", "b", "d"]));
+        assert!(Expr::from_string("a | b | c")
+            .unwrap()
+            .matches(&["a", "b", "c", "d"]));
+        assert!(Expr::from_string("a | b | c")
+            .unwrap()
+            .matches(&["a", "c", "d"]));
+        assert!(Expr::from_string("a | b | c")
+            .unwrap()
+            .matches(&["a", "b", "d"]));
+        assert!(Expr::from_string("a | b | c")
+            .unwrap()
+            .matches(&["c", "b", "d"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["c", "d"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["b", "d"]));
         assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "d"]));
         assert!(!Expr::from_string("a | b | c").unwrap().matches(&["ddwf"]));
         assert!(!Expr::from_string("a | b | c").unwrap().matches(&["d"]));
-        assert!(!Expr::from_string("a | b | c").unwrap().matches(&["hdwf", "dtw"]));
+        assert!(!Expr::from_string("a | b | c")
+            .unwrap()
+            .matches(&["hdwf", "dtw"]));
     }
 
     #[test]
     fn op_bracket_resoultion() {
-        assert_eq!(Expr::from_string("a & b | c"), Expr::from_string("a & (b | c)"));
-        assert_eq!(Expr::from_string("a | b & c"), Expr::from_string("a | (b & c)"));
-        assert_eq!(Expr::from_string("a & b | c & d"), Expr::from_string("a & (b | (c & d))"));
+        assert_eq!(
+            Expr::from_string("a & b | c"),
+            Expr::from_string("a & (b | c)")
+        );
+        assert_eq!(
+            Expr::from_string("a | b & c"),
+            Expr::from_string("a | (b & c)")
+        );
+        assert_eq!(
+            Expr::from_string("a & b | c & d"),
+            Expr::from_string("a & (b | (c & d))")
+        );
     }
 
     #[test]
     fn invert_bracket_resolution() {
-        assert_eq!(Expr::from_string("a & !b | c"), Expr::from_string("a & ((!(b)) | c)"));
+        assert_eq!(
+            Expr::from_string("a & !b | c"),
+            Expr::from_string("a & ((!(b)) | c)")
+        );
     }
 
     #[test]

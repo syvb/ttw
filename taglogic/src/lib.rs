@@ -190,6 +190,16 @@ pub fn pings_between_u32(t1: u32, t2: u32, interval_data: &PingIntervalData) -> 
         .collect() // fails after 2106
 }
 
+#[wasm_bindgen]
+pub fn new_expr(expr: &str) -> Result<bool::Expr, JsValue> {
+    bool::Expr::from_string(expr).map_err(JsValue::from_str)
+}
+
+#[wasm_bindgen]
+pub fn expr_matches(expr: &bool::Expr, tags: String) -> bool {
+    expr.matches(&tags.split(" ").collect::<Vec<_>>())
+}
+
 #[wasm_bindgen(start)]
 pub fn init() {
     #[cfg(feature = "console-panic")]
