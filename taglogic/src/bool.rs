@@ -87,19 +87,27 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
                 '&' => {
                     tokens.push(Token::BinaryOp(BinaryOp::And));
                     state = ParseState::InSymbolBinOp(BinaryOp::And);
-                },
+                }
                 '|' => {
                     tokens.push(Token::BinaryOp(BinaryOp::Or));
                     state = ParseState::InSymbolBinOp(BinaryOp::Or);
-                },
+                }
                 // ignore whitespace
-                _ if c.is_whitespace() => {},
+                _ if c.is_whitespace() => {}
                 _ => {
                     state = ParseState::InName;
                     cur_name = String::with_capacity(1);
                     cur_name.push(c);
                 }
             }
+        }
+    }
+    if !cur_name.is_empty() {
+        let lower = cur_name.to_ascii_lowercase();
+        if let Some(op) = BinaryOp::from_text(&lower) {
+            tokens.push(Token::BinaryOp(op));
+        } else {
+            tokens.push(Token::Name { text: cur_name });
         }
     }
     Ok(tokens)
@@ -114,6 +122,7 @@ enum AstNode {
 
 impl AstNode {
     fn munch_tokens(tokens: &mut VecDeque<Token>) -> Result<Self, &'static str> {
+        dbg!(tokens.clone());
         loop {
             let next = match tokens.get(0) {
                 Some(x) => x,
@@ -128,12 +137,12 @@ impl AstNode {
                     match tokens.get(1) {
                         Some(Token::OpenBracket) => {
                             return Ok(AstNode::Invert(Box::new(Self::munch_tokens(tokens)?)));
-                        },
+                        }
                         Some(Token::Name { text }) => {
                             // is it like "!abc" or "!abc & xyz"
                             let inverted = AstNode::Invert(Box::new(AstNode::Name(text.clone())));
                             match tokens.get(2) {
-                                Some(Token::BinaryOp(op)) => {
+                                Some(Token::BinaryOp(_)) => {
                                     // "!abc & xyz"
                                     // convert to unambiguous form and try again
                                     // 1 token for invert, 1 for name makes 2
@@ -145,38 +154,45 @@ impl AstNode {
                                     // "!abc"
                                     tokens.remove(0); // will return None if empty, that is okay
                                     return Ok(inverted);
-                                 }
+                                }
                                 Some(_) => return Err("invalid token after inverted name"),
                             }
                         }
-                        Some(Token::Invert) => return Err("can't double invert, that would be pointless"),
+                        Some(Token::Invert) => {
+                            return Err("can't double invert, that would be pointless")
+                        }
                         Some(_) => return Err("expected expression"),
                         None => return Err("Expected token to invert, got EOF"),
                     }
-                },
+                }
                 Token::OpenBracket => {
                     tokens.remove(0); // open bracket
                     let result = Self::munch_tokens(tokens)?;
-                    match tokens.remove(0) {
-                        Some(Token::CloseBracket) => {},
+                    match tokens.remove(0) { // remove closing bracket
+                        Some(Token::CloseBracket) => {}
                         _ => return Err("expected closing bracket"),
                     };
                     // check for binary op afterwards
                     return match tokens.get(0) {
                         Some(Token::BinaryOp(op)) => {
-                            let ret = Ok(AstNode::Binary(op.clone(), Box::new(result), Box::new(Self::munch_tokens(tokens)?)));
-                            tokens.remove(0);
+                            let op = op.clone();
+                            tokens.remove(0).unwrap(); // remove binary op
+                            let ret = Ok(AstNode::Binary(
+                                op,
+                                Box::new(result),
+                                Box::new(Self::munch_tokens(tokens)?),
+                            ));
                             ret
                         }
                         Some(Token::CloseBracket) | None => Ok(result),
                         Some(_) => Err("invald token after closing bracket"),
                     };
-                },
+                }
                 Token::BinaryOp(_) => return Err("Unexpected binary operator"),
                 Token::Name { text } => {
                     // could be the start of the binary op or just a lone name
                     match tokens.get(1) {
-                        Some(Token::BinaryOp(op)) => {
+                        Some(Token::BinaryOp(_)) => {
                             // convert to unambiguous form and try again
                             tokens.insert(1, Token::CloseBracket);
                             tokens.insert(0, Token::OpenBracket);
@@ -224,33 +240,66 @@ mod test {
     use super::*;
 
     #[test]
-    fn nested_lex() {
-        let tokens = lex("abc & !(( ! xyz || dwf) | (!abc or dwp) & (dwp and r   ) )  ");
-        assert_eq!(tokens, Ok(vec![
-            Token::Name { text: "abc".to_string() },
-            Token::BinaryOp(BinaryOp::And),
-            Token::Invert,
-            Token::OpenBracket,
-            Token::OpenBracket,
-            Token::Invert,
-            Token::Name { text: "xyz".to_string() },
-            Token::BinaryOp(BinaryOp::Or),
-            Token::Name { text: "dwf".to_string() },
-            Token::CloseBracket,
-            Token::BinaryOp(BinaryOp::Or),
-            Token::OpenBracket,
-            Token::Invert,
-            Token::Name { text: "abc".to_string() },
-            Token::BinaryOp(BinaryOp::Or),
-            Token::Name { text: "dwp".to_string() },
-            Token::CloseBracket,
-            Token::BinaryOp(BinaryOp::And),
-            Token::OpenBracket,
-            Token::Name { text: "dwp".to_string() },
-            Token::BinaryOp(BinaryOp::And),
-            Token::Name { text: "r".to_string() },
-            Token::CloseBracket,
-            Token::CloseBracket,
-        ]));
+    fn simple_add() {
+        assert_eq!(
+            Expr::from_string("a & b").unwrap().0,
+            ExprData::HasNodes(AstNode::Binary(
+                BinaryOp::And,
+                Box::new(AstNode::Name("a".to_string())),
+                Box::new(AstNode::Name("b".to_string())),
+            ))
+        )
+    }
+
+    #[test]
+    fn nested_expr() {
+        let tokens = lex("abc & !(( ! xyz || dwf) | (!abc or dwp) & (dwp and r   ) )  ").unwrap();
+        assert_eq!(
+            tokens,
+            vec![
+                Token::Name {
+                    text: "abc".to_string()
+                },
+                Token::BinaryOp(BinaryOp::And),
+                Token::Invert,
+                Token::OpenBracket,
+                Token::OpenBracket,
+                Token::Invert,
+                Token::Name {
+                    text: "xyz".to_string()
+                },
+                Token::BinaryOp(BinaryOp::Or),
+                Token::Name {
+                    text: "dwf".to_string()
+                },
+                Token::CloseBracket,
+                Token::BinaryOp(BinaryOp::Or),
+                Token::OpenBracket,
+                Token::Invert,
+                Token::Name {
+                    text: "abc".to_string()
+                },
+                Token::BinaryOp(BinaryOp::Or),
+                Token::Name {
+                    text: "dwp".to_string()
+                },
+                Token::CloseBracket,
+                Token::BinaryOp(BinaryOp::And),
+                Token::OpenBracket,
+                Token::Name {
+                    text: "dwp".to_string()
+                },
+                Token::BinaryOp(BinaryOp::And),
+                Token::Name {
+                    text: "r".to_string()
+                },
+                Token::CloseBracket,
+                Token::CloseBracket,
+            ]
+        );
+        let mut tokens = tokens.into_iter().collect();
+        let ast = AstNode::munch_tokens(&mut tokens).unwrap();
+        assert!(tokens.is_empty());
+        assert_eq!(ast, AstNode::Name("blah".to_string()));
     }
 }

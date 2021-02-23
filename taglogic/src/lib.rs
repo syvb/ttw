@@ -1,8 +1,8 @@
 use wasm_bindgen::prelude::*;
 
+pub mod bool;
 mod hash;
 pub mod tt;
-pub mod bool;
 
 #[wasm_bindgen]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
