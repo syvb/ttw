@@ -299,6 +299,46 @@ mod test {
     }
 
     #[test]
+    fn handles_invalid() {
+        let tests = vec![
+            "a &",
+            " b|",
+            "b and",
+            "and at",
+            "| dwp",
+            "a | b | c | d |",
+            "!",
+            "tfw & !)",
+            ")",
+            "()",
+            "((at) & a | b) | c)",
+            "((at) & a | b) | c)",
+            "a (&) b",
+            "a (& b)"
+        ];
+        for test in tests {
+            println!("trying: {}", test);
+            assert!(matches!(Expr::from_string(test), Err(_)));
+        }
+    }
+
+    #[test]
+    fn lots_of_nesting() {
+        assert_eq!(
+            Expr::from_string("(((((((a & (((((b))))))))))))").unwrap().0,
+            ExprData::HasNodes(AstNode::Binary(
+                BinaryOp::And,
+                Box::new(AstNode::Name("a".to_string())),
+                Box::new(AstNode::Name("b".to_string())),
+            ))
+        );
+        assert_eq!(
+            Expr::from_string("(((((((a)))))))").unwrap().0,
+            ExprData::HasNodes(AstNode::Name("a".to_string()))
+        );
+    }
+
+    #[test]
     fn nested_expr() {
         let tokens = lex("abc & !(( ! xyz || dwf) | (!abc or dwp) & (dwp and r   ) )  ").unwrap();
         assert_eq!(
