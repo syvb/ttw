@@ -211,6 +211,16 @@ impl AstNode {
             }
         }
     }
+
+    fn matches(&self, tags: &[&str]) -> bool {
+        // invert, binary, name
+        match self {
+            Self::Invert(inverted) => !inverted.matches(tags),
+            Self::Name(name) => tags.contains(&&**name),
+            Self::Binary(BinaryOp::And, a1, a2) => a1.matches(tags) && a2.matches(tags),
+            Self::Binary(BinaryOp::Or, a1, a2) => a1.matches(tags) || a2.matches(tags),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -233,6 +243,12 @@ impl Expr {
             return Err("expected EOF, found extra tokens");
         }
         Ok(Self(ExprData::HasNodes(ast)))
+    }
+    pub fn matches(&self, tags: &[&str]) -> bool {
+        match &self.0 {
+            ExprData::Empty => true,
+            ExprData::HasNodes(node) => node.matches(tags),
+        }
     }
 }
 
@@ -312,7 +328,7 @@ mod test {
             "((at) & a | b) | c)",
             "((at) & a | b) | c)",
             "a (&) b",
-            "a (& b)"
+            "a (& b)",
         ];
         for test in tests {
             println!("trying: {}", test);
@@ -323,7 +339,9 @@ mod test {
     #[test]
     fn lots_of_nesting() {
         assert_eq!(
-            Expr::from_string("(((((((a & (((((b))))))))))))").unwrap().0,
+            Expr::from_string("(((((((a & (((((b))))))))))))")
+                .unwrap()
+                .0,
             ExprData::HasNodes(AstNode::Binary(
                 BinaryOp::And,
                 Box::new(AstNode::Name("a".to_string())),
@@ -334,6 +352,51 @@ mod test {
             Expr::from_string("(((((((a)))))))").unwrap().0,
             ExprData::HasNodes(AstNode::Name("a".to_string()))
         );
+    }
+
+    #[test]
+    fn simple_and_matching() {
+        assert!(Expr::from_string("a & b & c").unwrap().matches(&["a", "b", "c"]));
+        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "c"]));
+        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "b"]));
+        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["c", "b"]));
+        assert!(Expr::from_string("a & b & c").unwrap().matches(&["a", "b", "c", "d"]));
+        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "c", "d"]));
+        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["a", "b", "d"]));
+        assert!(!Expr::from_string("a & b & c").unwrap().matches(&["c", "b", "d"]));
+    }
+
+    #[test]
+    fn simple_or_matching() {
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b", "c"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "c"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["c", "b"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["c"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["b"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b", "c", "d"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "c", "d"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "b", "d"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["c", "b", "d"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["c", "d"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["b", "d"]));
+        assert!(Expr::from_string("a | b | c").unwrap().matches(&["a", "d"]));
+        assert!(!Expr::from_string("a | b | c").unwrap().matches(&["ddwf"]));
+        assert!(!Expr::from_string("a | b | c").unwrap().matches(&["d"]));
+        assert!(!Expr::from_string("a | b | c").unwrap().matches(&["hdwf", "dtw"]));
+    }
+
+    #[test]
+    fn op_bracket_resoultion() {
+        assert_eq!(Expr::from_string("a & b | c"), Expr::from_string("a & (b | c)"));
+        assert_eq!(Expr::from_string("a | b & c"), Expr::from_string("a | (b & c)"));
+        assert_eq!(Expr::from_string("a & b | c & d"), Expr::from_string("a & (b | (c & d))"));
+    }
+
+    #[test]
+    fn invert_bracket_resolution() {
+        assert_eq!(Expr::from_string("a & !b | c"), Expr::from_string("a & ((!(b)) | c)"));
     }
 
     #[test]
