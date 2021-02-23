@@ -153,6 +153,7 @@ impl AstNode {
                                 }
                                 None | Some(Token::CloseBracket) => {
                                     // "!abc"
+                                    tokens.remove(0); // remove name
                                     return Ok(inverted);
                                 }
                                 Some(_) => return Err("invalid token after inverted name"),
@@ -240,6 +241,7 @@ impl Expr {
         }
         let ast = AstNode::munch_tokens(&mut tokens)?;
         if !tokens.is_empty() {
+            dbg!(tokens);
             return Err("expected EOF, found extra tokens");
         }
         Ok(Self(ExprData::HasNodes(ast)))
@@ -397,6 +399,27 @@ mod test {
     #[test]
     fn invert_bracket_resolution() {
         assert_eq!(Expr::from_string("a & !b | c"), Expr::from_string("a & ((!(b)) | c)"));
+    }
+
+    #[test]
+    fn lone_name() {
+        assert!(Expr::from_string("a").unwrap().matches(&["a"]));
+        assert!(Expr::from_string("a").unwrap().matches(&["a", "b"]));
+        assert!(!Expr::from_string("a").unwrap().matches(&["b"]));
+    }
+
+    #[test]
+    fn lone_inverted_name() {
+        assert!(!Expr::from_string("!a").unwrap().matches(&["a"]));
+        assert!(!Expr::from_string("!a").unwrap().matches(&["a", "b"]));
+        assert!(Expr::from_string("!a").unwrap().matches(&["b"]));
+    }
+
+    #[test]
+    fn lone_inverted_bracketed_name() {
+        assert!(!Expr::from_string("!(a)").unwrap().matches(&["a"]));
+        assert!(!Expr::from_string("!(a)").unwrap().matches(&["a", "b"]));
+        assert!(Expr::from_string("!(a)").unwrap().matches(&["b"]));
     }
 
     #[test]
