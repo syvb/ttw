@@ -280,7 +280,22 @@ mod test {
                 )),
             ))
         )
+    }
 
+    #[test]
+    fn multiple_with_inversion_in_middle() {
+        assert_eq!(
+            Expr::from_string("a & !b & c").unwrap().0,
+            ExprData::HasNodes(AstNode::Binary(
+                BinaryOp::And,
+                Box::new(AstNode::Name("a".to_string())),
+                Box::new(AstNode::Binary(
+                    BinaryOp::And,
+                    Box::new(AstNode::Invert(Box::new(AstNode::Name("b".to_string())))),
+                    Box::new(AstNode::Name("c".to_string())),
+                )),
+            ))
+        )
     }
 
     #[test]
