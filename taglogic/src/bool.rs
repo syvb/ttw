@@ -122,7 +122,6 @@ enum AstNode {
 
 impl AstNode {
     fn munch_tokens(tokens: &mut VecDeque<Token>) -> Result<Self, &'static str> {
-        dbg!(tokens.clone());
         loop {
             let next = match tokens.get(0) {
                 Some(x) => x,
@@ -141,7 +140,6 @@ impl AstNode {
                         Some(Token::Name { text }) => {
                             // is it like "!abc" or "!abc & xyz"
                             let inverted = AstNode::Invert(Box::new(AstNode::Name(text.clone())));
-                            dbg!(tokens.get(1).clone());
                             match tokens.get(1) {
                                 Some(Token::BinaryOp(_)) => {
                                     // "!abc & xyz"
