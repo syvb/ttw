@@ -134,25 +134,27 @@ impl AstNode {
                     tokens.remove(0);
                     // invert exactly the next token
                     // !a & b -> (!a) & b
-                    match tokens.get(1) {
+                    match tokens.get(0) {
                         Some(Token::OpenBracket) => {
                             return Ok(AstNode::Invert(Box::new(Self::munch_tokens(tokens)?)));
                         }
                         Some(Token::Name { text }) => {
                             // is it like "!abc" or "!abc & xyz"
                             let inverted = AstNode::Invert(Box::new(AstNode::Name(text.clone())));
-                            match tokens.get(2) {
+                            dbg!(tokens.get(1).clone());
+                            match tokens.get(1) {
                                 Some(Token::BinaryOp(_)) => {
                                     // "!abc & xyz"
                                     // convert to unambiguous form and try again
-                                    // 1 token for invert, 1 for name makes 2
-                                    tokens.insert(2, Token::CloseBracket);
                                     tokens.insert(0, Token::OpenBracket);
+                                    tokens.insert(1, Token::Invert);
+                                    tokens.insert(2, Token::OpenBracket);
+                                    tokens.insert(4, Token::CloseBracket);
+                                    tokens.insert(5, Token::CloseBracket);
                                     return Self::munch_tokens(tokens);
                                 }
                                 None | Some(Token::CloseBracket) => {
                                     // "!abc"
-                                    tokens.remove(0); // will return None if empty, that is okay
                                     return Ok(inverted);
                                 }
                                 Some(_) => return Err("invalid token after inverted name"),
@@ -168,7 +170,8 @@ impl AstNode {
                 Token::OpenBracket => {
                     tokens.remove(0); // open bracket
                     let result = Self::munch_tokens(tokens)?;
-                    match tokens.remove(0) { // remove closing bracket
+                    match tokens.remove(0) {
+                        // remove closing bracket
                         Some(Token::CloseBracket) => {}
                         _ => return Err("expected closing bracket"),
                     };
@@ -252,6 +255,18 @@ mod test {
     }
 
     #[test]
+    fn simple_inversion() {
+        assert_eq!(
+            Expr::from_string("!a & b").unwrap().0,
+            ExprData::HasNodes(AstNode::Binary(
+                BinaryOp::And,
+                Box::new(AstNode::Invert(Box::new(AstNode::Name("a".to_string())))),
+                Box::new(AstNode::Name("b".to_string())),
+            ))
+        )
+    }
+
+    #[test]
     fn nested_expr() {
         let tokens = lex("abc & !(( ! xyz || dwf) | (!abc or dwp) & (dwp and r   ) )  ").unwrap();
         assert_eq!(
@@ -300,6 +315,9 @@ mod test {
         let mut tokens = tokens.into_iter().collect();
         let ast = AstNode::munch_tokens(&mut tokens).unwrap();
         assert!(tokens.is_empty());
-        assert_eq!(ast, AstNode::Name("blah".to_string()));
+        assert_eq!(
+            format!("{:?}", ast),
+            "Binary(And, Name(\"abc\"), Invert(Binary(Or, Binary(Or, Invert(Name(\"xyz\")), Name(\"dwf\")), Binary(And, Binary(Or, Invert(Name(\"abc\")), Name(\"dwp\")), Binary(And, Name(\"dwp\"), Name(\"r\"))))))".to_string()
+        );
     }
 }
