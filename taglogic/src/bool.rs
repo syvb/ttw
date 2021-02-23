@@ -267,6 +267,23 @@ mod test {
     }
 
     #[test]
+    fn unbracketed_multiple_bin_ops() {
+        assert_eq!(
+            Expr::from_string("a & b & c").unwrap().0,
+            ExprData::HasNodes(AstNode::Binary(
+                BinaryOp::And,
+                Box::new(AstNode::Name("a".to_string())),
+                Box::new(AstNode::Binary(
+                    BinaryOp::And,
+                    Box::new(AstNode::Name("b".to_string())),
+                    Box::new(AstNode::Name("c".to_string())),
+                )),
+            ))
+        )
+
+    }
+
+    #[test]
     fn nested_expr() {
         let tokens = lex("abc & !(( ! xyz || dwf) | (!abc or dwp) & (dwp and r   ) )  ").unwrap();
         assert_eq!(
