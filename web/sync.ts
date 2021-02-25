@@ -340,7 +340,8 @@ export async function checkLoginStateOnInit(): Promise<{ status: "in" | "out", u
         anyPendingPromise = genPendingPromise();
     }
     if (status === "out" && location.pathname !== "/") {
-        location.pathname = "/";
+        // don't create a history entry for this page to prevent back button trapping
+        location.replace("/");
     }
     whenIdle(() => rebuildTagIndex(), 2500);
     return {
