@@ -91,13 +91,18 @@
         </p>
         <div>
             <button on:click={beeRedir}
-                title="This will redirect you to a page where you can make the final call as to if we can access your beeswax.">Authorize
-                us to access your Beeminder account</button>
+                title="This will redirect you to a page where you can make the final call as to if we can access your beeswax.">
+                {#if localStorage["retag-beem-token"]}
+                    Change connected user
+                {:else}
+                    Connect to Beeminder
+                {/if}
+            </button>
             <div>
                 {#if localStorage["retag-beem-token"]}
-                    You are currently connected with Beeminder, click the button to change the connected user.
+                    Connected with Beeminder!
                 {:else}
-                    You are not currently connected with Beeminder.
+                    The Beeminder integration isn't active.
                 {/if}
             </div>
         </div>
