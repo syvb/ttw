@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from "svelte";
+    import BoolFilter from "./BoolFilter.svelte";
     import DateRangePicker from "./DateRangePicker.svelte";
     import TagEntry from "./TagEntry.svelte";
     import { backend, MINI_BACKEND, FULL_BACKEND } from "../backend.ts";
@@ -22,6 +23,7 @@
 
     export let includedTags = [];
     export let excludedTags = [];
+    export let boolFilter = "";
     export let includeType = "some";
     export let norange = false;
     export let justcrit = false;
@@ -174,6 +176,8 @@
         <TagEntry on:input={critChange} bind:tags={includedTags} />
         None of:
         <TagEntry on:input={critChange} bind:tags={excludedTags} />
+        Custom filter:
+        <BoolFilter on:input={critChange} bind:filter={boolFilter} />
         {#if !norange}
             Date range:
             <DateRangePicker bind:range />
