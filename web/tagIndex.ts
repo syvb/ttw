@@ -8,7 +8,7 @@ export async function rebuildTagIndex() {
     await eachLocalPing((row: { tags: string[]; time: number; }) => {
         row.tags.forEach((tag: string) => {
             // weight by time away tag was, will be negative
-            const weight = row.time - now;
+            const weight = -(row.time - now);
             if (tagData[tag] === undefined) {
                 tagData[tag] = weight;
             } else {
