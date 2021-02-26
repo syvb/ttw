@@ -37,17 +37,19 @@
     }
 
     let swPending = false;
-    navigator.serviceWorker.ready.then(reg => {
-        function checkInstalling() {
-            swPending = !!reg.waiting;
-            console.log("swPending", swPending);
-            if (reg.installing) {
-                reg.installing.onstatechange = checkInstalling;
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.ready.then(reg => {
+            function checkInstalling() {
+                swPending = !!reg.waiting;
+                console.log("swPending", swPending);
+                if (reg.installing) {
+                    reg.installing.onstatechange = checkInstalling;
+                }
             }
-        }
-        reg.addEventListener("updatefound", checkInstalling);
-        checkInstalling();
-    });
+            reg.addEventListener("updatefound", checkInstalling);
+            checkInstalling();
+        });
+    }
 </script>
 
 <style>

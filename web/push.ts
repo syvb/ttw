@@ -3,6 +3,7 @@ import urlBase64ToUint8Array from "./urlBase64ToUint8Array.ts";
 const config = require("../config.json");
 
 export async function unsub() {
+    if (!("serviceWorker" in navigator)) return;
     const registration = await navigator.serviceWorker.getRegistration();
     if (registration !== undefined) {
         const subscription = await registration.pushManager.getSubscription();
@@ -71,6 +72,7 @@ export async function subWithReg(reg: ServiceWorkerRegistration) {
 }
 
 export async function sub() {
+    if (!("serviceWorker" in navigator)) return;
     const reg = await navigator.serviceWorker.getRegistration();
     if (!reg) {
         alert("Failed to enable notifications since a ServiceWorker isn't registered. Try closing all tabs from this website, then re-opening them.")
@@ -80,6 +82,7 @@ export async function sub() {
 }
 
 export async function pushLoadCheck() {
+    if (!("serviceWorker" in navigator)) return;
     if (localStorage["retag-notifs"] !== "1") return;
     const reg = await navigator.serviceWorker.getRegistration();
     if (!reg) return; // no sw registered, let's try again next reload?
