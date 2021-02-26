@@ -139,6 +139,9 @@
             a:visited {
                 color: #C07FFF;
             }
+            .card {
+                color: black;
+            }
         }
 
         .app-root {
