@@ -40,7 +40,7 @@ export async function beemLoadCheck() {
 }
 
 // prepares a goal for usage with TTW
-export async function prepGoal(name: string) {
+export async function prepGoal(name: string, silentFailure = false) {
     const token = localStorage["retag-beem-token"];
     if (!token) throw new Error("no beem token");
     // datasource -> integration name
@@ -49,26 +49,41 @@ export async function prepGoal(name: string) {
     const updateRes = await fetch(updateUri, {
         method: "PUT",
     });
-    switch (updateRes.status) {
-        case 404:
-            alert(`Beeminder goal "${name}" doesn't exist`);
-            break;
-        case 200: case 204:
-            break;
-        default:
-            alert(`Failed to update Beeminder goal "${name}"`);
+    if (!silentFailure) {
+        switch (updateRes.status) {
+            case 404:
+                alert(`Beeminder goal "${name}" doesn't exist`);
+                break;
+            case 200: case 204:
+                break;
+            default:
+                alert(`Failed to update Beeminder goal "${name}"`);
+        }
     }
     // setting goal hhmmformat -> true, gunits -> "seconds" seems impossible with the API
+}
+
+async function resyncAll() {
+    let promises = [];
+    await window.db.goals.each(goal => {
+        if (goal.beemGoal === "" || goal.beemGoal === null || goal.beemGoal === undefined) return;
+        promises.push(prepGoal(goal.name, true));
+    });
+    await Promise.all(promises);
 }
 
 export async function beemResync() {
     const token = localStorage["retag-beem-token"];
     if (!token) return "Not logged in with Beeminder";
     const url = `${config["api-server"]}/internal/beem/resync`;
-    const res = await fetch(url, {
+    const resPromise = fetch(url, {
         method: "PATCH",
         credentials: "include",
     });
+    const [ res ] = await Promise.all([
+        resPromise,
+        resyncAll(),
+    ])
     if (res.status === 204 || res.status === 200) return;
     return await res.text();
 }
