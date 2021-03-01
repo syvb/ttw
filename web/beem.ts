@@ -51,12 +51,12 @@ export async function prepGoal(name: string) {
     });
     switch (updateRes.status) {
         case 404:
-            alert("Beeminder goal doesn't exist.");
+            alert(`Beeminder goal "${name}" doesn't exist`);
             break;
         case 200: case 204:
             break;
         default:
-            alert("Failed to update Beeminder goal.");
+            alert(`Failed to update Beeminder goal "${name}"`);
     }
     // setting goal hhmmformat -> true, gunits -> "seconds" seems impossible with the API
 }
