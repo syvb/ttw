@@ -42,7 +42,7 @@
 
 <div id="maincontent">
     <div>
-        Last tag: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)}).
+        Last tag: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)})
     </div>
 
     <NotificationsPerm alwaysShow={false} />
