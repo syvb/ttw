@@ -216,7 +216,7 @@ window.recheckPending = () => {}; // ignore calls to recheck pending until ping 
         { key: "alg", value: window.pintData.alg },
     ]);
     if ("serviceWorker" in navigator) {
-        const reg = await navigator.serviceWorker.register("./sw.js");
+        const reg = await navigator.serviceWorker.register("/sw.js");
         const swCheck = async () => {
             await reg.update();
             setTimeout(swCheck, SW_CHECK_INTERVAL);
