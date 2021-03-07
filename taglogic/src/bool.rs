@@ -16,7 +16,7 @@ impl BinaryOp {
     }
     pub fn from_char(c: char) -> Option<Self> {
         match c {
-            '&' => Some(Self::And),
+            '&' | ',' => Some(Self::And),
             '|' => Some(Self::Or),
             _ => None,
         }
@@ -62,7 +62,8 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
 
         if state == ParseState::InName {
             let end_cur_token = match c {
-                '(' | ')' | '&' | '|' | '!' => true,
+                '(' | ')' | '!' => true,
+                _ if BinaryOp::from_char(c) != None => true,
                 _ if c.is_whitespace() => true,
                 _ => false,
             };
@@ -81,18 +82,15 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
         }
 
         if state == ParseState::AnyExpected {
+            let op = BinaryOp::from_char(c);
             match c {
+                _ if op != None => {
+                    tokens.push(Token::BinaryOp(op.unwrap()));
+                    state = ParseState::InSymbolBinOp(op.unwrap());
+                }
                 '(' => tokens.push(Token::OpenBracket),
                 ')' => tokens.push(Token::CloseBracket),
                 '!' => tokens.push(Token::Invert),
-                '&' => {
-                    tokens.push(Token::BinaryOp(BinaryOp::And));
-                    state = ParseState::InSymbolBinOp(BinaryOp::And);
-                }
-                '|' => {
-                    tokens.push(Token::BinaryOp(BinaryOp::Or));
-                    state = ParseState::InSymbolBinOp(BinaryOp::Or);
-                }
                 // ignore whitespace
                 _ if c.is_whitespace() => {}
                 _ => {
@@ -260,6 +258,14 @@ impl Expr {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn and_alias() {
+        assert_eq!(
+            Expr::from_string("a & b").unwrap().0,
+            Expr::from_string("a, b").unwrap().0,
+        );
+    }
 
     #[test]
     fn simple_add() {
