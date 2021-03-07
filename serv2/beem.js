@@ -185,7 +185,10 @@ module.exports = authMiddleware => {
                 if (typeof goal.name !== "string") return;
                 if (typeof goal.beemGoal !== "string") return;
                 if (goal.beemGoal === "") return;
-                const boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                let boolExpr;
+                try {
+                    boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                } catch (e) {}
                 const added = pings
                     .filter(ping => pingFilter(ping, goal, boolExpr))
                     .map(ping => ({

@@ -47,7 +47,10 @@
             .orderBy("time")
             .reverse()
             .toArray();
-        const boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+        let boolExpr;
+        try {
+            boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+        } catch (e) {}
         const filteredRows = allRows.filter(row => pingFilter(row, crit, boolExpr));
         if (boolExpr) boolExpr.free();
         return {
@@ -95,7 +98,10 @@
                     forcedLocal = false;
                     const crit = getCrit();
                     console.log("crit", crit);
-                    const boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                    let boolExpr;
+                    try {
+                        boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                    } catch (e) {}
                     const ret = {
                         rows: (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit, boolExpr))),
                         totalUnfiltered: totalUnfiltered + data.pings.length,
