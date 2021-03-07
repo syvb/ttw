@@ -1,6 +1,9 @@
 use std::collections::VecDeque;
 use wasm_bindgen::prelude::*;
 
+const MAX_RECURSION: u16 = 20;
+const MAX_LEN: usize = 200;
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum BinaryOp {
     And,
@@ -46,6 +49,10 @@ fn lex(s: &str) -> Result<Vec<Token>, &'static str> {
         InName,
         /// Currently in a binary operation repersented with symbols instead of words.
         InSymbolBinOp(BinaryOp),
+    }
+
+    if s.len() >= MAX_LEN {
+        return Err("expression too long");
     }
 
     let mut state = ParseState::AnyExpected;
@@ -120,7 +127,10 @@ enum AstNode {
 }
 
 impl AstNode {
-    fn munch_tokens(tokens: &mut VecDeque<Token>) -> Result<Self, &'static str> {
+    fn munch_tokens(tokens: &mut VecDeque<Token>, depth: u16) -> Result<Self, &'static str> {
+        if depth == 0 {
+            return Err("expression too deep");
+        }
         loop {
             let next = match tokens.get(0) {
                 Some(x) => x,
@@ -134,7 +144,7 @@ impl AstNode {
                     // !a & b -> (!a) & b
                     match tokens.get(0) {
                         Some(Token::OpenBracket) => {
-                            return Ok(AstNode::Invert(Box::new(Self::munch_tokens(tokens)?)));
+                            return Ok(AstNode::Invert(Box::new(Self::munch_tokens(tokens, depth - 1)?)));
                         }
                         Some(Token::Name { text }) => {
                             // is it like "!abc" or "!abc & xyz"
@@ -148,7 +158,7 @@ impl AstNode {
                                     tokens.insert(2, Token::OpenBracket);
                                     tokens.insert(4, Token::CloseBracket);
                                     tokens.insert(5, Token::CloseBracket);
-                                    return Self::munch_tokens(tokens);
+                                    return Self::munch_tokens(tokens, depth - 1);
                                 }
                                 None | Some(Token::CloseBracket) => {
                                     // "!abc"
@@ -167,7 +177,7 @@ impl AstNode {
                 }
                 Token::OpenBracket => {
                     tokens.remove(0); // open bracket
-                    let result = Self::munch_tokens(tokens)?;
+                    let result = Self::munch_tokens(tokens, depth - 1)?;
                     match tokens.remove(0) {
                         // remove closing bracket
                         Some(Token::CloseBracket) => {}
@@ -181,7 +191,7 @@ impl AstNode {
                             let ret = Ok(AstNode::Binary(
                                 op,
                                 Box::new(result),
-                                Box::new(Self::munch_tokens(tokens)?),
+                                Box::new(Self::munch_tokens(tokens, depth - 1)?),
                             ));
                             ret
                         }
@@ -197,7 +207,7 @@ impl AstNode {
                             // convert to unambiguous form and try again
                             tokens.insert(1, Token::CloseBracket);
                             tokens.insert(0, Token::OpenBracket);
-                            return Self::munch_tokens(tokens);
+                            return Self::munch_tokens(tokens, depth - 1);
                         }
                         Some(Token::CloseBracket) | None => {
                             // lone token
@@ -239,7 +249,7 @@ impl Expr {
         if tokens.is_empty() {
             return Ok(Self(ExprData::Empty));
         }
-        let ast = AstNode::munch_tokens(&mut tokens)?;
+        let ast = AstNode::munch_tokens(&mut tokens, MAX_RECURSION)?;
         if !tokens.is_empty() {
             dbg!(tokens);
             return Err("expected EOF, found extra tokens");
@@ -258,6 +268,12 @@ impl Expr {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn max_len() {
+        assert!(matches!(Expr::from_string("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"), Err(_)));
+        assert!(matches!(Expr::from_string("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"), Ok(_)));
+    }
 
     #[test]
     fn and_alias() {
@@ -512,7 +528,7 @@ mod test {
             ]
         );
         let mut tokens = tokens.into_iter().collect();
-        let ast = AstNode::munch_tokens(&mut tokens).unwrap();
+        let ast = AstNode::munch_tokens(&mut tokens, MAX_RECURSION).unwrap();
         assert!(tokens.is_empty());
         assert_eq!(
             format!("{:?}", ast),
