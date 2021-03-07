@@ -7,13 +7,14 @@
     import { beemResync } from "../beem.ts";
     let dispatch = createEventDispatcher();
     export let goal = null;
-    let settingsName, settingsType, settingsIncludedTags, settingsExcludedTags, settingsIncludeType, settingsBeem;
+    let settingsName, settingsType, settingsIncludedTags, settingsExcludedTags, settingsBoolFilter, settingsIncludeType, settingsBeem;
     if (goal) {
         settingsName = goal.name || "Goal name";
         settingsType = goal.type || "max";
         settingsIncludedTags = goal.includedTags || [];
         settingsExcludedTags = goal.excludedTags || [];
         settingsIncludeType = goal.includeType || "some";
+        settingsBoolFilter = goal.settingsBoolFilter || "";
         settingsBeem = goal.beemGoal || "";
     }
     let origGoalBeem = settingsBeem;
@@ -26,6 +27,7 @@
             includedTags: settingsIncludedTags,
             excludedTags: settingsExcludedTags,
             includeType: settingsIncludeType,
+            boolFilter: settingsBoolFilter,
             beemGoal: settingsBeem,
         };
     }
@@ -63,7 +65,7 @@
         <input type="text" id="goal-settings-name" bind:value={settingsName}>
     </div>
     <div>
-        <PingSelector open norange justcrit bind:includedTags={settingsIncludedTags} bind:excludedTags={settingsExcludedTags} bind:includeType={settingsIncludeType} />
+        <PingSelector open norange justcrit bind:includedTags={settingsIncludedTags} bind:excludedTags={settingsExcludedTags} bind:includeType={settingsIncludeType} bind:boolFilter={settingsBoolFilter} />
     </div>
     <div>
         <label for="goal-settings-beem">Beeminder goal name:</label>

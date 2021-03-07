@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from "svelte";
+    import BoolFilter from "./BoolFilter.svelte";
     import DateRangePicker from "./DateRangePicker.svelte";
     import TagEntry from "./TagEntry.svelte";
     import { backend, MINI_BACKEND, FULL_BACKEND } from "../backend.ts";
@@ -22,6 +23,7 @@
 
     export let includedTags = [];
     export let excludedTags = [];
+    export let boolFilter = "";
     export let includeType = "some";
     export let norange = false;
     export let justcrit = false;
@@ -35,7 +37,7 @@
     export let forcedLocal = false;
 
     function getCrit() {
-        return { includedTags, excludedTags, includeType, range };
+        return { includedTags, excludedTags, includeType, boolFilter, range };
     }
 
     let totalUnfiltered = null;
@@ -45,7 +47,12 @@
             .orderBy("time")
             .reverse()
             .toArray();
-        const filteredRows = allRows.filter(row => pingFilter(row, crit));
+        let boolExpr;
+        try {
+            boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+        } catch (e) {}
+        const filteredRows = allRows.filter(row => pingFilter(row, crit, boolExpr));
+        if (boolExpr) boolExpr.free();
         return {
             rows: filteredRows,
             totalUnfiltered: allRows.length,
@@ -90,10 +97,17 @@
                     }
                     forcedLocal = false;
                     const crit = getCrit();
-                    return {
-                        rows: (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit))),
+                    console.log("crit", crit);
+                    let boolExpr;
+                    try {
+                        boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                    } catch (e) {}
+                    const ret = {
+                        rows: (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit, boolExpr))),
                         totalUnfiltered: totalUnfiltered + data.pings.length,
                     };
+                    if (boolExpr) boolExpr.free();
+                    return ret;
                 } else if (res.status === 403) {
                     location.href = "/";
                     forcedLocal = false;
@@ -174,6 +188,8 @@
         <TagEntry on:input={critChange} bind:tags={includedTags} />
         None of:
         <TagEntry on:input={critChange} bind:tags={excludedTags} />
+        Custom filter:
+        <BoolFilter on:input={critChange} bind:filter={boolFilter} />
         {#if !norange}
             Date range:
             <DateRangePicker bind:range />

@@ -133,7 +133,7 @@ module.exports = authMiddleware => {
     })
 
     // sync with client
-    function pingFilter(row, crit) {
+    function pingFilter(row, crit, boolExpr) {
         if (typeof crit !== "object") return false;
         if (!Array.isArray(crit.includedTags)) return false;
         if (!Array.isArray(crit.excludedTags)) return false;
@@ -147,6 +147,7 @@ module.exports = authMiddleware => {
             }
         }
 
+        // keep in sync with web/pingFilter.ts
         if (crit.includedTags.length > 0) {
             let valid;
             if (crit.includeType === "some") {
@@ -165,6 +166,9 @@ module.exports = authMiddleware => {
             if (rowDate < +crit.range[0]) return false;
             if (rowDate > +crit.range[1]) return false;
         }
+        if (boolExpr) {
+            return taglogic.expr_matches(boolExpr, row.tags.join(" "));
+        }
         return true;
     }
 
@@ -181,12 +185,17 @@ module.exports = authMiddleware => {
                 if (typeof goal.name !== "string") return;
                 if (typeof goal.beemGoal !== "string") return;
                 if (goal.beemGoal === "") return;
+                let boolExpr;
+                try {
+                    boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                } catch (e) {}
                 const added = pings
-                    .filter(ping => pingFilter(ping, goal))
+                    .filter(ping => pingFilter(ping, goal, boolExpr))
                     .map(ping => ({
                         ...ping,
                         goalId: goal.beemGoal,
                     }));
+                if (boolExpr) boolExpr.free();
                 if (added.length > 0) {
                     affectedGoals.push(goal.beemGoal);
                     pingsToSend = pingsToSend.concat(added);
