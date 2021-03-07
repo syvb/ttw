@@ -20,7 +20,7 @@ export default function pingFilter(row, crit, boolExpr) {
         if (rowDate > +crit.range[1]) return false;
     }
     if (boolExpr) {
-        return taglogic.expr_matches(boolExpr, row.tags.join(" "));
+        return self.taglogic.expr_matches(boolExpr, row.tags.join(" "));
     }
     return true;
 }
