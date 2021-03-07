@@ -1,5 +1,6 @@
 // sync with server
-export default function pingFilter(row, crit) {
+export default function pingFilter(row, crit, boolExpr) {
+    // TODO: check boolExpr
     if (crit.includedTags.length > 0) {
         let valid;
         if (crit.includeType === "some") {
@@ -17,6 +18,9 @@ export default function pingFilter(row, crit) {
     if (crit.range.length === 2) {
         if (rowDate < +crit.range[0]) return false;
         if (rowDate > +crit.range[1]) return false;
+    }
+    if (boolExpr) {
+        return taglogic.expr_matches(boolExpr, row.tags.join(" "));
     }
     return true;
 }

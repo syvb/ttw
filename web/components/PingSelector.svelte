@@ -37,7 +37,7 @@
     export let forcedLocal = false;
 
     function getCrit() {
-        return { includedTags, excludedTags, includeType, range };
+        return { includedTags, excludedTags, includeType, boolFilter, range };
     }
 
     let totalUnfiltered = null;
@@ -47,7 +47,9 @@
             .orderBy("time")
             .reverse()
             .toArray();
-        const filteredRows = allRows.filter(row => pingFilter(row, crit));
+        const boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+        const filteredRows = allRows.filter(row => pingFilter(row, crit, boolExpr));
+        if (boolExpr) boolExpr.free();
         return {
             rows: filteredRows,
             totalUnfiltered: allRows.length,
@@ -92,10 +94,14 @@
                     }
                     forcedLocal = false;
                     const crit = getCrit();
-                    return {
-                        rows: (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit))),
+                    console.log("crit", crit);
+                    const boolExpr = crit.boolFilter ? window.taglogic.new_expr(crit.boolFilter) : null;
+                    const ret = {
+                        rows: (append ? pings : []).concat(data.pings.filter(row => pingFilter(row, crit, boolExpr))),
                         totalUnfiltered: totalUnfiltered + data.pings.length,
                     };
+                    if (boolExpr) boolExpr.free();
+                    return ret;
                 } else if (res.status === 403) {
                     location.href = "/";
                     forcedLocal = false;
