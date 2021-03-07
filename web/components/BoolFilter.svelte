@@ -33,12 +33,12 @@
         display: block;
         box-sizing: border-box;
     }
-    .invalid > input {
-        background: red;
+    :global(.invalid > input) {
+        background: #ffcccc;
     }
 </style>
 
-<div class="filter-wrap invalid" bind:this={wrap}>
+<div class="filter-wrap" bind:this={wrap}>
     <input type="text" bind:value={filter} class="filter" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     {#if err}<div class="err">Error: {err || ""}</div>{/if}
 </div>
