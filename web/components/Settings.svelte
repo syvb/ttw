@@ -502,7 +502,7 @@
                             <button on:click={dbDownload}>Download SQLite database</button>
                         </td>
                         <td>
-                            This is how your pings are internally repersented.
+                            This is how your pings are internally repersented, specified by <a href="https://github.com/Smittyvb/ttw/blob/master/serv2/initUserDb.sql">a schema</a>.
                         </td>
                     </tr>
                     <tr>
