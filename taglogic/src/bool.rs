@@ -144,7 +144,10 @@ impl AstNode {
                     // !a & b -> (!a) & b
                     match tokens.get(0) {
                         Some(Token::OpenBracket) => {
-                            return Ok(AstNode::Invert(Box::new(Self::munch_tokens(tokens, depth - 1)?)));
+                            return Ok(AstNode::Invert(Box::new(Self::munch_tokens(
+                                tokens,
+                                depth - 1,
+                            )?)));
                         }
                         Some(Token::Name { text }) => {
                             // is it like "!abc" or "!abc & xyz"
