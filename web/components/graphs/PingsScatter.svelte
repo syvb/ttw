@@ -72,5 +72,5 @@
 </script>
 
 <Graph on:graphUpdate={graphUpdate} on:graphLoad={graphLoad} bind:graphLoadPromise loadChartjs>
-    <span slot="title">Pings scatter chart</span>
+    <span slot="title">Pings scatter plot</span>
 </Graph>
