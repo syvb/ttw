@@ -174,7 +174,7 @@
         if (err) {
             alert(err);
         } else {
-            alert("Started resyncing (it can take a few minutes for the syncing to complete in the background)");
+            alert("Started resyncing. It can take a few minutes for the syncing to complete in the background.");
         }
     }
 
