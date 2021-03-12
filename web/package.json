@@ -9,7 +9,7 @@
     "style-loader": "^2.0.0",
     "svelte": "^3.35.0",
     "svelte-loader": "^3.0.0",
-    "ts-loader": "^8.0.17",
+    "ts-loader": "^8.0.18",
     "typescript": "^4.2.3",
     "webpack": "^5",
     "webpack-cli": "^4.5.0",
