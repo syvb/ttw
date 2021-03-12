@@ -10,7 +10,7 @@ apt-get install -y \
   vim \
   build-essential \
   openssl \
-  openssl-dev \
+  libssl-dev \
   libcurl4-openssl-dev \
   libelf-dev \
   libdw-dev \
