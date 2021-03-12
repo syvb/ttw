@@ -10,6 +10,7 @@ apt-get install -y \
   vim \
   build-essential \
   openssl \
+  openssl-dev \
   libcurl4-openssl-dev \
   libelf-dev \
   libdw-dev \
@@ -32,4 +33,5 @@ cargo install cargo-expand
 cargo install cargo-edit
 cargo install wasm-pack
 
+cd ..
 cp config.example.json config.json
