@@ -11,7 +11,8 @@
 <main id="maincontent">
     <h1>Graphs</h1>
     <p>
-        Here are some graphs, generated from your pings. (They are generated entirely client-side.)
+        Here are some graphs generated from your pings, all by your browser.
+        If you have any suggestions for graphs, <a href="mailto:ttw@smitop.com">please tell me!</a>
     </p>
     <ul>
         <li><Link to="/graphs/day-dist">Daily distribution</Link></li>
