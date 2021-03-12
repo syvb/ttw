@@ -16,6 +16,7 @@ apt-get install -y \
   cmake \
   gcc \
   binutils-dev \
+  pkg-config \
   libiberty-dev
 
 ## Install rustup and common components
