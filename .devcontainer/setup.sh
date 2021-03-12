@@ -18,6 +18,10 @@ apt-get install -y \
   binutils-dev \
   libiberty-dev
 
+## install node
+curl -fsSL https://deb.nodesource.com/setup_15.x | bash -
+apt-get install -y nodejs
+
 ## Install rustup and common components
 curl https://sh.rustup.rs -sSf | sh -s -- -y
 rustup install nightly
