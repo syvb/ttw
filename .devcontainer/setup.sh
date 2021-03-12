@@ -40,6 +40,6 @@ cargo install wasm-pack
 
 ls
 echo $CWD
-git clone git@github.com:Smittyvb/ttw.git
+git clone https://github.com/Smittyvb/ttw.git
 cd ttw
 cp config.example.json config.json
