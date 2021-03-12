@@ -33,5 +33,9 @@ cargo install cargo-expand
 cargo install cargo-edit
 cargo install wasm-pack
 
-cd ..
+
+ls
+echo $CWD
+git clone git@github.com:Smittyvb/ttw.git
+cd ttw
 cp config.example.json config.json
