@@ -24,6 +24,12 @@ apt-get install -y \
 curl -fsSL https://deb.nodesource.com/setup_15.x | bash -
 apt-get install -y nodejs
 
+## install yarn
+curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+apt-get update
+apt-get -y install yarn
+
 ## Install rustup and common components
 curl https://sh.rustup.rs -sSf | sh -s -- -y
 source "$HOME/.cargo/env"
@@ -37,9 +43,9 @@ cargo install cargo-expand
 cargo install cargo-edit
 cargo install wasm-pack
 
+## Install nodemon
+npm install nodemon -g
 
 ls
 echo $CWD
 git clone https://github.com/Smittyvb/ttw.git
-cd ttw
-cp config.example.json config.json
