@@ -538,4 +538,29 @@ mod test {
             "Binary(And, Name(\"abc\"), Invert(Binary(Or, Binary(Or, Invert(Name(\"xyz\")), Name(\"dwf\")), Binary(And, Binary(Or, Invert(Name(\"abc\")), Name(\"dwp\")), Binary(And, Name(\"dwp\"), Name(\"r\"))))))".to_string()
         );
     }
+
+    #[test]
+    fn simple_lex() {
+        let tokens = lex("foo and !(bar | !baz)").unwrap();
+        assert_eq!(
+            tokens,
+            vec![
+                Token::Name {
+                    text: "foo".to_string()
+                },
+                Token::BinaryOp(BinaryOp::And),
+                Token::Invert,
+                Token::OpenBracket,
+                Token::Name {
+                    text: "bar".to_string()
+                },
+                Token::BinaryOp(BinaryOp::Or),
+                Token::Invert,
+                Token::Name {
+                    text: "baz".to_string()
+                },
+                Token::CloseBracket
+            ]
+        );
+    }
 }
