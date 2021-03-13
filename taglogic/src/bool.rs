@@ -271,9 +271,18 @@ mod test {
 
     #[test]
     fn premature_eof() {
-        assert_eq!(Expr::from_string("a &"), Err("unexpected end of expression"));
-        assert_eq!(Expr::from_string("a & b &"), Err("unexpected end of expression"));
-        assert_eq!(Expr::from_string("(a & b) |"), Err("unexpected end of expression"));
+        assert_eq!(
+            Expr::from_string("a &"),
+            Err("unexpected end of expression")
+        );
+        assert_eq!(
+            Expr::from_string("a & b &"),
+            Err("unexpected end of expression")
+        );
+        assert_eq!(
+            Expr::from_string("(a & b) |"),
+            Err("unexpected end of expression")
+        );
     }
 
     #[test]
