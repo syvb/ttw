@@ -35,6 +35,12 @@
             margin-bottom: 2.5rem;
         }
 
+        .mid-page-authlinks>.auth-link {
+            background: #005644;
+            border: none;
+            color: white;
+        }
+
         .auth-link {
             margin-left: 1rem;
             font-size: 1rem;
@@ -42,7 +48,7 @@
             border-radius: 4px;
             border: 2px solid #e0e0e0;
             text-decoration: none;
-            padding: 0.5rem .8rem 0.4rem;
+            padding: 0.5rem .8rem;
         }
 
         h1 {
@@ -95,7 +101,7 @@
             margin-left: 1rem;
         }
 
-        .card > img {
+        .card>img {
             /* stop corners from hitting boundary */
             border-radius: 8px;
             width: 100%;
@@ -105,6 +111,7 @@
             .card-stack {
                 flex-flow: column;
             }
+
             .card {
                 margin-left: 0;
                 margin-bottom: 1rem;
@@ -126,19 +133,25 @@
         }
 
         @media (prefers-color-scheme: dark) {
-            body, .auth-link {
+
+            body,
+            .auth-link {
                 background: black;
                 color: white;
             }
+
             .step-num {
                 color: black;
             }
+
             a {
                 color: #8a8aff;
             }
+
             a:visited {
                 color: #C07FFF;
             }
+
             .card {
                 color: black;
             }
@@ -174,7 +187,7 @@
         }
         var supported = typeof window.WebAssembly !== "undefined";
         if (!supported) {
-            onload = function() {
+            onload = function () {
                 document.getElementById("unsupported").style.display = "block";
             };
         }
@@ -200,10 +213,12 @@
                     <div class="tagline">Time tracking that samples you randomly</div>
                 </header>
                 <noscript>
-                    You can look at this page without Javascript, but be warned that logging in will fail without Javascript.
+                    You can look at this page without Javascript, but be warned that logging in will fail without
+                    Javascript.
                 </noscript>
                 <p>
-                    APPNAME is an <a href="https://github.com/smittyvb/ttw" target="_blank" rel="noopener">open-source</a>
+                    APPNAME is an <a href="https://github.com/smittyvb/ttw" target="_blank"
+                        rel="noopener">open-source</a>
                     time-tracking web app.
                     At random points throughout the day, it asks you what you are doing.
                 </p>
@@ -273,13 +288,15 @@
                     <a href="https://github.com/tagtime/TagTime" target="_blank" rel="noopener">TagTime</a>
                     was initially written in Perl. APPNAME is a complete, modern, re-implementation
                     that works in web browsers. This isn't the only re-implementation though: check
-                    out <a href="http://doc.beeminder.com/tagtime" target="_blank" rel="noopener">this comprehensive list</a>
+                    out <a href="http://doc.beeminder.com/tagtime" target="_blank" rel="noopener">this comprehensive
+                        list</a>
                     for more.
                 </p>
 
                 <footer>
                     <p>
-                        APPNAME was made by <a href="https://smitop.com/">Smitop</a> (<a href="mailto:ttw@smitop.com">ttw@smitop.com</a>).
+                        APPNAME was made by <a href="https://smitop.com/">Smitop</a> (<a
+                            href="mailto:ttw@smitop.com">ttw@smitop.com</a>).
                     </p>
                 </footer>
             </div>
