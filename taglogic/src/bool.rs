@@ -131,11 +131,7 @@ impl AstNode {
         if depth == 0 {
             return Err("expression too deep");
         }
-        loop {
-            let next = match tokens.get(0) {
-                Some(x) => x,
-                None => return Err("unexpected end of expression"),
-            };
+        while let Some(next) = tokens.get(0) {
             match next {
                 Token::CloseBracket => return Err("Unexpected closing bracket"),
                 Token::Invert => {
@@ -223,6 +219,7 @@ impl AstNode {
                 }
             }
         }
+        Err("unexpected end of expression")
     }
 
     fn matches(&self, tags: &[&str]) -> bool {
@@ -271,6 +268,13 @@ impl Expr {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn premature_eof() {
+        assert_eq!(Expr::from_string("a &"), Err("unexpected end of expression"));
+        assert_eq!(Expr::from_string("a & b &"), Err("unexpected end of expression"));
+        assert_eq!(Expr::from_string("(a & b) |"), Err("unexpected end of expression"));
+    }
 
     #[test]
     fn max_len() {
