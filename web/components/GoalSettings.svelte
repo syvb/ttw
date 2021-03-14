@@ -14,7 +14,7 @@
         settingsIncludedTags = goal.includedTags || [];
         settingsExcludedTags = goal.excludedTags || [];
         settingsIncludeType = goal.includeType || "some";
-        settingsBoolFilter = goal.settingsBoolFilter || "";
+        settingsBoolFilter = goal.boolFilter || "";
         settingsBeem = goal.beemGoal || "";
     }
     let origGoalBeem = settingsBeem;

@@ -1,18 +1,25 @@
 <script>
+    import { onMount } from "svelte";
     let wrap;
     let err;
     let expr;
+    let mounted = false;
+    let invalid = false;
     function makeAst(filter) {
         if (expr) expr.free();
-        if (filter === "") return null;
+        if (filter === "") {
+            invalid = false;
+            err = null;
+            return null;
+        }
         try {
             let ret = window.taglogic.new_expr(filter);
             console.log(ret);
-            wrap.classList.remove("invalid");
+            invalid = false;
             err = null;
             return ret;
         } catch (e) {
-            wrap.classList.add("invalid");
+            invalid = true;
             err = e;
         }
     }
@@ -33,12 +40,12 @@
         display: block;
         box-sizing: border-box;
     }
-    :global(.invalid > input) {
+    :global(.filter-wrap > input.invalid) {
         background: #ffcccc;
     }
 </style>
 
 <div class="filter-wrap" bind:this={wrap}>
-    <input type="text" bind:value={filter} class="filter" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <input type="text" bind:value={filter} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class={invalid ? "filter invalid" : "filter"}>
     {#if err}<div class="err">Error: {err || ""}</div>{/if}
 </div>
