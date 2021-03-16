@@ -27,7 +27,7 @@
     "moment": "^2.29.1",
     "svelte-routing": "^1.5.0",
     "workbox-precaching": "^6.1.1",
-    "workbox-webpack-plugin": "^6.1.1"
+    "workbox-webpack-plugin": "^6.1.2"
   },
   "scripts": {
     "build": "yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt && sed \"s/APPNAME/$(node -e \"console.log(require('../config.json')['app-name'] || 'TagTime Web')\")/g\" static/manifest.webmanifest.template > static/manifest.webmanifest && sed \"s/APPNAME/$(node -e \"console.log(require('../config.json')['app-name'] || 'TagTime Web')\")/g\" static/index.html.template | sed \"s*BACKSERV*$(node -e \"console.log(require('../config.json')['api-server'])\")*g\" > static/index.html && rm -rf dist pkg && wasm-pack build ../taglogic/ --out-dir ../web/pkg && webpack",
