@@ -188,7 +188,7 @@
         <TagEntry on:input={critChange} bind:tags={includedTags} />
         None of:
         <TagEntry on:input={critChange} bind:tags={excludedTags} />
-        Custom filter:
+        Custom filter (<a href="https://github.com/Smittyvb/ttw/blob/master/docs/boolean.md">usage</a>):
         <BoolFilter on:input={critChange} bind:filter={boolFilter} />
         {#if !norange}
             Date range:
