@@ -25,6 +25,7 @@
     }
     $: expr = makeAst(filter);
     export let filter = "";
+    export let placeholder = "";
 </script>
 
 <style>
@@ -46,6 +47,6 @@
 </style>
 
 <div class="filter-wrap" bind:this={wrap}>
-    <input type="text" bind:value={filter} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class={invalid ? "filter invalid" : "filter"}>
+    <input type="text" bind:value={filter} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class={invalid ? "filter invalid" : "filter"} {placeholder}>
     {#if err}<div class="err">Error: {err || ""}</div>{/if}
 </div>

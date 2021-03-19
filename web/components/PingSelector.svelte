@@ -36,6 +36,37 @@
     let paginateStart = null;
     export let forcedLocal = false;
 
+    function toBoolFilter(incl, excl, type) {
+        const p1Join = type === "some" ? " | " : " & ";
+        const p1 = incl.join(p1Join);
+        let p2;
+        if (excl.length === 0) {
+            p2 = "";
+        } else if (excl.length === 1) {
+            p2 = "!" + excl[0];
+        } else {
+            p2 = "!(" + excl.join(" | ") + ")";
+        }
+        let expr;
+        if (p1 && p2) {
+            if (p1.length === 1) {
+                expr = `${p1} & ${p2}`;
+            } else {
+                expr = `(${p1}) & ${p2}`;
+            }
+        } else if (p1) {
+            expr = p1;
+        } else if (p2) {
+            expr = p2;
+        } else {
+            expr = "";
+        }
+        return expr;
+    }
+
+    let eqBoolFilter = "a";
+    $: eqBoolFilter = toBoolFilter(includedTags, excludedTags, includeType);
+
     function getCrit() {
         return { includedTags, excludedTags, includeType, boolFilter, range };
     }
@@ -189,7 +220,7 @@
         None of:
         <TagEntry on:input={critChange} bind:tags={excludedTags} />
         Custom filter (<a href="https://github.com/Smittyvb/ttw/blob/master/docs/boolean.md">usage</a>):
-        <BoolFilter on:input={critChange} bind:filter={boolFilter} />
+        <BoolFilter on:input={critChange} bind:filter={boolFilter} placeholder={eqBoolFilter} />
         {#if !norange}
             Date range:
             <DateRangePicker bind:range />
