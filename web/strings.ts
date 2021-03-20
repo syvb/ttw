@@ -35,3 +35,5 @@ You can easily see all pings over a 30 day time range in the Pings and Graphs ta
 STR.welcome = `Welcome to ${STR.appName}!`;
 
 STR.reloadNote = `Note: To prevent incorrect ping timing, reload all open ${STR.appName} tabs after changing this setting (while connected to the Internet).`;
+
+STR.ttwUnivSched = "TTW universal schedule";

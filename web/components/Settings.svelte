@@ -417,11 +417,11 @@
             </div>
             <div class="pint-alg">
                 <div>
-                    <label for="pint-dropdown">Pinging algorithm:</label>
+                    <label for="pint-dropdown">Ping schedule:</label>
                     <!-- svelte-ignore a11y-no-onchange -->
                     <select bind:value={pingAlgDropdownVal} on:change={pingAlgDropdownSelect} disabled={pintChangePending} id="pint-dropdown">
-                        <option value="ttw-univ-sched">Standard (TTW2)</option>
-                        <option value="univ-sched">Original (TagTime)</option>
+                        <option value="ttw-univ-sched">{STR.ttwUnivSched} (default)</option>
+                        <option value="univ-sched">TagTime universal schedule</option>
                         <option value="custom">Custom...</option>
                     </select>
                 </div>
