@@ -1,6 +1,11 @@
 <script>
     export let swPending;
+
+    let updating = window.swPending;
     async function update() {
+        if (updating) return;
+        updating = true;
+        window.swPending = true;
         const waiting = (await navigator.serviceWorker.ready).waiting;
         waiting.postMessage("earlyClaim");
     }
@@ -24,4 +29,10 @@
     }
 </style>
 
-<div class="update-notif" on:click={update} class:shown={swPending}>There's an update available. Click on me to update!</div>
+<div class="update-notif" on:click={update} class:shown={swPending || updating}>
+    {#if updating}
+        Updating...
+    {:else}
+        There's an update available. Click on me to update!
+    {/if}
+</div>
