@@ -117,7 +117,7 @@ function authMiddleware(req, res, next) {
 }
 
 app.get("/", (req, res) => {
-    res.send(`This is the ${config["app-name"] || "TagTime Web"} backend.`);
+    res.send(`This is the <a href="${config["root-domain"]}">${config["app-name"] || "TagTime Web"}</a> backend.`);
 });
 
 const formsScript = fs.readFileSync(__dirname + "/forms/forms.js", "utf-8");
