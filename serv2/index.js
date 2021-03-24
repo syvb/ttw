@@ -67,6 +67,7 @@ const authPrepped = {
     create: authDb.prepare("INSERT INTO tokens(user_id, token_data, created) VALUES (@uid, @token, @now)"),
     invalidateAll: authDb.prepare("DELETE from tokens WHERE user_id = ?"),
     invalidate: authDb.prepare("DELETE from tokens WHERE token_data = ?"),
+    invalidateApi: authDb.prepare("DELETE from tokens WHERE user_id = ? AND token_data LIKE 'api!%'"),
     checkToken: authDb.prepare("SELECT user_id FROM tokens WHERE token_data = ?"),
 }
 
@@ -101,12 +102,23 @@ app.use((req, res, next) => {
     res.header("Content-Security-Policy", "default-src 'self'")
     next();
 })
+
 function authMiddleware(req, res, next) {
-    if ((typeof req.cookies["retag-auth"]) !== "string") {
-        req.authUser = null;
-        return next();
+    const authHeader = req.header("Authorization");
+    let dbInfo = null;
+    if (authHeader) {
+        const tokenMatches = authHeader.match(/Bearer ttwprivate_(.+)/);
+        if (tokenMatches) {
+            const token = tokenMatches[1];
+            dbInfo = authPrepped.checkToken.get(token);
+        }
+    } else {
+        if ((typeof req.cookies["retag-auth"]) !== "string") {
+            req.authUser = null;
+            return next();
+        }
+        dbInfo = authPrepped.checkToken.get(req.cookies["retag-auth"]);
     }
-    const dbInfo = authPrepped.checkToken.get(req.cookies["retag-auth"]);
     if (!dbInfo) {
         req.authUser = null;
         res.clearCookie("retag-auth");
@@ -270,6 +282,36 @@ app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended:
 app.get("/.well-known/change-password", (req, res) => {
     res.redirect(302, "/internal/changepw");
 })
+
+const gentokenForm = fs.readFileSync(__dirname + "/forms/gentoken.html", "utf-8");
+app.get("/internal/gentoken", authMiddleware, (req, res) => {
+    if (req.authUser === null) {
+        res.redirect(302, "/internal/login");
+        return;
+    }
+    const username = globalPreped.uidUsername.get(req.authUser).username;
+    res.send(gentokenForm.replace(/%main%/g, config["root-domain"]).replace(/%username%/g, username));
+});
+app.post("/internal/gentoken", authMiddleware, async (req, res) => {
+    if (req.authUser === null) {
+        res.redirect(302, "/internal/login");
+        return;
+    }
+    const uid = req.authUser;
+    // use some extra bytes because cookie length doesn't matter here
+    const randPromise = util.promisify(crypto.randomBytes)(256);
+    authPrepped.invalidateApi.run(uid);
+    const randomToken = (await randPromise).toString("base64").replace(/=/g, "");
+    let token = `api!${uid.toString(36)}.${randomToken}`;
+    authPrepped.create.run({
+        now: Date.now(),
+        token,
+        uid,
+    });
+    const userToken = `ttwprivate_${token}`;
+    res.type("text/plain");
+    res.send(userToken);
+});
 
 app.post("/logout", authMiddleware, (req, res) => {
     if (req.authUser !== null) {
