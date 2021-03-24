@@ -116,8 +116,16 @@ function authMiddleware(req, res, next) {
     next();
 }
 
-app.get("/", (req, res) => {
-    res.send(`This is the <a href="${config["root-domain"]}">${config["app-name"] || "TagTime Web"}</a> backend.`);
+app.get("/", authMiddleware, (req, res) => {
+    let authInfo;
+    if (req.authUser) {
+        // usernames can only have HTML-safe characters
+        const username = globalPreped.uidUsername.get(req.authUser).username;
+        authInfo = `You are logged in, your user ID is ${req.authUser} and your username is ${username}.`;
+    } else {
+        authInfo = "You are logged out."
+    }
+    res.send(`This is the <a href="${config["root-domain"]}">${config["app-name"] || "TagTime Web"}</a> backend. ${authInfo}`);
 });
 
 const formsScript = fs.readFileSync(__dirname + "/forms/forms.js", "utf-8");
