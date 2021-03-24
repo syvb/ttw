@@ -6,7 +6,7 @@
 All API endpoints are relative to the API root. Currently the API root is always just a domain with no path, but this can and will change in the future.
 
 ## Authentication
-TODO
+Generate a token from the Imports/Exports tab in Settings, then pass it to all requests in the `Authorization` header using the `Bearer` authentication type.
 
 ## Versioning
 This is the first and only API version. If a new API version ever happens, it will be in a subdirectory (such as `/v2`).

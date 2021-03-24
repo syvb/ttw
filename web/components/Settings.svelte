@@ -517,6 +517,14 @@
                             {/if}
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <a href={config["api-server"] + "/internal/gentoken"}>Generate API token</a>
+                        </td>
+                        <td>
+                            See the <a href="https://github.com/Smittyvb/ttw/blob/master/docs/api.md">API documentation</a> for more details.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
