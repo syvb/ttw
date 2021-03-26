@@ -455,7 +455,7 @@
                             </label>
                             <details>
                                 <summary>Read this before changing the above checkbox!</summary>
-                                You should check this box if you want compatability with the original TagTime.
+                                You should check this box if you want compatibility with the original TagTime.
                                 Checking this checkbox will enable using the algorithm used by the original TagTime.
                                 You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
                                 If you use the TagTime algorithm but not a seed of 11193462 and a gap of 45:00, then
