@@ -1,15 +1,15 @@
 # API documentation
 
-**Note:** This documentation is incomplete, and missing important information (like how to authenticate).
+**Note:** This documentation is incomplete in parts.
 
 ## About
 All API endpoints are relative to the API root. Currently the API root is always just a domain with no path, but this can and will change in the future.
 
 ## Authentication
-Generate a token from the Imports/Exports tab in Settings, then pass it to all requests in the `Authorization` header using the `Bearer` authentication type.
-
-## Versioning
-This is the first and only API version. If a new API version ever happens, it will be in a subdirectory (such as `/v2`).
+Generate a token from the Imports/Exports tab in Settings, then pass it to all requests in the `Authorization` header using the `Bearer` authentication type. It should look like:
+```http
+Authorization: Bearer topsecrectblah123
+```
 
 ## Concepts
 ### Pings
@@ -23,8 +23,7 @@ A ping is repersented as a JSON object:
 |comment    | Currently unused, ping comment.                           |
 |last_change| Timestamp of the last modification to the ping.           |
 
-#### When does a ping occur?
-TODO
+There's currently no easy way to determine currently pending pings.
 
 ### Config
 This is a simple key-value store. Keys starting with `retag` are reserved for internal use, you can use any other keys you want for any purpose.
@@ -38,7 +37,16 @@ A JSON object with data about the authenticated user.
 | uid | User ID |
 
 ### GET `/pings`
-A JSON object. This returns more than just pings to reduce the number of needed API Calls:
+A JSON object. You can filter pings with query string params:
+
+| Param | Explanation |
+| ----- | ------------ |
+| ?editedAfter=X | Only get pings modified or created after Unix time X |
+| ?startTime=X | Pings with a timestamp after X |
+| ?endTime=X | Pings with a timestamp before X |
+| ?limit=X | Limit to X results, and sort pings from newest to oldest (to paginate, change startTime/endTime) |
+
+This returns more than just pings to reduce the number of needed API Calls. Response object:
 | Key          | Value                                                  |
 |--------------|--------------------------------------------------------|
 | pings        | Array of pings                                         |
