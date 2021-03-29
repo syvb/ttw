@@ -26,12 +26,11 @@
         <div class="expanded">
             <ul>
                 <li>You can include any number (including zero) of tags.</li>
-                <li>Tags are seperated by spaces.</li>
-                <li>Extra whitespace is ignored.</li>
+                <li>Seperate tags with spaces.</li>
                 <li>Duplicate tags are ignored.</li>
-                <li>Tags are automatically converted to lowercase.</li>
-                <li>You can use a single/double quote to repeat last ping's tags.</li>
-                <li>The order of tags does not matter.</li>
+                <li>Tags are case-insensitive</li>
+                <li>Use a single/double quote to repeat last ping's tags.</li>
+                <li>Tags can be in any order</li>
             </ul>
         </div>
     {/if}
