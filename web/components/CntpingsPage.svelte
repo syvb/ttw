@@ -5,7 +5,7 @@
     import tagColor from "../tagColor.ts";
     import { putPings } from "../pings.ts";
     import debounce from "../debounce.ts";
-    import { onMount, afterUpdate } from "svelte";
+    import { onMount, onDestroy, afterUpdate } from "svelte";
     import { backend, MINI_BACKEND, FULL_BACKEND } from "../backend.ts";
 
     function rowInputComplete(e) {
@@ -44,18 +44,26 @@
     }
 
     let lastDbUpdate = Promise.resolve();
-    const updateRow = i => debounce(async e => {
-        console.assert(!loading);
-        await lastDbUpdate;
-        const newPing = {
-            ...pings[i],
-            tags: e.detail,
-        };
-        lastDbUpdate = putPings([newPing]);
-        // pings[i].tags = e.detail;
-        // pings[i].modified = true;
-    }, 1800);
 
+    const debouncers = [];
+    const updateRow = i => {
+        const deb = debounce(async e => {
+            console.assert(!loading);
+            await lastDbUpdate;
+            const newPing = {
+                ...pings[i],
+                tags: e.detail,
+            };
+            lastDbUpdate = putPings([newPing]);
+            // pings[i].tags = e.detail;
+            // pings[i].modified = true;
+        }, 1800);
+        debouncers.push(deb);
+        return deb;
+    };
+    onDestroy(() => {
+        debouncers.forEach(deb => deb.end());
+    });
     function pingsChanged() {
         checkTableSize();
     }

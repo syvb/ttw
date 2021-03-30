@@ -5,7 +5,7 @@
     import TagEntry from "./TagEntry.svelte";
     import download from "../download.ts";
     import { rebuildTagIndex } from "../tagIndex.ts";
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import { toDurString, updatePint } from "../pint-update.ts";
     import { allPings, putPings } from "../pings.ts";
     import { beemResync } from "../beem.ts";
@@ -164,6 +164,9 @@
         afkTags = event.detail;
         localStorage["retag-afk-tags"] = afkTags.join(" ");
     }, 1750);
+    onDestroy(() => {
+        afkTagsUpdate.end();
+    });
 
     function dbDownload() {
         location.href = `${config["api-server"]}/db`;
