@@ -5,6 +5,7 @@
     import TagEntry from "./TagEntry.svelte";
     import download from "../download.ts";
     import { rebuildTagIndex } from "../tagIndex.ts";
+    import { syncConfig } from "../sync.ts";
     import { onMount, onDestroy } from "svelte";
     import { toDurString, updatePint } from "../pint-update.ts";
     import { allPings, putPings } from "../pings.ts";
@@ -163,6 +164,9 @@
     const afkTagsUpdate = debounce(event => {
         afkTags = event.detail;
         localStorage["retag-afk-tags"] = afkTags.join(" ");
+        syncConfig([
+            "retag-afk-tags",
+        ]);
     }, 1750);
     onDestroy(() => {
         afkTagsUpdate.end();
