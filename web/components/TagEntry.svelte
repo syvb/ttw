@@ -48,8 +48,13 @@
     function restKeydown(e) {
         if (curInput === "" && e.code === "Enter") {
             dispatch("inputComplete", tags);
-        } else if (activeSuggestion !== null && (e.code === "Enter" || e.code === "Space")) {
+        } else if (activeSuggestion !== null && (e.code === "Enter" || e.code === "Space" || e.code === "Tab")) {
+            e.preventDefault();
             chooseSuggestion(activeSuggestion)(e);
+        } else if ((e.code === "Tab") && (suggestions.length >= 1)) {
+            // hit tab with no suggestion selected, but some pending
+            e.preventDefault();
+            chooseSuggestion(0)(e);
         } else if (curInput === "" && e.code === "Backspace") {
             completedTags.pop();
             tags = completedTags;
