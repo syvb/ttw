@@ -129,7 +129,7 @@
     {#if window.loginState === "in"}
         <span class="auth-info">
             {#if username}
-                Logged in as <span class="username">{username}</span>.
+                Logged in as <span class="username">{username}</span>
             {/if}
             <form class="signout-form" action={`${config["api-server"]}/logout`} method="POST">
                 <input type="submit" value="Sign out">
