@@ -30,6 +30,12 @@ This is a simple key-value store. Keys starting with `retag` are reserved for in
 
 ## Endpoints
 
+### GET `/`
+This returns information about the currently authenticated user in a textual format for debugging.
+
+### POST `/logout`
+Invalidates the API token used to make the call.
+
 ### GET `/me.json`
 A JSON object with data about the authenticated user.
 | Key | Value   |
@@ -46,7 +52,7 @@ A JSON object. You can filter pings with query string params:
 | ?endTime=X | Pings with a timestamp before X |
 | ?limit=X | Limit to X results, and sort pings from newest to oldest (to paginate, change startTime/endTime) |
 
-This returns more than just pings to reduce the number of needed API Calls. Response object:
+This returns more than just pings to reduce the number of needed API calls. Response object:
 | Key          | Value                                                  |
 |--------------|--------------------------------------------------------|
 | pings        | Array of pings                                         |
