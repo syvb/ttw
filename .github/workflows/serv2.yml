@@ -11,6 +11,7 @@ jobs:
     name: serv2 on Node ${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
+      - run: sudo apt update
       - run: sudo apt install libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
       - name: Setup node
         uses: actions/setup-node@v2
