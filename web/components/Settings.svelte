@@ -529,7 +529,7 @@
                             <a href={config["api-server"] + "/internal/gentoken"}>Generate API token</a>
                         </td>
                         <td>
-                            See the <a href="https://github.com/Smittyvb/ttw/blob/master/docs/api.md">API documentation</a> for more details.
+                            See the <a href="https://github.com/Smittyvb/ttw/blob/master/docs/api.md">API documentation</a> for more details. The API endpoint to use is <code>{config["api-server"]}/</code>
                         </td>
                     </tr>
                 </tbody>
