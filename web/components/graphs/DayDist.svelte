@@ -19,15 +19,14 @@
 
     function graphLoad(e) {
         const { defaultCanvas } = e.detail;
-        const color = Chart.helpers.color;
-        chart = new Chart(defaultCanvas, {
+        chart = new Chart.Chart(defaultCanvas, {
             type: "bar",
             data: {
                 labels: (new Array(24)).fill().map((_ele, i) => (i).toString() + ":00"),
                 datasets: [{
                     label: "Pings per hour",
                     borderColor: (window.__theme === "dark") ? "white" : "black",
-                    backgroundColor: color((window.__theme === "dark") ? "white" : "black").alpha(0.6).rgbString(),
+                    backgroundColor: `rgba(${(window.__theme === "dark") ? "100%, 100%, 100%" : "0%, 0%, 0%"}, 60%)`,
                     barPercentage: 1,
                     categoryPercentage: 1,
                     data: [],
@@ -39,7 +38,7 @@
                     text: "Daily distribution"
                 },
                 scales: {
-                    yAxes: [{
+                    y: [{
                         ticks: {
                             beginAtZero: true
                         }

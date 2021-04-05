@@ -17,7 +17,8 @@
 
     onMount(async () => {
         if (loadChartjs && !window.Chart) {
-            window.Chart = (await import("chart.js")).default;
+            window.Chart = (await import("chart.js"));
+            window.Chart.registry.add(...window.Chart.registerables);
         }
         loaded = true;
         graphLoadPromiseResolve({

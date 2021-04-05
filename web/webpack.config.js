@@ -122,6 +122,7 @@ module.exports = {
             index: "/app.html",
             verbose: true,
         },
+        public: "ttw.localhost.com",
     },
     optimization: {
         splitChunks: false
