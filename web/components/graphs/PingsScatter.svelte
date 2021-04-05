@@ -19,16 +19,15 @@
 
     async function graphLoad(e) {
         const { defaultCanvas } = e.detail;
-        const color = Chart.helpers.color;
         const dU = await dateUtils;
-        chart = new Chart(defaultCanvas, {
+        chart = new Chart.Chart(defaultCanvas, {
             type: "scatter",
             data: {
                 // labels: [],
                 datasets: [{
                     label: "Pings per hour",
                     borderColor: (window.__theme === "dark") ? "white" : "black",
-                    backgroundColor: color((window.__theme === "dark") ? "white" : "black").alpha(0.6).rgbString(),
+                    backgroundColor: `rgba(${(window.__theme === "dark") ? "100%, 100%, 100%" : "0%, 0%, 0%"}, 60%)`,
                     data: [],
                 }]
             },
@@ -38,17 +37,17 @@
                     text: "Daily distribution"
                 },
                 scales: {
-                    yAxes: [{
+                    y: {
                         ticks: {
                             beginAtZero: true,
-                            userCallback: tick => dU.msToTimeString(-tick),
+                            callback: tick => dU.msToTimeString(-tick),
                         },
-                    }],
-                    xAxes: [{
+                    },
+                    x: {
                         ticks: {
-                            userCallback: tick => dU.dayNumToDateString(tick),
+                            callback: tick => dU.dayNumToDateString(tick),
                         },
-                    }],
+                    },
                 },
                 tooltips: {
                     callbacks: {
