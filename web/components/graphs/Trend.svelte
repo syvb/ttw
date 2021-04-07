@@ -15,7 +15,7 @@
         if (intervalName === "Daily") {
             stringifyIntervalIdFunc = dU.dayNumToDateString;
         } else if (intervalName === "Weekly") {
-            stringifyIntervalIdFunc = num => `week ${num}`;
+            stringifyIntervalIdFunc = num => `${Math.floor(num / 53)} week ${(num % 53) + 1}`;
         } else if (intervalName === "Monthly") {
             stringifyIntervalIdFunc = dU.monthNumToString;
         } else {
@@ -27,7 +27,7 @@
             if (intervalName === "Daily") {
                 intervalId = dU.daysSince1900ish(dateObj);
             } else if (intervalName === "Weekly") {
-                intervalId = dU.weeksSince1900ish(dateObj);
+                intervalId = dU.weekScore(dateObj);
             } else if (intervalName === "Monthly") {
                 intervalId = dU.monthsSince1900(dateObj);
             } else {

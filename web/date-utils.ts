@@ -43,10 +43,14 @@ export function daysSince1900ish(dateObj: Date) {
     return (yearsSince1990 * 365) + daysIntoYear;
 }
 
-// https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
-export function weeksSince1900ish(d: Date) {
+// Arbitrary way to encode weeks into a number
+export function weekScore(d: Date) {
     const mom = moment(d);
-    return mom.week();
+    // Last two digits are week, digits before are year
+    let week = mom.week();
+    // hack to handle last week of year being week 1 of next year
+    if (week === 1 && mom.month() === 11) week = 53;
+    return (mom.year() * 53) + (week - 1);
 }
 
 export function monthsSince1900(dateObj: Date) {
