@@ -5,7 +5,6 @@ const argon2 = require("argon2");
 const cookieParser = require("cookie-parser");
 const { shouldSendSameSiteNone } = require("should-send-same-site-none");
 const fs = require("fs");
-const fsP = require("fs").promises;
 const crypto = require("crypto");
 const util = require("util");
 const https = require("https");
