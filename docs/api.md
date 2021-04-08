@@ -23,8 +23,6 @@ A ping is repersented as a JSON object:
 |comment    | Currently unused, ping comment.                           |
 |last_change| Timestamp of the last modification to the ping.           |
 
-There's currently no easy way to determine currently pending pings.
-
 ### Config
 This is a simple key-value store. Keys starting with `retag` are reserved for internal use, you can use any other keys you want for any purpose.
 
@@ -74,6 +72,9 @@ The per-user SQLite database for this user. Note that the database schema is sub
 
 ### DELETE `/db`
 Deletes all data in the user's database. This is irreversible. Note that this only affects the user's pings/config, it doesn't delete the account, or affect authentication.
+
+### GET `/pings/expected/:from/:to`
+Returns all pings expected between the Unix time (in seconds) `from` and `to`.
 
 ### `/internal/*` endpoints
 All API endpoints beginning with `/internal` are subject to change at any time. Only use them if also control the server on the other end (and ensure everything still works after an update), or are modifying the client/server itself. Although you aren't missing out on much, since these endpoints are mostly just for debugging/authentication/push.

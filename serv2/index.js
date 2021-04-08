@@ -13,6 +13,7 @@ const beem = require("./beem")(authMiddleware);
 const validate = require("./validate");
 const pushHandler = require("./pushHandler");
 const setCorsHeaders = require("./setCorsHeaders");
+const taglogic = require("./pkg/taglogic.js");
 const config = {
     ...require("../config.json"),
     ...require("../config-private.json")
@@ -448,6 +449,52 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
 app.options("/pings", authMiddleware, (req, res) => {
     setCorsHeaders(res);
     res.send();
+});
+
+app.get("/pings/expected/:from/:to", authMiddleware, (req, res) => {
+    if (req.authUser === null) return res.status(403).send();
+    const from = parseInt(req.params.from, 10);
+    const to = parseInt(req.params.to, 10);
+    if (Number.isNaN(from)) return res.status(400).send("from is not a number");
+    if (Number.isNaN(to)) return res.status(400).send("to is not a number");
+    if (from < 0) return res.status(400).send("from is negative");
+    if (to < 0) return res.status(400).send("to is negative");
+    if (from > 4294967295) return res.status(400).send("from is too big");
+    if (to > 4294967295) return res.status(400).send("to is too big");
+    if (from >= to) return res.status(400).send("to must be after from, try reversing the arguments");
+    // give 100 seconds of leeway
+    if ((to - from) > 86500) return res.status(400).send("gap is bigger than 86400 seconds")
+
+    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const stmt = userDb.prepare("SELECT k, v FROM meta WHERE k IN ('retag-pint-alg', 'retag-pint-interval', 'retag-pint-seed')");
+    let pintData = Object.create(null);
+    stmt.all().forEach(({ k, v }) => pintData[k] = v);
+    const alg = (pintData["retag-pint-alg"] === "tagtime" || pintData["retag-pint-alg"] === "fnv") ? pintData["retag-pint-alg"] : "fnv";
+    let interval = pintData["retag-pint-interval"];
+    if (interval) {
+        interval = parseInt(interval, 10);
+        if (Number.isNaN(interval) || interval < 1 || interval >= 2147483647) {
+            interval = 2700;
+        }
+    } else {
+        interval = 2700;
+    }
+    if (interval < 60) return res.status(400).send("interval must be at least a minute to use this endpoint");
+    let seed = pintData["retag-pint-seed"];
+    if (seed) {
+        seed = parseInt(seed, 10);
+        if (Number.isNaN(seed) || seed < 1 || seed >= 2147483647) {
+            seed = 12345;
+        }
+    } else {
+        seed = 12345;
+    }
+    if (alg === "tagtime") {
+        return res.status(400).send("using tagtime alg is not currently supported");
+    }
+    const pint = taglogic.new_ping_interval_data(seed, interval, alg === "tagtime");
+    const between = taglogic.pings_between_u32(from, to, pint);
+    res.status(200).send([...between]);
 });
 
 app.get("/config", authMiddleware, (req, res) => {
