@@ -488,7 +488,7 @@
                         <td>
                             <label for="tt-import" class="tt-import-btn">
                                 <button on:click={doTtImport} disabled={tagtimeImportPending}>
-                                    Import from TagTime
+                                    Import from TagTime log
                                 </button>
                             </label>
                             <input id="tt-import" class="tt-import" aria-hidden="true" tabindex="-1" type="file" on:change={tagtimeImport} bind:this={ttImportButton} disabled={tagtimeImportPending}>
