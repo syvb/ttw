@@ -99,7 +99,8 @@
             const humanTimeIndex = parts.findIndex(part => part.includes("["));
             const tags = parts
                 .slice(1, humanTimeIndex)
-                .map(tag => tag.trim().toLowerCase())
+                // normalize tag
+                .map(tag => tag.trim().toLowerCase().replace(/"|'|\t/g, ""))
                 .filter(tag => !tag.match(/^\W*$/));
             return {
                 tags,
