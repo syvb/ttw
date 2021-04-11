@@ -30,7 +30,10 @@ You can see what hours of the day get the most of a particular tag with the Dail
 You can see a matrix graph of your time in the Graphs tab.
 How do you spend the hours of your day/week/month? Find out in the Graphs tab.
 ${STR.appName} is open source! You can find in on GitHub as smittyvb/ttw
-You can easily see all pings over a 30 day time range in the Pings and Graphs tab.`.split("\n");
+You can easily see all pings over a 30 day time range in the Pings and Graphs tab.
+${STR.appName} has an API. See the details in Imports/Exports in Settings.
+You can use Tab to use the currently selected tag suggestion.
+You can use boolean expressions for advanced ping filtering.`.split("\n");
 
 STR.welcome = `Welcome to ${STR.appName}!`;
 
