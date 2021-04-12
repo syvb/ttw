@@ -246,7 +246,7 @@
                 </p>
 
                 <p>
-                    <img src="scrping.png" alt="What a ping looks like" class="scr" />
+                    <img src="scrping.png" alt="What a ping looks like" class="scr" width="498" height="188" />
                 </p>
 
                 <div class="step">
@@ -259,7 +259,7 @@
                 </p>
 
                 <p>
-                    <img src="scrautocomplete.png" alt="Entering tags" class="scr" />
+                    <img src="scrautocomplete.png" alt="Entering tags" class="scr" width="136" height="88" />
                 </p>
 
                 <div class="step">
