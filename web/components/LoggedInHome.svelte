@@ -45,6 +45,12 @@
         Last tag: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)})
     </div>
 
+    {#if window.miniData && window.miniData.total}
+        <div>
+            Total pings answered: {window.miniData.total}
+        </div>
+    {/if}
+
     <NotificationsPerm alwaysShow={false} />
 
     <Tip />
