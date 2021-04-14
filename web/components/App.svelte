@@ -50,6 +50,8 @@
             checkInstalling();
         });
     }
+
+    let anyPending = false;
 </script>
 
 <style>
@@ -100,8 +102,8 @@
                 Loading...
             </Route>
             <Route path="/app">
-                <LoggedInTop {username} {url} />
-                <div class="home"><LoggedInHome {swPending} /></div>
+                <LoggedInTop {username} {url} bind:anyPending />
+                <div class="home"><LoggedInHome {swPending} {anyPending} /></div>
             </Route>
             <Route path="/settings">
                 <LoggedInTop {username} {url} />

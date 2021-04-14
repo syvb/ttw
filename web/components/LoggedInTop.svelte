@@ -6,6 +6,9 @@
     import config from "../../config.json";
     export let username;
     export let url;
+
+    export let anyPending;
+
     let homeLink, pingsLink, settingsLink, graphsLink, goalsLink;
     let mounted = false;
 
@@ -139,4 +142,4 @@
     <SyncStatus />
 </nav>
 
-<FillPings />
+<FillPings bind:anyPending />

@@ -11,6 +11,8 @@
     let setTagsBtn;
     let lastPingTags = window.lastTag ? window.lastTag.tags : [];
     let pending = window.pingsPending;
+    export let anyPending = false;
+    $: anyPending = pending.length > 0;
     let afkTags = (localStorage["retag-afk-tags"] || "afk").split(" ");
     if (afkTags.length === 1 && afkTags[0] === "") afkTags = [];
 
