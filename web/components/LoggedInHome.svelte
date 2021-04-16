@@ -61,6 +61,12 @@
     .home-info {
         text-align: center;
     }
+
+    @media (max-width: 425px) {
+        #maincontent {
+            font-size: 1.1rem;
+        }
+    }
 </style>
 
 <svelte:window on:pingUpdate={pingUpdate} />
