@@ -293,13 +293,13 @@
         color: black;
         text-decoration: none;
         border: 2px solid #005644;
-        width: fit-content;
         border-radius: 3rem;
         padding: .5rem;
         margin-bottom: 0.5rem;
         cursor: pointer;
         background: #d4faf1;
-        height: fit-content;
+        width: max-content;
+        height: max-content;
     }
 
     /* .active is manipulated in JS, this is needed to supress dead style removal */
