@@ -103,7 +103,7 @@
         margin-right: 1rem;
     }
 
-    @media (max-width: 460px) {
+    @media (max-width: 580px) {
         .navlink {
             margin-right: 0.15rem;
         }
@@ -112,7 +112,7 @@
         }
     }
 
-    @media (max-width: 365px) {
+    @media (max-width: 485px) {
         nav {
             height: 2rem;
         }

@@ -30,7 +30,7 @@
     .statcircle-synced {
         background: #09da00;
     }
-    @media (max-width: 430px) {
+    @media (max-width: 540px) {
         .status-text {
             display: none;
         }
