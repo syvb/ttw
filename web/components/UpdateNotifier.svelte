@@ -16,7 +16,6 @@
         background: #034c3d;
         cursor: pointer;
         color: white;
-        width: fit-content;
         padding: 0.75rem;
         border-radius: 0.5rem;
         box-shadow: 0px 5px 4px 0px #00392d;
