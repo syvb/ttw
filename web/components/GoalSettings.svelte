@@ -7,6 +7,7 @@
     import { beemResync } from "../beem.ts";
     let dispatch = createEventDispatcher();
     export let goal = null;
+
     let settingsName, settingsType, settingsIncludedTags, settingsExcludedTags, settingsBoolFilter, settingsIncludeType, settingsBeem;
     if (goal) {
         settingsName = goal.name || "Goal name";
@@ -31,7 +32,10 @@
             beemGoal: settingsBeem,
         };
     }
+
+    let updateLoading = false;
     async function createGoal() {
+        updateLoading = true;
         let settings = genObj();
         db.goals.add(settings);
         const goalsChangedPromise = goalsChanged();
@@ -45,6 +49,7 @@
         navigate("/goals");
     }
     async function updateGoal() {
+        updateLoading = true;
         let settings = genObj();
         db.goals.update(settings.id, settings);
         const goalsChangedPromise = goalsChanged();
@@ -56,6 +61,7 @@
             ]);
         }
         origGoalBeem = settingsBeem;
+        updateLoading = false;
     }
 </script>
 
@@ -73,9 +79,9 @@
     </div>
     {#if goal == null}
         <!-- new goal -->
-        <button on:click={createGoal}>Create goal</button>
+        <button on:click={createGoal} disabled={updateLoading}>Create goal</button>
     {:else}
         <!-- existing goal -->
-        <button on:click={updateGoal}>Update goal</button>
+        <button on:click={updateGoal} disabled={updateLoading}>Update goal</button>
     {/if}
 </main>
