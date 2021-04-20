@@ -8,8 +8,9 @@ All API endpoints are relative to the API root. Currently the API root is always
 ## Authentication
 Generate a token from the Imports/Exports tab in Settings, then pass it to all requests in the `Authorization` header using the `Bearer` authentication type. It should look like:
 ```http
-Authorization: Bearer topsecrectblah123
+Authorization: Bearer ttwprivate_api!8.axaihDWNkJtPaFqQsOBqVnXu...
 ```
+API tokens will always start with `ttwprivate_`.
 
 ## Concepts
 ### Pings
