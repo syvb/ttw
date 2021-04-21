@@ -66,6 +66,12 @@
         .tagline {
             font-size: 2.7rem;
             font-weight: bold;
+
+            /* hopefully browsers support either all or none of these */
+            background: -webkit-linear-gradient(60deg, #005644, #189eb0, #9a1fe0);
+            /* seemingly no standard way to do this: */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .scr {
