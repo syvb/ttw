@@ -133,7 +133,7 @@ app.get("/", authMiddleware, (req, res) => {
     if (req.authUser) {
         // usernames can only have HTML-safe characters
         const username = globalPreped.uidUsername.get(req.authUser).username;
-        authInfo = `You are logged in, your user ID is ${req.authUser} and your username is ${username}.`;
+        authInfo = `You are logged in, your user ID is ${req.authUser}, and your username is ${username}.`;
     } else {
         authInfo = "You are logged out."
     }
