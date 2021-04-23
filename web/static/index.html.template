@@ -126,15 +126,24 @@
 
         @media (max-width: 580px) {
             .scr {
-                width: 90vw;
                 margin-left: 5vw;
             }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 560px) {
             .scr {
-                width: 98vw;
+                width: calc(100vw - 40px);
+                height: unset;
                 margin-left: 0.5vw;
+            }
+
+            .top-auth-links {
+                display: none;
+            }
+
+            h1 {
+                width: 100%;
+                text-align: center;
             }
         }
 
@@ -211,7 +220,7 @@
                 <header>
                     <nav>
                         <h1>APPNAME</h1>
-                        <div class="auth-links">
+                        <div class="auth-links top-auth-links">
                             <a class="auth-link" href="BACKSERV/internal/login">Login</a>
                             <a class="auth-link" href="BACKSERV/internal/register">Sign up</a>
                         </div>
