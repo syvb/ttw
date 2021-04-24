@@ -3,7 +3,7 @@
 **Note:** This documentation is incomplete in parts.
 
 ## About
-All API endpoints are relative to the API root. Currently the API root is always just a domain with no path, but this can and will change in the future.
+All API endpoints are relative to the API root. Currently the API root is always just a domain with no path, but this can and will change in the future. Currently you need to set a `content-type: text/plain;charset=UTF-8` header with all requests due to a bug.
 
 ## Authentication
 Generate a token from the Imports/Exports tab in Settings, then pass it to all requests in the `Authorization` header using the `Bearer` authentication type. It should look like:
