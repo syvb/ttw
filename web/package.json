@@ -23,7 +23,7 @@
     "flatpickr": "^4.6.9",
     "humanize-duration": "^3.23.1",
     "js-xxhash": "^1.0.4",
-    "mini-css-extract-plugin": "^1.4.1",
+    "mini-css-extract-plugin": "^1.5.1",
     "moment": "^2.29.1",
     "svelte-routing": "^1.6.0",
     "workbox-precaching": "^6.1.2",
