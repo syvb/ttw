@@ -313,6 +313,9 @@
                         APPNAME was made by <a href="https://smitop.com/">Smitop</a> (<a
                             href="mailto:ttw@smitop.com">ttw@smitop.com</a>). See <a href="https://github.com/smittyvb/ttw">the repo on Github</a>.
                     </p>
+                    <p>
+                        EXTRA_TEXT
+                    </p>
                 </footer>
             </div>
         </div>
