@@ -81,7 +81,7 @@
     <div>
         <slot name="graph">
             <canvas width="500" height="200" bind:this={defaultCanvas}>
-                Sorry, your browser is old and doesn't support canvas.
+                Sorry, your browser is old and doesn&rsquo;t support canvas.
             </canvas>
         </slot>
     </div>

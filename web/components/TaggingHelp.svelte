@@ -29,7 +29,7 @@
                 <li>Seperate tags with spaces.</li>
                 <li>Duplicate tags are ignored.</li>
                 <li>Tags are case-insensitive</li>
-                <li>Use a single/double quote to repeat last ping's tags.</li>
+                <li>Use a single/double quote to repeat last ping&rsquo;s tags.</li>
                 <li>Tags can be in any order</li>
             </ul>
         </div>

@@ -8,7 +8,7 @@
     let goalDataPromise = window.db.goals.get(id);
 
     async function deleteGoal() {
-        if (!confirm("Are you sure you want to delete this goal? If you have an associated Beeminder goal, the Beeminder goal won't be deleted.")) return;
+        if (!confirm("Are you sure you want to delete this goal? If you have an associated Beeminder goal, the Beeminder goal won’t be deleted.")) return;
         await window.db.goals.delete(id);
         goalsChanged();
         navigate("/goals");
@@ -44,8 +44,8 @@
             <GoalSettings {goal} />
         {:else}
             <div>
-                Sorry, a goal couldn't be found with that ID.
-                Make sure you're logged in to the right account.
+                Sorry, a goal couldn&rsquo;t be found with that ID.
+                Make sure you&rsquo;re logged in to the right account.
             </div>
         {/if}
     {/await}

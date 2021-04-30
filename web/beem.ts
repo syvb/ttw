@@ -27,7 +27,7 @@ export async function beemLoadCheck() {
         return;
     }
     if (beeInfo.username !== username) {
-        alert(`BTW, Beeminder thinks your username is "${beeInfo.username}", but the URL params say it's "${username}". Weird.`);
+        alert(`BTW, Beeminder thinks your username is "${beeInfo.username}", but the URL params say it’s "${username}". Weird.`);
     }
     let syncPromise = Promise.resolve();
     if (localStorage["retag-beem-token"] !== token) {
@@ -52,7 +52,7 @@ export async function prepGoal(name: string, silentFailure = false) {
     if (!silentFailure) {
         switch (updateRes.status) {
             case 404:
-                alert(`Beeminder goal "${name}" doesn't exist`);
+                alert(`Beeminder goal "${name}" doesn’t exist`);
                 break;
             case 200: case 204:
                 break;

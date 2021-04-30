@@ -119,7 +119,7 @@
     <div class="ping-input-root">
         <h2>Ping!</h2>
         {#if pending.length === 1}
-            It's tag time! What were you doing at
+            It&rsquo;s tag time! What were you doing at
             <span class="ping-time">{new Date(pending[0] * 1000).toLocaleTimeString()}</span>?
             {#if lastPingTags}
                 <div>

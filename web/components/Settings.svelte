@@ -396,7 +396,7 @@
                         Audio is from <a href="https://cynicmusic.com/" rel="noopener">The Cynic Project</a>.
                     {:else if pingNoise === "d2"}
                         Sounds like a doorbell. Ding-dong! Very confusing if this device is near a door. Audio is from
-                        <a href="https://freesound.org/people/MatthewWong/" rel="noopener" title="Don't get too excited about clicking this link. MatthewWong's only upload to freesound.org is this doorbell sound. Which you've already heard if you're hovering over this link.">MatthewWong</a>.
+                        <a href="https://freesound.org/people/MatthewWong/" rel="noopener" title="Don’t get too excited about clicking this link. MatthewWong’s only upload to freesound.org is this doorbell sound. Which you’ve already heard if you’re hovering over this link.">MatthewWong</a>.
                     {:else if pingNoise === "d3"}
                         Sounds a bit futuristic (but not too futuristic).
                         Audio is from
@@ -404,14 +404,14 @@
                     {:else if pingNoise === "d1337"}
                         no
                     {:else}
-                        Erm what? honestly I don't what know *what* will be played
+                        Erm what? honestly I don&rsquo;t what know *what* will be played
                     {/if}
                 </div>
                 <div class="ding-info">
                     {#await window.supportsAutoplay then supported}
                         {#if !supported && (pingNoise !== "n")}
                             <div class="autoplay-warning">
-                                Note: Your browser doesn't support automatically playing audio. It might be that you need to tap on the page before audio can play.
+                                Note: Your browser doesn&rsquo;t support automatically playing audio. It might be that you need to tap on the page before audio can play.
                             </div>
                         {/if}
                     {/await}
@@ -466,7 +466,7 @@
                                 Checking this checkbox will enable using the algorithm used by the original TagTime.
                                 You can change the seed under advanced settings. Note that UR_PING is always 1184097393.
                                 If you use the TagTime algorithm but not a seed of 11193462 and a gap of 45:00, then
-                                performance will suffer and notifications won't work.
+                                performance will suffer and notifications won&rsquo;t work.
                             </details>
                         </div>
                         <div>
@@ -561,7 +561,7 @@
 
         <div class="tab tab-advanced">
             <div>
-                You probably don't want to touch any of the settings here.
+                You probably don&rsquo;t want to touch any of the settings here.
             </div>
             <div>
                 <button on:click={tryToPersist}>Request persistent storage</button>
