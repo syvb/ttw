@@ -85,10 +85,10 @@
 <main id="maincontent">
     <h1>Goals (beta)</h1>
     <div class="about">
-        <p>
+        <div>
             Here you can create and manage your goals. Currently the only point of creating goals is to sync with
             Beeminder. <a href="https://www.youtube.com/watch?v=oZ1R3oxGN90" taget="_blank">Here&rsquo;s a tutorial</a> on setting this up.
-        </p>
+        </div>
         <div>
             <button on:click={beeRedir}
                 title="This will redirect you to a page where you can make the final call as to if we can access your beeswax.">
