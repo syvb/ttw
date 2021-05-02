@@ -20,5 +20,6 @@
         <li><Link to="/graphs/trend/daily">Hours per day</Link></li>
         <li><Link to="/graphs/trend/weekly">Hours per week</Link></li>
         <li><Link to="/graphs/trend/monthly">Hours per month</Link></li>
+        <li><Link to="/graphs/correlation">Correlations</Link></li>
     </ul>
 </main>

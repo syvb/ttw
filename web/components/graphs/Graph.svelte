@@ -7,10 +7,11 @@
     const dispatch = createEventDispatcher();
 
     export let loadChartjs = false;
+    export let doubleSelect = false;
     let graphLoadPromiseResolve;
     export const graphLoadPromise = new Promise((resolve, _reject) => graphLoadPromiseResolve = resolve);
 
-    let graphSlot, defaultCanvas, showMorePings, loading, forcedLocal, curPaginating, pings;
+    let graphSlot, defaultCanvas, showMorePings, showMorePings2, loading, loading2, forcedLocal, curPaginating, pings, pings2;
     let chartjsPromise;
     let loaded = false;
     let dispatchGraphUpdateOnLoad = false;
@@ -31,7 +32,7 @@
         });
         if (dispatchGraphUpdateOnLoad) {
             dispatch("graphUpdate", {
-                pings,
+                pings, pings2,
                 graphEle: graphSlot,
                 defaultCanvas,
             });
@@ -39,23 +40,23 @@
     });
 
     function pingsChanged() {
-        if (loading) return;
+        if (loading || loading2) return;
         if (!loaded) {
             dispatchGraphUpdateOnLoad = true;
             return;
         }
         dispatch("graphUpdate", {
-            pings,
+            pings, pings2,
             graphEle: graphSlot,
             defaultCanvas,
         });
     }
 
-
     let showMoreDisabled = false;
     async function showMore() {
         showMoreDisabled = true;
         await showMorePings();
+        if (showMorePings2) await showMorePings2();
         showMoreDisabled = false;
     }
 </script>
@@ -74,6 +75,9 @@
     </div>
 
     <PingSelector pageReqSize={250} bind:showMorePings bind:loading bind:pings bind:forcedLocal bind:curPaginating pingsChanged={pingsChanged} open />
+    {#if doubleSelect}
+        <PingSelector pageReqSize={250} bind:showMorePings={showMorePings2} bind:loading={loading2} bind:pings={pings2} {curPaginating} pingsChanged={pingsChanged} open />
+    {/if}
     {#if curPaginating && !forcedLocal}
         <button class="show-more" disabled={showMoreDisabled} on:click={showMore}>Load older pings</button>
     {/if}

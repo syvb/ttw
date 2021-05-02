@@ -13,6 +13,7 @@
     import DailyTrendGraph from "./graphs/DailyTrend.svelte";
     import WeeklyTrendGraph from "./graphs/WeeklyTrend.svelte";
     import MonthlyTrendGraph from "./graphs/MonthlyTrend.svelte";
+    import CorrelationGraph from "./graphs/Correlation.svelte";
     import LoggedInHome from "./LoggedInHome.svelte";
     import config from "../../config.json";
     export let url = "";
@@ -145,6 +146,9 @@
             </Route>
             <Route path="/graphs/trend/monthly">
                 <MonthlyTrendGraph />
+            </Route>
+            <Route path="/graphs/correlation">
+                <CorrelationGraph />
             </Route>
             <Route>
                 <LoggedInTop {username} {url} />
