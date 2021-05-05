@@ -33,7 +33,8 @@ ${STR.appName} is open source! You can find in on GitHub as smittyvb/ttw
 You can easily see all pings over a 30 day time range in the Pings and Graphs tab.
 ${STR.appName} has an API. See the details in Imports/Exports in Settings.
 You can use Tab to use the currently selected tag suggestion.
-You can use boolean expressions for advanced ping filtering.`.split("\n");
+You can use boolean expressions for advanced ping filtering.
+The Correlation graph can help you find if two tags tend to predict each other.`.split("\n");
 
 STR.welcome = `Welcome to ${STR.appName}!`;
 
