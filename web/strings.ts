@@ -20,7 +20,7 @@ You can use filtering options to only include pings without a certain tag.
 You can use filtering options to include pings that have all of a list of tags.
 You can change the default AFK tags in settings.
 Tags are converted to lowercase.
-On most recent browsers, you can use ${STR.appName} offline.
+On modern browsers, you can use ${STR.appName} offline.
 ${STR.appName} will automatically sync up when you are reconnected to the Internet if you answer pings offline.
 You can export your tags as a SQLite database in Settings, and run SQL queries against it.
 You can enable notifications from Settings to get a push notification when it's ping time.
