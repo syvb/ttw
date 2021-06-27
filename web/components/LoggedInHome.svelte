@@ -45,12 +45,7 @@
     }
 
     #maincontent {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /*                 navbar------------- footer--------------------- */
-        height: calc(100vh - 10px - 8px - 1rem - 1rem - 1rem - 1rem - 1rem - 1.5rem);
-        font-size: 1.25rem;
+        font-size: 1.1rem;
     }
 
     #maincontent.any-pending {
@@ -58,13 +53,9 @@
         height: unset;
     }
 
-    .home-info {
-        text-align: center;
-    }
-
     @media (max-width: 425px) {
         #maincontent {
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
     }
 </style>
