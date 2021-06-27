@@ -56,12 +56,12 @@
 </script>
 
 <style>
-    :global(.fake-link, a) {
+    :global(.fake-link), :global(a) {
         color: rgb(0, 52, 194);
         text-decoration: underline;
         cursor: pointer;
     }
-    :global(.dark .fake-link, .dark a) {
+    :global(.dark .fake-link), :global(.dark a) {
         color: rgb(92, 210, 255);
     }
     :global(body.dark) {
