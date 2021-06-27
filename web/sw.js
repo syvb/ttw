@@ -63,6 +63,7 @@ async function handleNotificationClick() {
     console.log("Notification clicked");
     if (!self.clients || !self.clients.matchAll) {
         console.log("but we don't support matchAll so not focusing");
+        return;
     }
     const clients = await self.clients.matchAll({ includeUncontrolled: true, type: "window" });
     if (clients.length > 0) {
