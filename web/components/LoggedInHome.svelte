@@ -32,8 +32,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         background-size: cover;
         /* https://mycolor.space/gradient3?ori=to+right+top&hex=%233DD1EB&hex2=%231AC87C&hex3=%236BE8D3&submit=submit */
         background: linear-gradient(to right top, #3dd1eb, #00d1de, #00d1ce, #00cfb9, #00cda1, #12ce9d, #1ed099, #28d195, #37d7a6, #47ddb6, #59e3c5, #6be8d3);
