@@ -12,7 +12,6 @@ precacheAndRoute(
     manifest,
     {
         urlManipulation: ({ url }) => {
-            console.log("checking", url);
             if (url.pathname.match(/^\/(app|settings|cntpings|welcome|graphs(\/.+)?)\/?$/)) {
                 console.log("match");
                 return [new URL("/app.html", location.href)];
