@@ -9,5 +9,6 @@
     "node-fetch": "^2.6.1",
     "should-send-same-site-none": "^2.0.5",
     "web-push": "^3.4.4"
-  }
+  },
+  "license": "Apache-2.0"
 }

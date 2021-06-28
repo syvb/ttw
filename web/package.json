@@ -35,5 +35,6 @@
     "test": "cargo test && wasm-pack test --headless",
     "bundlesize": "./node_modules/.bin/webpack --json > stats.json && webpack-bundle-analyzer stats.json"
   },
-  "browserslist": "> 0.25%, not dead"
+  "browserslist": "> 0.25%, not dead",
+  "license": "Apache-2.0"
 }
