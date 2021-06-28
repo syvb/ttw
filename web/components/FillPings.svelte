@@ -88,6 +88,14 @@
     function defaultPingComplete(e) {
         if (allPingInputs.children[0]) allPingInputs.children[0].children[0].focusInner();
     }
+    let singleEle;
+    function insertLastSingle() {
+        singleEle.setTags([...new Set(onePingTags.concat(lastPingTags))]);
+    }
+    let defaultEle;
+    function insertLastDefault() {
+        defaultEle.setTags([...new Set(defaultTags.concat(lastPingTags))]);
+    }
     $: document.title = (pending.length > 0 ? "*** " : "") + STR.appName;
 </script>
 
@@ -110,6 +118,7 @@
     }
     .last-tags {
         font-weight: bold;
+        cursor: pointer;
     }
 </style>
 
@@ -123,24 +132,24 @@
             <span class="ping-time">{new Date(pending[0] * 1000).toLocaleTimeString()}</span>?
             {#if lastPingTags}
                 <div>
-                    Last ping: <span class="last-tags">{lastPingTags.join(" ")}</span>
+                    Last ping: <span class="last-tags" on:click={insertLastSingle}>{lastPingTags.join(" ")}</span>
                 </div>
             {/if}
             <TaggingHelp />
-            <TagEntry lastTags={lastPingTags} bind:tags={onePingTags} on:inputComplete={setTags} class="ping-input one-ping" autofocus />
+            <TagEntry lastTags={lastPingTags} bind:this={singleEle} bind:tags={onePingTags} on:inputComplete={setTags} bind class="ping-input one-ping" autofocus />
         {:else if pending.length > 0}
             You have multiple pending pings, please fill them in.
             {#if lastPingTags}
                 <!-- technically the if isn't needed since there will always be
                      a last tag if multiple are pending -->
                 <div>
-                    Last ping: <span class="last-tags">{lastPingTags.join(" ")}</span>
+                    Last ping: <span class="last-tags" on:click={insertLastDefault}>{lastPingTags.join(" ")}</span>
                 </div>
             {/if}
             <TaggingHelp />
             <div>
                 Default ping entry:
-                <TagEntry lastTags={lastPingTags} bind:tags={defaultTags} class="ping-input" on:inputComplete={defaultPingComplete} on:input={updateDefault} />
+                <TagEntry lastTags={lastPingTags} bind:this={defaultEle} bind:tags={defaultTags} class="ping-input" on:inputComplete={defaultPingComplete} on:input={updateDefault} />
             </div>
             <div bind:this={allPingInputs} class="all-ping-inputs">
                 {#each pending as pingTime, i}
