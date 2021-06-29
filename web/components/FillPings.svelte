@@ -120,6 +120,12 @@
         font-weight: bold;
         cursor: pointer;
     }
+    .default-entry {
+        margin-bottom: 1rem;
+    }
+    .default-entry-about {
+        font-weight: bold;
+    }
 </style>
 
 <svelte:window on:pingUpdate={pingUpdate} />
@@ -138,7 +144,7 @@
             <TaggingHelp />
             <TagEntry lastTags={lastPingTags} bind:this={singleEle} bind:tags={onePingTags} on:inputComplete={setTags} bind class="ping-input one-ping" autofocus />
         {:else if pending.length > 0}
-            You have multiple pending pings, please fill them in.
+            There are multiple pings pending.
             {#if lastPingTags}
                 <!-- technically the if isn't needed since there will always be
                      a last tag if multiple are pending -->
@@ -147,8 +153,8 @@
                 </div>
             {/if}
             <TaggingHelp />
-            <div>
-                Default ping entry:
+            <div class="default-entry">
+                <span class="default-entry-about">Default ping entry:</span>
                 <TagEntry lastTags={lastPingTags} bind:this={defaultEle} bind:tags={defaultTags} class="ping-input" on:inputComplete={defaultPingComplete} on:input={updateDefault} />
             </div>
             <div bind:this={allPingInputs} class="all-ping-inputs">
