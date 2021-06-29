@@ -142,7 +142,7 @@
                     <tr>
                         <td class="time-cell">{new Date(row.time * 1000).toLocaleString()}</td>
                         <td>
-                            <TagEntry on:input={updateRow(i)} on:inputComplete={rowInputComplete} tags={row.tags} forceMobile={smaller} />
+                            <TagEntry on:input={updateRow(i)} on:inputComplete={rowInputComplete} lastTags={pings[i + 1] ? pings[i + 1].tags : []} tags={row.tags} forceMobile={smaller} />
                         </td>
                     </tr>
                 {/each}
