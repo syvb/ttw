@@ -1,6 +1,7 @@
 <script>
     import TaggingHelp from "./TaggingHelp.svelte";
     import TagEntry from "./TagEntry.svelte";
+    import LastPingInfo from "./LastPingInfo.svelte";
     import { updateTagIndexWithPings } from "../tagIndex.ts";
     import { afterUpdate } from "svelte";
     import { putPings } from "../pings.ts";
@@ -89,12 +90,12 @@
         if (allPingInputs.children[0]) allPingInputs.children[0].children[0].focusInner();
     }
     let singleEle;
-    function insertLastSingle() {
-        singleEle.setTags([...new Set(onePingTags.concat(lastPingTags))]);
+    function insertSingle(tags) {
+        singleEle.setTags([...new Set(onePingTags.concat(tags))]);
     }
     let defaultEle;
-    function insertLastDefault() {
-        defaultEle.setTags([...new Set(defaultTags.concat(lastPingTags))]);
+    function insertDefault(tags) {
+        defaultEle.setTags([...new Set(defaultTags.concat(tags))]);
     }
     $: document.title = (pending.length > 0 ? "*** " : "") + STR.appName;
 </script>
@@ -116,10 +117,6 @@
     .ping-time {
         font-weight: bold;
     }
-    .last-tags {
-        font-weight: bold;
-        cursor: pointer;
-    }
     .default-entry {
         margin-bottom: 1rem;
     }
@@ -136,22 +133,12 @@
         {#if pending.length === 1}
             It&rsquo;s tag time! What were you doing at
             <span class="ping-time">{new Date(pending[0] * 1000).toLocaleTimeString()}</span>?
-            {#if lastPingTags}
-                <div>
-                    Last ping: <span class="last-tags" on:click={insertLastSingle}>{lastPingTags.join(" ")}</span>
-                </div>
-            {/if}
+            <LastPingInfo {lastPingTags} insertTags={insertSingle} />
             <TaggingHelp />
             <TagEntry lastTags={lastPingTags} bind:this={singleEle} bind:tags={onePingTags} on:inputComplete={setTags} bind class="ping-input one-ping" autofocus />
         {:else if pending.length > 0}
             There are multiple pings pending.
-            {#if lastPingTags}
-                <!-- technically the if isn't needed since there will always be
-                     a last tag if multiple are pending -->
-                <div>
-                    Last ping: <span class="last-tags" on:click={insertLastDefault}>{lastPingTags.join(" ")}</span>
-                </div>
-            {/if}
+            <LastPingInfo {lastPingTags} insertTags={insertDefault} />
             <TaggingHelp />
             <div class="default-entry">
                 <span class="default-entry-about">Default ping entry:</span>
