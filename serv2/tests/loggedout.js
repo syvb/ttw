@@ -12,7 +12,7 @@ module.exports = async () => {
     }
 
     const root = await getEndpoint("/");
-    assert.equal(root, 'This is the <a href="http://ttw.localhost.com:8080">TagTime Web</a> backend. You are logged out.');
+    assert(root.endsWith('">TagTime Web</a> backend. You are logged out.'));
 
     assert((await fetch(config["api-server"] + "/.well-known/change-password")).redirected);
     assert((await fetch(config["api-server"] + "/internal/gentoken")).redirected);
