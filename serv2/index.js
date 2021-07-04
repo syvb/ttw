@@ -1,3 +1,7 @@
+if (process.env["SERV2_TEST_MODE"]) {
+    process.on("unhandledRejection", up => { throw up });
+}
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const Database = require("better-sqlite3");
@@ -610,9 +614,7 @@ app.use("/internal/push", pushHandler(globalDb));
 
 app.use("/internal/beem", beem.router);
 
-if (process.env["SERV2_TEST_MODE"]) {
-    process.exit(0);
-} else if (config["https-crt"]) {
+if (config["https-crt"]) {
     const httpsConfig = {
         key: fs.readFileSync(config["https-key"]),
         cert: fs.readFileSync(config["https-crt"]),
@@ -624,4 +626,11 @@ if (process.env["SERV2_TEST_MODE"]) {
     server.listen(config["api-listen-port"]);
 } else {
     app.listen(config["api-listen-port"]);
+}
+
+if (process.env["SERV2_TEST_MODE"]) {
+    (async () => {
+        await require("./tests/loggedout.js")();
+        process.exit(0);
+    })();
 }
