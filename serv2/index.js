@@ -25,7 +25,13 @@ const config = {
 const USER_DB_SETUP = fs.readFileSync(__dirname + "/initUserDb.sql", "utf-8");
 const USER_DB_EMPTY = fs.readFileSync(__dirname + "/emptyUserDb.sql", "utf-8");
 
-const USER_DB_DIR = config["user-db-dir"] ? config["user-db-dir"] : (__dirname + "/user-dbs");
+const USER_DB_DIR =
+    (config["user-db-dir"] ? config["user-db-dir"] : (__dirname + "/user-dbs")) +
+    (process.env["SERV2_TEST_MODE"] ? "/test" : "");
+
+if (!fs.existsSync(USER_DB_DIR)) {
+    fs.mkdirSync(USER_DB_DIR);
+}
 
 const ARGON2_CONFIG = {
     type: argon2.argon2id,
@@ -36,9 +42,9 @@ const ARGON2_CONFIG = {
     version: 0x13,
 };
 
-const globalDb = new Database("global.db");
+const globalDb = new Database(process.env["SERV2_TEST_MODE"] ? ":memory:" : "global.db");
 globalDb.exec(fs.readFileSync(__dirname + "/initGlobalDb.sql", "utf-8"));
-const authDb = new Database("auth.db");
+const authDb = new Database(process.env["SERV2_TEST_MODE"] ? ":memory:" : "auth.db");
 authDb.exec(fs.readFileSync(__dirname + "/initAuthDb.sql", "utf-8"));
 try {
     globalDb.exec("ALTER TABLE pushregs ADD COLUMN alg DEFAULT 0");
@@ -73,6 +79,10 @@ const authPrepped = {
     invalidate: authDb.prepare("DELETE from tokens WHERE token_data = ?"),
     invalidateApi: authDb.prepare("DELETE from tokens WHERE user_id = ? AND token_data LIKE 'api!%'"),
     checkToken: authDb.prepare("SELECT user_id FROM tokens WHERE token_data = ?"),
+}
+
+function getUserDb(id) {
+    return new Database(`${USER_DB_DIR}/${id.toString(36)}.db`);;
 }
 
 async function setAuthCookie(res, uid) {
@@ -202,7 +212,7 @@ app.post("/internal/register", bodyParser.urlencoded({ extended: false, limit: c
 
     const uid = globalPreped.registerTx(emailToken.toString("base64"), hashedPw, email, username);
     const setCookiePromise = setAuthCookie(res, uid);
-    const userDb = new Database(`${USER_DB_DIR}/${uid.toString(36)}.db`);
+    const userDb = getUserDb(uid);
     userDb.exec(USER_DB_SETUP);
     userDb.pragma("page_size = 4096");
     userDb.pragma(`max_page_count = ${Math.floor(config["db-max-size"] / 4096)}`);
@@ -353,7 +363,7 @@ function getUserConfig(userDb) {
 app.get("/pings", authMiddleware, (req, res) => {
     setCorsHeaders(res);
     if (req.authUser === null) return res.status(403).send();
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     let editedAfter = null;
     if ((typeof req.query.editedAfter) === "string") {
         editedAfter = parseInt(req.query.editedAfter, 10);
@@ -417,7 +427,7 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
         return res.status(400).send("pings must be an array");
     }
     if (json.pings.length < 1) return res.status(400).send("Must modify at least 1 ping.");
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     const stmt = userDb.prepare("INSERT OR REPLACE INTO pings (time, tags, interval, category, comment, last_change) VALUES (@time, @tags, @interval, @category, @comment, @last_change)");
     const now = Date.now();
     const tx = userDb.transaction(() => {
@@ -469,7 +479,7 @@ app.get("/pings/expected/:from/:to", authMiddleware, (req, res) => {
     // give 100 seconds of leeway
     if ((to - from) > 86500) return res.status(400).send("gap is bigger than 86400 seconds")
 
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     const stmt = userDb.prepare("SELECT k, v FROM meta WHERE k IN ('retag-pint-alg', 'retag-pint-interval', 'retag-pint-seed')");
     let pintData = Object.create(null);
     stmt.all().forEach(({ k, v }) => pintData[k] = v);
@@ -504,7 +514,7 @@ app.get("/pings/expected/:from/:to", authMiddleware, (req, res) => {
 app.get("/config", authMiddleware, (req, res) => {
     setCorsHeaders(res);
     if (req.authUser === null) return res.status(403).send();
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     res.json(getUserConfig(userDb));
 });
 app.patch("/config", authMiddleware, bodyParser.text({ limit: config["db-max-size"] }), (req, res) => {
@@ -522,7 +532,7 @@ app.patch("/config", authMiddleware, bodyParser.text({ limit: config["db-max-siz
     if (typeof json.changes.lastModified !== "number") {
         return res.status(400).send("changes.lastModified must be a number");
     }
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     const modifyCheckStmt = userDb.prepare("SELECT v FROM meta WHERE k = 'lastModified'");
     let lastModified = modifyCheckStmt.get();
     if (lastModified === undefined) {
@@ -565,7 +575,7 @@ app.get("/db", authMiddleware, (req, res) => {
 app.delete("/db", authMiddleware, (req, res) => {
     if (req.authUser === null) return res.status(403).send();
     setCorsHeaders(res);
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     const tx = userDb.transaction(() => {
         userDb.exec(USER_DB_EMPTY);
         userDb.exec(USER_DB_SETUP);
@@ -583,7 +593,7 @@ app.options("/db", (req, res) => {
 app.get("/internal/mini-data", authMiddleware, (req, res) => {
     setCorsHeaders(res);
     if (req.authUser === null) return res.status(403).send();
-    const userDb = new Database(`${USER_DB_DIR}/${req.authUser.toString(36)}.db`);
+    const userDb = getUserDb(req.authUser);
     // send just over 1 day of tags on default schedule
     // should be quite compressable
     const pingsStmt = userDb.prepare("SELECT * FROM pings ORDER BY time DESC LIMIT 50");
@@ -631,6 +641,7 @@ if (config["https-crt"]) {
 if (process.env["SERV2_TEST_MODE"]) {
     (async () => {
         await require("./tests/loggedout.js")();
+        fs.rmdirSync(USER_DB_DIR);
         process.exit(0);
     })();
 }
