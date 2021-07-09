@@ -167,19 +167,19 @@ function registerFormWithError(error) {
 app.post("/internal/register", bodyParser.urlencoded({ extended: false, limit: config["db-max-size"] }), async (req, res) => {
     const pw = req.body.pw;
     if (typeof pw !== "string") {
-        return res.status(400).body(registerFormWithError("No pw specified"));
+        return res.status(400).send(registerFormWithError("No pw specified"));
     }
     const pwValidationMsg = validate.pw(pw);
     if (pwValidationMsg) return res.send(registerFormWithError(pwValidationMsg));
     const pw2 = req.body.pw2;
     if (typeof pw2 !== "string") {
-        return res.status(400).body(registerFormWithError("No pw2 specified"));
+        return res.status(400).send(registerFormWithError("No pw2 specified"));
     }
     if (pw !== pw2) return res.send(registerFormWithError("Passwords don't match"))
 
     let username = req.body.username;
     if (typeof username !== "string") {
-        return res.status(400).body(registerFormWithError("No username specified"));
+        return res.status(400).send(registerFormWithError("No username specified"));
     }
     username = username.toLowerCase();
     const usernameValidationMsg = validate.username(username);
@@ -187,7 +187,7 @@ app.post("/internal/register", bodyParser.urlencoded({ extended: false, limit: c
 
     let email = req.body.email;
     if (typeof email !== "string") {
-        return res.status(400).body(registerFormWithError("No email specified"));
+        return res.status(400).send(registerFormWithError("No email specified"));
     }
     email = email.toLowerCase();
     const emailValidationMsg = validate.email(email);
@@ -233,14 +233,14 @@ app.get("/internal/login", (req, res) => {
 app.post("/internal/login", bodyParser.urlencoded({ extended: false, limit: config["db-max-size"] }), async (req, res) => {
     const pw = req.body.pw;
     if (typeof pw !== "string") {
-        return res.status(400).body(loginFormWithError("No pw specified"));
+        return res.status(400).send(loginFormWithError("No pw specified"));
     }
     const pwValidationMsg = validate.pw(pw);
     if (pwValidationMsg) return res.send(loginFormWithError(pwValidationMsg));
 
     let username = req.body.username;
     if (typeof username !== "string") {
-        return res.status(400).body(loginFormWithError("No username specified"));
+        return res.status(400).send(loginFormWithError("No username specified"));
     }
     username = username.toLowerCase();
     const usernameValidationMsg = validate.username(username);
@@ -280,7 +280,7 @@ app.post("/internal/changepw", authMiddleware, bodyParser.urlencoded({ extended:
 
     const pw = req.body.pw;
     if (typeof pw !== "string") {
-        return res.status(400).body(changePwFormWithError(req, "No pw specified"));
+        return res.status(400).send(changePwFormWithError(req, "No pw specified"));
     }
     const pwValidationMsg = validate.pw(pw);
     if (pwValidationMsg) return res.send(changePwFormWithError(req, pwValidationMsg));
