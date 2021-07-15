@@ -81,7 +81,7 @@
         <UpdateNotifier {swPending} />
     </div>
 
-    {#if !anyPending}
+    {#if !anyPending && localStorage["retag-homepage-gradient"] === "1"}
         <div class="bg" style={localStorage['retag-bg'] ? `background-image: url(${localStorage['retag-bg']});` : ""}></div>
     {/if}
 </div>

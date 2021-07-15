@@ -130,6 +130,11 @@
         localStorage["retag-theme"] = theme;
         location.reload();
     }
+    let useHomepageGradient = localStorage["retag-homepage-gradient"] === "1";
+    function updateHomepageGradient() {
+        useHomepageGradient = this.checked;
+        localStorage["retag-homepage-gradient"] = ~~useHomepageGradient;
+    }
 
     let pintAvgInterval = toDurString(window.pintData.avg_interval);
     let pintSeed = window.pintData.seed.toString();
@@ -189,7 +194,7 @@
     const TABS = [
         "ping-notifs",
         "import-export",
-        "theme",
+        "display",
         "account",
         "advanced",
     ];
@@ -214,6 +219,7 @@
 
     onMount(() => {
         pingNoise = localStorage["retag-audio"] || "n";
+        document.getElementById("homepage-gradient").checked = useHomepageGradient;
         updateTab();
     });
 </script>
@@ -359,7 +365,7 @@
         <h2>Settings</h2>
         <a class="tab-ping-notifs" href="/settings#ping-notifs">Pings and notifications</a>
         <a class="tab-import-export" href="/settings#import-export">Imports/Exports</a>
-        <a class="tab-theme" href="/settings#theme">Theme</a>
+        <a class="tab-display" href="/settings#display">Display</a>
         <a class="tab-account" href="/settings#account">Account</a>
         <a class="tab-advanced" href="/settings#advanced">Advanced</a>
     </div>
@@ -536,13 +542,19 @@
             </table>
         </div>
 
-        <div class="tab tab-theme">
-            <label for="theme-dropdown">Theme: </label>
-            <select id="theme-dropdown" on:input={updateTheme}>
-                <option selected={theme === "default"} value="default">Browser default {(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "(dark)" : "(light)"}</option>
-                <option selected={theme === "dark"} value="dark">Dark</option>
-                <option selected={theme === "light"} value="light">Light</option>
-            </select>
+        <div class="tab tab-display">
+            <div>
+                <label for="theme-dropdown">Theme: </label>
+                <select id="theme-dropdown" on:input={updateTheme}>
+                    <option selected={theme === "default"} value="default">Browser default {(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "(dark)" : "(light)"}</option>
+                    <option selected={theme === "dark"} value="dark">Dark</option>
+                    <option selected={theme === "light"} value="light">Light</option>
+                </select>
+            </div>
+            <div>
+                <label for="homepage-gradient">Enable gradient on homepage: </label>
+                <input type="checkbox" id="homepage-gradient" on:input={updateHomepageGradient} />
+            </div>
         </div>
 
         <div class="tab tab-account">
