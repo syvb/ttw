@@ -641,7 +641,7 @@ if (config["https-crt"]) {
 if (process.env["SERV2_TEST_MODE"]) {
     (async () => {
         await require("./tests/loggedout.js")();
-        fs.rmdirSync(USER_DB_DIR);
+        await require("./tests/accs.js")();
         process.exit(0);
     })();
 }
