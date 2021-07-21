@@ -4,7 +4,8 @@ module.exports = async () => {
 
     const token = await createAcc("normalacc");
     const root = await getEndpoint("/", token);
-    assert(root.endsWith('">TagTime Web</a> backend. You are logged in, your user ID is 1, and your username is normalacc.'));
+    assert(root.includes('">TagTime Web</a> backend. You are logged in, your user ID is'));
+    assert(root.endsWith(', and your username is normalacc.'));
     await createAcc("z");
     await createAcc("abcdeabcdeabcde");
     await createAcc("sOmEwHaTuPpEr");
