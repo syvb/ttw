@@ -1,9 +1,10 @@
 module.exports = async () => {
     const assert = require("assert").strict;
-    const fetch = require("node-fetch");
-    const { createAcc } = require("./util.js")
+    const { createAcc, getEndpoint } = require("./util.js")
 
-    await createAcc("normalacc");
+    const token = await createAcc("normalacc");
+    const root = await getEndpoint("/", token);
+    assert(root.endsWith('">TagTime Web</a> backend. You are logged in, your user ID is 1, and your username is normalacc.'));
     await createAcc("z");
     await createAcc("abcdeabcdeabcde");
     await createAcc("sOmEwHaTuPpEr");

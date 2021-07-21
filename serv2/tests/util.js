@@ -39,9 +39,13 @@ module.exports = {
             req.end();
         });
     },
-    getEndpoint: async (endpoint, method = "GET", body) => {
+    getEndpoint: async (endpoint, auth = null, method = "GET", body) => {
+        let headers = {};
+        if (auth !== null) {
+            headers["Cookie"] = `retag-auth=${auth}`;
+        }
         const res = await fetch(module.exports.config["api-server"] + endpoint, {
-            method, body,
+            method, body, headers,
         });
         assert.equal(res.status, 200);
         return await res.text();
