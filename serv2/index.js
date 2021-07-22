@@ -428,6 +428,10 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
     }
     if (json.pings.length < 1) return res.status(400).send("Must modify at least 1 ping.");
     const userDb = getUserDb(req.authUser);
+    let getStmt;
+    if (req.query.merge) {
+        getStmt = userDb.prepare("SELECT tags FROM pings WHERE time = @time");
+    }
     const stmt = userDb.prepare("INSERT OR REPLACE INTO pings (time, tags, interval, category, comment, last_change) VALUES (@time, @tags, @interval, @category, @comment, @last_change)");
     const now = Date.now();
     const tx = userDb.transaction(() => {
@@ -439,6 +443,13 @@ app.patch("/pings", authMiddleware, bodyParser.text({ limit: config["db-max-size
             if (typeof ping.time !== "number") return "invalid time";
             if (typeof ping.interval !== "number") return "invalid interval";
             if (ping.time > (Date.now() + 45000)) return "Your clock is ahead, please ensure your system time is valid.";
+            if (req.query.merge) {
+                const cur = getStmt.get({ time: ping.time });
+                if (cur) {
+                    const tags = new Set([...ping.tags, ...cur.tags.split(" ")]);
+                    ping.tags = [...tags];
+                }
+            }
             stmt.run({
                 tags: ping.tags.join(" "),
                 comment: ping.comment,

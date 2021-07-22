@@ -71,6 +71,64 @@ module.exports = async () => {
         );
     }
 
+    // merge tags
+    {
+        await getEndpoint("/pings?merge=1", token, "PATCH", JSON.stringify({
+            pings: [{
+                time: 1626903604,
+                tags: ["afk", "pie", "eat", "newt"],
+                interval: 2700,
+                category: null,
+                comment: null,
+                last_change: 20000,
+                unsynced: ""
+            }]
+        }));
+        assert.deepEqual(
+            norm(JSON.parse(await getEndpoint("/pings", token)).pings),
+            [{
+                time: 1626903604,
+                tags: ["afk", "pie", "eat", "newt"],
+                interval: 2700,
+                category: null,
+                comment: null,
+            }]
+        );
+    }
+
+    // add a ping with ?merge=1
+    {
+        {
+            await getEndpoint("/pings?merge=1", token, "PATCH", JSON.stringify({
+                pings: [{
+                    time: 1626909604,
+                    tags: ["trs", "trstrs"],
+                    interval: 2700,
+                    category: null,
+                    comment: null,
+                    last_change: 10000,
+                    unsynced: ""
+                }]
+            }));
+            assert.deepEqual(
+                norm(JSON.parse(await getEndpoint("/pings", token)).pings),
+                [{
+                    time: 1626903604,
+                    tags: ["afk", "pie", "eat", "newt"],
+                    interval: 2700,
+                    category: null,
+                    comment: null,
+                }, {
+                    time: 1626909604,
+                    tags: ["trs", "trstrs"],
+                    interval: 2700,
+                    category: null,
+                    comment: null,
+                }]
+            );
+        }
+    }
+
     // add one, update one in the past
     {
         await getEndpoint("/pings", token, "PATCH", JSON.stringify({
@@ -103,6 +161,12 @@ module.exports = async () => {
                 time: 1626903699,
                 tags: ["a", "b", "c"],
                 interval: 2800,
+                category: null,
+                comment: null,
+            }, {
+                time: 1626909604,
+                tags: ["trs", "trstrs"],
+                interval: 2700,
                 category: null,
                 comment: null,
             }]

@@ -60,7 +60,9 @@ This returns more than just pings to reduce the number of needed API calls. Resp
 | username     | Username of the logged in user.                        |
 
 ### PATCH `/pings`
-The request body must be a JSON object, with a single key named `pings`. `pings` must be an array of ping objects. Each ping object in the database is overwritten (or created if it doesn't exist) with the update pings. Pings must not be from the future (`ping.time` can't be greater than the server time). Note that a request to this endpoint will result in Beeminder being updated if needed.
+The request body must be a JSON object, with a single key named `pings`. `pings` must be an array of ping objects. Each ping object in the database is overwritten (or created if it doesn't exist) with the update pings. Pings must not be from the future (`ping.time` can't be greater than the server time). Note that a request to this endpoint will result in Beeminder being updated if needed. If the `?merge=1`
+URI parameter is specified, tags will be merged with existing ones, if any, by the server. Note one cannot delete existing tags with
+this parameter specified, so if you are syncing to delete a tag this parameter should not be specified.
 
 ### GET `/config`
 The user's config data, as a JSON object.
