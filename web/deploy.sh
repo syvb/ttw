@@ -16,6 +16,7 @@ cp app.html graphs/pings-scatter.html
 cp app.html graphs/trend/daily.html
 cp app.html graphs/trend/weekly.html
 cp app.html graphs/trend/monthly.html
+cp app.html graphs/correlation
 cp app.html goals.html
 cp app.html goals/info.html
 cp app.html goals/new.html
