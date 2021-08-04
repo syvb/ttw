@@ -149,7 +149,7 @@
         root.tags = tags;
         dispatch("input", tags);
     }
-    function focusRest() {
+    export function focusRest() {
         restInputEle.focus();
     }
     function removeTag() {

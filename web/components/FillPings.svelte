@@ -92,10 +92,12 @@
     let singleEle;
     function insertSingle(tags) {
         singleEle.setTags([...new Set(onePingTags.concat(tags))]);
+        singleEle.focusRest();
     }
     let defaultEle;
     function insertDefault(tags) {
         defaultEle.setTags([...new Set(defaultTags.concat(tags))]);
+        defaultEle.focusRest();
     }
     $: document.title = (pending.length > 0 ? "*** " : "") + STR.appName;
 </script>
@@ -135,7 +137,7 @@
             <span class="ping-time">{new Date(pending[0] * 1000).toLocaleTimeString()}</span>?
             <LastPingInfo {lastPingTags} insertTags={insertSingle} />
             <TaggingHelp />
-            <TagEntry lastTags={lastPingTags} bind:this={singleEle} bind:tags={onePingTags} on:inputComplete={setTags} bind class="ping-input one-ping" autofocus />
+            <TagEntry lastTags={lastPingTags} bind:this={singleEle} bind:tags={onePingTags} on:inputComplete={setTags} class="ping-input one-ping" autofocus />
         {:else if pending.length > 0}
             There are multiple pings pending.
             <LastPingInfo {lastPingTags} insertTags={insertDefault} />
