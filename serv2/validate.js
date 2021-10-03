@@ -1,13 +1,13 @@
 module.exports = {
     pw: pw => {
         if (pw.length > 10000) return "Password cannot be longer than 10000 characters";
-        if (pw.length < 8) return "Password must be at least 8 characters.";
+        if (pw.length < 8) return "Password must be at least 8 characters";
         if (pw.includes("\x00")) return "Password must not contain null bytes";
         return false;
     },
     username: usr => {
-        if (usr.length > 15) return "Username cannot be longer than 15 characters.";
-        if (usr.length < 1) return "Username must be at least 1 character.";
+        if (usr.length > 15) return "Username cannot be longer than 15 characters";
+        if (usr.length < 1) return "Username must be at least 1 character";
         if (!usr.match(/^[a-z]{1,15}$/)) return "Username can only contain ASCII letters";
         return false;
     },
