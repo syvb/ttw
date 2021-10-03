@@ -1,3 +1,6 @@
+-- This is only run at the creation of a user database; to change the schema a
+-- database migration would be needed.
+
 -- The user's pings.
 CREATE TABLE pings (
     time INTEGER NOT NULL PRIMARY KEY UNIQUE,
