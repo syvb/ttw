@@ -60,7 +60,7 @@
         }
         const data = rows
             .map(r => genLine(r))
-            .join("\n");
+            .join("\n") + "\n"; // all files should end with trailing newline
         download(data, "text/plain", "tags.log");
         tagtimeExportPending = false;
     }
