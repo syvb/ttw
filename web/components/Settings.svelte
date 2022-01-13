@@ -426,7 +426,7 @@
 
             <h3>Pinging</h3>
             <div>
-                Automatically add the tags when you miss multiple pings:
+                Automatically add these tags when you miss multiple pings:
                 <TagEntry bind:tags={afkTags} on:input={afkTagsUpdate} small />
             </div>
             <div class="pint-alg">
