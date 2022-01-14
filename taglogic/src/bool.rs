@@ -133,7 +133,7 @@ impl AstNode {
         }
         while let Some(next) = tokens.get(0) {
             match next {
-                Token::CloseBracket => return Err("Unexpected closing bracket"),
+                Token::CloseBracket => return Err("unexpected closing bracket"),
                 Token::Invert => {
                     tokens.remove(0);
                     // invert exactly the next token
@@ -171,7 +171,7 @@ impl AstNode {
                             return Err("can't double invert, that would be pointless")
                         }
                         Some(_) => return Err("expected expression"),
-                        None => return Err("Expected token to invert, got EOF"),
+                        None => return Err("expected token to invert, got EOF"),
                     }
                 }
                 Token::OpenBracket => {
@@ -198,7 +198,7 @@ impl AstNode {
                         Some(_) => Err("invald token after closing bracket"),
                     };
                 }
-                Token::BinaryOp(_) => return Err("Unexpected binary operator"),
+                Token::BinaryOp(_) => return Err("unexpected binary operator"),
                 Token::Name { text } => {
                     // could be the start of the binary op or just a lone name
                     match tokens.get(1) {
