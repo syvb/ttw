@@ -1,6 +1,6 @@
 # Using boolean filters
 
-This is a guide to using boolean fitlers in TagTime Web. Source code for filters are written in `monospace`.
+This is a guide to using boolean fitlers in TagTime Web. Source code for filters are written in `monospace`. For details on the implementation, see [this blog post](https://smitop.com/post/ttw-boolean/).
 
 ## Usage
 
