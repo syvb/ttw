@@ -8,7 +8,7 @@ if (!self.indexedDB) {
 
 const db: any = new Dexie("retag");
 db.version(5).stores({
-    // non-indexed priperties: type
+    // non-indexed properties: type
     goals: "id,name,beemGoal",
 })
 db.version(4).stores({
