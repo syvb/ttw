@@ -21,7 +21,8 @@ module.exports = {
     mode,
     devtool: prod ? undefined : "cheap-source-map",
     entry: {
-        bundle: ["./index.ts"]
+        bundle: ["./index.ts"],
+        lite: ["./lite-index.ts"],
     },
     output: {
         path: dist,
@@ -38,6 +39,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             templateContent: fs.readFileSync(__dirname + "/app.html", "utf-8").replace(/APPNAME/g, config["app-name"] || "TagTime Web"),
             filename: "app.html",
+            chunks: ["bundle"],
+        }),
+
+        new HtmlWebpackPlugin({
+            templateContent: fs.readFileSync(__dirname + "/lite.html", "utf-8").replace(/APPNAME/g, config["app-name"] || "TagTime Web"),
+            filename: "lite.html",
+            chunks: ["lite"],
         }),
 
         new CopyPlugin({
