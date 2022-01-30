@@ -17,6 +17,7 @@ const beem = require("./beem")(authMiddleware);
 const validate = require("./validate");
 const pushHandler = require("./pushHandler");
 const setCorsHeaders = require("./setCorsHeaders");
+const static = require("./static/static");
 const taglogic = require("./pkg/taglogic.js");
 const config = {
     ...require("../config.json"),
@@ -113,9 +114,8 @@ app.use(shouldSendSameSiteNone); // fixes browsers that don't respect SameSite=N
 app.use(cookieParser(config["cookie-secret"]));
 app.use((req, res, next) => {
     res.header("X-Frame-Options", "deny");
-    res.header("Content-Security-Policy", "default-src 'self'")
     next();
-})
+});
 
 function authMiddleware(req, res, next) {
     const authHeader = req.header("Authorization");
@@ -632,8 +632,8 @@ app.options("/internal/mini-data", (req, res) => {
 });
 
 app.use("/internal/push", pushHandler(globalDb));
-
 app.use("/internal/beem", beem.router);
+app.use(static);
 
 if (config["https-crt"]) {
     const httpsConfig = {
@@ -654,6 +654,7 @@ if (process.env["SERV2_TEST_MODE"]) {
         await require("./tests/pings.js")();
         await require("./tests/loggedout.js")();
         await require("./tests/accs.js")();
+        await require("./tests/normalizePath.js")();
         process.exit(0);
     })();
 }

@@ -35,7 +35,7 @@ jobs:
         run: yarn
         working-directory: serv2
       - name: Verify source is valid
-        run: node --check *.js forms/*.js
+        run: node --check *.js forms/*.js static/*.js
         working-directory: serv2
       - name: Try running
         run: SERV2_TEST_MODE=1 ./run.sh
