@@ -16,6 +16,8 @@
     let updatingTableSize = false;
     let smaller = false;
     function checkTableSize() {
+        // TODO: better way to check for table size, this causes large reflows
+        return;
         updatingTableSize = true;
         if (!tableEle || !tbodyEle || tbodyEle.children.length === 0) {
             smaller = false;
