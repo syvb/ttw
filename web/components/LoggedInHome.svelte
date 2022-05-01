@@ -65,7 +65,7 @@
 <div id="maincontent" class:any-pending={anyPending}>
     <div class="home-info">
         <div>
-            Last tag: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)})
+            Last ping: {lastTagTime.toLocaleTimeString()} ({secsToTime(timeAgo)})
         </div>
 
         {#if window.miniData && window.miniData.total}
