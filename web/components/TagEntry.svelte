@@ -113,7 +113,7 @@
         activeSuggestion = null;
         pendingSugFind = ++pendingSugFind;
         let thisSugFind = pendingSugFind;
-        const newSuggestions = await searchTagIndex(search, 3);
+        const newSuggestions = await searchTagIndex(search, 3, completedTags);
         if (thisSugFind !== pendingSugFind) return;
         suggestions = newSuggestions;
     }

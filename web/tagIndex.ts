@@ -51,11 +51,11 @@ function scoreMatch(search: string, match: { count: number; tag: string; }): num
     return score;
 }
 
-export async function searchTagIndex(search: string, num: number): Promise<string[]> {
+export async function searchTagIndex(search: string, num: number, ignore: string[] = []): Promise<string[]> {
     search = search.toLowerCase();
     let matching = await db.tags
         .limit(100)
-        .filter(tag => tag.tag.includes(search))
+        .filter(tag => tag.tag.includes(search) && !ignore.includes(tag.tag))
         .toArray();
     matching = matching.map(match => ({
         score: scoreMatch(search, match),
