@@ -14,7 +14,9 @@
     "webpack": "^5",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2",
-    "worker-loader": "^3.0.8"
+    "worker-loader": "^3.0.8",
+    "mini-css-extract-plugin": "^1.5.1",
+    "workbox-webpack-plugin": "^6.1.2"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
   "dependencies": {
@@ -23,11 +25,9 @@
     "flatpickr": "^4.6.9",
     "humanize-duration": "^3.23.1",
     "js-xxhash": "^1.0.4",
-    "mini-css-extract-plugin": "^1.5.1",
     "moment": "^2.29.1",
     "svelte-routing": "^1.6.0",
-    "workbox-precaching": "^6.1.2",
-    "workbox-webpack-plugin": "^6.1.2"
+    "workbox-precaching": "^6.1.2"
   },
   "scripts": {
     "build": "./build.sh && webpack",
