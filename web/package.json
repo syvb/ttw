@@ -15,7 +15,7 @@
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2",
     "worker-loader": "^3.0.8",
-    "mini-css-extract-plugin": "^1.5.1",
+    "mini-css-extract-plugin": "^2.7.0",
     "workbox-webpack-plugin": "^6.1.2"
   },
   "//note": "Don't remove js-xxhash despite it being unused, so it's included in the license disclaimer",
