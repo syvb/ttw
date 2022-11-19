@@ -1,3 +1,4 @@
+#!/bin/bash
 echo Generating license disclaimer
 yarn licenses generate-disclaimer --silent --prod > static/disclaimer.txt
 

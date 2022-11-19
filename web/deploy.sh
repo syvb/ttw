@@ -1,3 +1,4 @@
+#!/bin/bash
 echo Are you using the right config? If not, change it now!
 sleep 5
 yarn
