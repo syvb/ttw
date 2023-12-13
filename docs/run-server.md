@@ -15,6 +15,6 @@ Want to run your own Retag server? This is the documentation file for you!
 1. Install `wasm-pack` with `cargo install wasm-pack`
 1. From the `web` folder, run `yarn`
 1. [Setup the config file](/docs/config.md).
-1. In `web`, run `yarn build` (or `yarn watch` in dev)
+1. In `web`, run `yarn build` (or `yarn start` in dev)
 1. Publish `/web/dist` as a static site
 1. In the `serv2` directory, run `yarn`, then `./run.sh` to start the server (or `./watch.sh` in dev). This will start a server listening on the specified port that will serve the backend.
