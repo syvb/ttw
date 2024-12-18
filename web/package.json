@@ -24,7 +24,7 @@
     "dexie": "^3.0.3",
     "flatpickr": "^4.6.9",
     "humanize-duration": "^3.23.1",
-    "js-xxhash": "^1.0.4",
+    "js-xxhash": "^4.0.0",
     "moment": "^2.29.1",
     "svelte-routing": "^1.6.0",
     "workbox-precaching": "^6.1.2"
