@@ -164,6 +164,12 @@ const registerForm = fs.readFileSync(__dirname + "/forms/register.html", "utf-8"
 function registerFormWithError(error) {
     return registerForm.replace(/%main%/g, config["root-domain"]).replace(/%errors%/g, `<div class="error">${error}</div>`);
 }
+app.use("/internal/register", (req, res, next) => {
+    if (config["disable-signups"]) {
+        return res.status(403).send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><link rel="stylesheet" href="/internal/style.css"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Register</title></head><body><a href="${config["root-domain"]}">Back to homepage</a><p>Signups are disabled on this instance.</p></body></html>`);
+    }
+    next();
+});
 app.post("/internal/register", bodyParser.urlencoded({ extended: false, limit: config["db-max-size"] }), async (req, res) => {
     const pw = req.body.pw;
     if (typeof pw !== "string") {
