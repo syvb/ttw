@@ -4,31 +4,26 @@ name: Build frontend
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node: [ '12', '14', '15' ]
+        node: [ '14' ]
     name: Node ${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v2
-      - run: sudo apt update
-      - run: sudo apt install libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc binutils-dev libiberty-dev
+      - uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+      # newer Rust emits wasm features (multivalue, reference types) that Node 14 and webpack's wasm parser reject
+      - name: Install Rust 1.81 toolchain
+        uses: dtolnay/rust-toolchain@1.81
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
+          targets: wasm32-unknown-unknown
       - name: Install wasm-pack
-        # fork that supports working-directory
-        uses: actions-rs/cargo@v1
+        uses: taiki-e/install-action@v2
         with:
-          command: install
-          args: wasm-pack
+          tool: wasm-pack
       - run: cp config.example.json config.json
       - name: Install node dependencies
         run: yarn

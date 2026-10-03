@@ -5,7 +5,7 @@ name: Build/test taglogic
 jobs:
   test:
     name: taglogic tests (no WASM)
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         rust:
@@ -14,72 +14,47 @@ jobs:
           - nightly
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
-          override: true
-
-      - run: cd taglogic
 
       - name: Run cargo test
-        # fork that supports working-directory
-        uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-        with:
-          command: test
-          working-directory: taglogic
+        run: cargo test
+        working-directory: taglogic
 
   formatted:
     name: Formatted with rustfmt
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
           components: rustfmt
 
       - name: Run cargo fmt
-        uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-        with:
-          working-directory: taglogic
-          command: fmt
-          args: --all -- --check
+        run: cargo fmt --all -- --check
+        working-directory: taglogic
   min-vers:
     name: works with minimal dependency versions
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout sources
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Install toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: nightly
-        override: true
-    - run: cd taglogic
+      uses: dtolnay/rust-toolchain@nightly
 
     - name: Set versions to minimal
-      # fork that supports working-directory
-      uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-      with:
-        command: update
-        working-directory: taglogic
-        args: -Z minimal-versions
+      # only direct deps, since ancient transitive deps (e.g. proc-macro2) don't build on current nightly
+      run: cargo update -Z direct-minimal-versions
+      working-directory: taglogic
 
     - name: Run cargo test
-      # fork that supports working-directory
-      uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-      with:
-        command: test
-        working-directory: taglogic
-
+      run: cargo test
+      working-directory: taglogic

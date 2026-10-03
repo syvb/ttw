@@ -37,7 +37,8 @@ This guide will assume you are in the repo root.
 6. If the backend is only accessible over HTTPS, set `secure-cookie` to `true` in `config.json`.
 7. (optional) If you want, you can store user databases in a custom location with the `user-db-dir` config key in `config-private.json`.
 8. (optional) You can set `extra-footer-text` or `extra-homepage-text` to add extra text to the footer/homepage.
-9. (optional) Add Beeminder support (see `beem.md`).
+9. (optional) Set `disable-signups` to `true` in `config.json` to prevent new accounts from being created. Existing users can still log in. You will need to rebuild the front-end for the "Sign up" links to be hidden.
+10. (optional) Add Beeminder support (see `beem.md`).
 
 **Note:** If login/signup loads forever or takes a long time, then the randomness pool is running dry. Installing `rng-tools` should fix the issue on Linux by automatically topping up the randomness pool via `rngd`.
 
