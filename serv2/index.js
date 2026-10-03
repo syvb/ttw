@@ -659,6 +659,7 @@ if (process.env["SERV2_TEST_MODE"]) {
     (async () => {
         await require("./tests/pings.js")();
         await require("./tests/loggedout.js")();
+        await require("./tests/signups.js")(config);
         await require("./tests/accs.js")();
         await require("./tests/normalizePath.js")();
         process.exit(0);
