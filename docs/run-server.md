@@ -19,3 +19,6 @@ Want to run your own Retag server? This is the documentation file for you!
 1. In `web`, run `yarn build` (or `yarn start` in dev)
 1. Publish `/web/dist` as a static site
 1. In the `serv2` directory, run `./run.sh` to start the server (or `./watch.sh` in dev). This will start a server listening on the specified port that will serve the backend.
+
+## Shutting down
+To stop running an instance but let users keep downloading their data, see [shutdown.md](shutdown.md).
