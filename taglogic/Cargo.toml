@@ -39,4 +39,4 @@ lto = "thin"
 panic = "abort"
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ["-Oz", "--enable-mutable-globals"]
+wasm-opt = ["-Oz", "--enable-mutable-globals", "--signext-lowering"]

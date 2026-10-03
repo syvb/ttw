@@ -15,8 +15,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Install stable toolchain
-        uses: dtolnay/rust-toolchain@stable
+      # newer Rust emits wasm features (multivalue, reference types) that Node 14 and webpack's wasm parser reject
+      - name: Install Rust 1.81 toolchain
+        uses: dtolnay/rust-toolchain@1.81
         with:
           targets: wasm32-unknown-unknown
       - name: Install wasm-pack
