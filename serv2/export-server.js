@@ -163,7 +163,7 @@ function wrap(handler) {
  * - globalDbPath (required): path to global.db (usernames and password hashes)
  * - userDbDir (required): directory holding each user's <id in base 36>.db
  * - authDbPath: path to auth.db; when given, old login cookies and API tokens keep working
- * - appName, contactEmail, deletionDate: shown on the page
+ * - appName, contactEmail: shown on the page
  * - extraHtml: raw HTML shown under the shutdown notice
  * - secureCookie: set the Secure flag on the session cookie
  * - legacyCookieDomain: the old `cookie-domain`, needed to clear old login cookies on logout
@@ -248,11 +248,8 @@ ${contact}
     }
 
     function homePage(user, error) {
-        const deletion = options.deletionDate
-            ? ` All data will be permanently deleted on ${escapeHtml(options.deletionDate)}.`
-            : "";
         let body = `<h1>${escapeHtml(appName)} has shut down</h1>
-<p>${escapeHtml(appName)} is no longer running. You can still log in to download your data.${deletion}</p>
+<p>${escapeHtml(appName)} is no longer running. You can still log in to download your data.</p>
 ${options.extraHtml || ""}`;
         if (user) {
             body += `<h2>Your data</h2>
@@ -464,7 +461,6 @@ function main() {
         userDbDir: config["user-db-dir"] || path.join(__dirname, "user-dbs"),
         appName: config["app-name"],
         contactEmail: config["contact-email"],
-        deletionDate: config["export-deletion-date"],
         extraHtml: config["export-extra-html"],
         secureCookie: config["secure-cookie"],
         legacyCookieDomain: config["cookie-domain"],

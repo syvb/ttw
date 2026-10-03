@@ -23,9 +23,9 @@ The `tz` query parameter picks the TagTime log's time zone, like `/export/tags.l
 
 ## Before the shutdown
 
-1. Pick a shutdown date and a later date when the data will be deleted.
+1. Pick a shutdown date.
 1. Set `disable-signups` to `true` (see [config.md](config.md)).
-1. Announce both dates. You can add a notice to the homepage with `extra-homepage-text` and rebuild the frontend.
+1. Announce the date. You can add a notice to the homepage with `extra-homepage-text` and rebuild the frontend.
 1. Ask users to open the app while online before the shutdown.
    The app saves pings in the browser and syncs them later, so pings answered offline exist only in the browser until then.
 
@@ -50,7 +50,6 @@ If you set `user-db-dir`, use that directory instead of `user-dbs`.
 
    | Key | Value |
    |-----|-------|
-   | `export-deletion-date` | Text such as `"March 1, 2027"`. The page says all data will be permanently deleted on this date. |
    | `export-extra-html` | HTML shown under the shutdown notice, such as a link to an announcement |
    | `export-listen-port` | Port to listen on. Defaults to `api-listen-port`. |
    | `global-db`, `auth-db` | Paths to the databases, if they aren't in the working directory |
@@ -86,9 +85,7 @@ Other old API endpoints return `410 Gone`.
 Logins check old password hashes, which take about 500 MB of memory each.
 The server checks one password at a time and turns logins away with a "server is busy" message when more than eight are waiting.
 
-## Deleting the data
+## Stopping the export server
 
-On the deletion date, stop the export server and delete `global.db`, `auth.db`, `user-dbs`, and the backups.
-
-Consider keeping the frontend domain, even if it only serves a static page.
+If you eventually stop the export server, consider keeping the frontend domain, even if it only serves a static page.
 If someone else registers it, browsers that still have the old app installed would run whatever service worker they serve.

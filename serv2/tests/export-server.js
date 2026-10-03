@@ -157,7 +157,6 @@ async function testServer() {
         userDbDir,
         appName: "Test App",
         contactEmail: "admin@example.com",
-        deletionDate: "January 1, 2027",
         extraHtml: "<p id=extra>Extra <em>notice</em></p>",
     });
     const server = await new Promise(resolve => {
@@ -178,7 +177,7 @@ async function testServer() {
             assert.equal(res.status, 200);
             const html = await res.text();
             assert(html.includes("Test App has shut down"));
-            assert(html.includes("permanently deleted on January 1, 2027"));
+            assert(html.includes("You can still log in to download your data.</p>"));
             assert(html.includes("<p id=extra>Extra <em>notice</em></p>"));
             assert(html.includes('action="/login"'));
             assert(html.includes("mailto:admin@example.com"));
