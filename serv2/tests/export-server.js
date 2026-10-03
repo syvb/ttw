@@ -4,12 +4,12 @@
 const assert = require("assert").strict;
 const crypto = require("crypto");
 const fs = require("fs");
+const http = require("http");
 const os = require("os");
 const path = require("path");
 const argon2 = require("argon2");
 const Database = require("better-sqlite3");
 const fetch = require("node-fetch");
-const cookieSignature = require("cookie-signature");
 const { createApp, createSerialQueue, tagtimeLineFormatter, QueueFullError } = require("../export-server.js");
 
 const SECRET = "test-cookie-secret";
@@ -38,6 +38,8 @@ async function buildFixture() {
     addUser.run(2, "bob", await argon2.hash("bob password", FAST_ARGON2));
     // it used to be possible to register a duplicate username; the oldest account wins
     addUser.run(3, "alice", await argon2.hash("newer alice password", FAST_ARGON2));
+    // has a large database, for testing cancelled downloads
+    addUser.run(4, "carol", await argon2.hash("carol password", FAST_ARGON2));
     globalDb.close();
 
     const authDb = new Database(path.join(dir, "auth.db"));
@@ -45,6 +47,7 @@ async function buildFixture() {
     const addToken = authDb.prepare("INSERT INTO tokens (user_id, token_data, created) VALUES (?, ?, 0)");
     addToken.run(1, "1.legacycookie");
     addToken.run(1, "api!1.apitoken");
+    addToken.run(4, "api!4.bigtoken");
     authDb.close();
 
     const userDb = new Database(path.join(userDbDir, "1.db"));
@@ -53,6 +56,11 @@ async function buildFixture() {
     PINGS.forEach(ping => addPing.run(ping));
     userDb.prepare("INSERT INTO meta (k, v) VALUES ('retag-pint-interval', '2700')").run();
     userDb.close();
+
+    const bigDb = new Database(path.join(userDbDir, "4.db"));
+    bigDb.exec(sql("initUserDb.sql"));
+    bigDb.prepare("INSERT INTO meta (k, v) VALUES ('filler', ?)").run("x".repeat(32 * 1024 * 1024));
+    bigDb.close();
 
     // the export server must work on read-only data
     for (const file of fs.readdirSync(userDbDir)) fs.chmodSync(path.join(userDbDir, file), 0o444);
@@ -81,6 +89,11 @@ function snapshot(dir, prefix = "") {
         }
     }
     return out;
+}
+
+// Signs a cookie value the same way cookie-parser does
+function signCookie(value, secret) {
+    return value + "." + crypto.createHmac("sha256", secret).update(value).digest("base64").replace(/=+$/, "");
 }
 
 function cspHash(source) {
@@ -202,6 +215,21 @@ async function testServer() {
             assert((await res.text()).includes("Incorrect username or password."));
         }
 
+        // an oversized login form is a client error, not a logged server error
+        {
+            const logged = [];
+            const realConsoleError = console.error;
+            console.error = (...args) => logged.push(args);
+            try {
+                const res = await login("alice", "x".repeat(30 * 1024));
+                assert.equal(res.status, 413);
+                assert((await res.text()).includes("Bad request"));
+            } finally {
+                console.error = realConsoleError;
+            }
+            assert.deepEqual(logged, []);
+        }
+
         // successful login, with the username in a different case and padded
         const loginRes = await login(" ALICE ", "alice password");
         assert.equal(loginRes.status, 303);
@@ -282,11 +310,11 @@ async function testServer() {
         {
             const tampered = session.replace("ttw-export=s%3A1.", "ttw-export=s%3A2.");
             assert.equal((await req("/export/pings.json", { headers: { Cookie: tampered } })).status, 403);
-            const expired = "ttw-export=" + encodeURIComponent("s:" + cookieSignature.sign(`1.${Date.now() - 1000}`, SECRET));
+            const expired = "ttw-export=" + encodeURIComponent("s:" + signCookie(`1.${Date.now() - 1000}`, SECRET));
             assert.equal((await req("/export/pings.json", { headers: { Cookie: expired } })).status, 403);
-            const fresh = "ttw-export=" + encodeURIComponent("s:" + cookieSignature.sign(`1.${Date.now() + 60000}`, SECRET));
+            const fresh = "ttw-export=" + encodeURIComponent("s:" + signCookie(`1.${Date.now() + 60000}`, SECRET));
             assert.equal((await req("/export/pings.json", { headers: { Cookie: fresh } })).status, 200);
-            const wrongSecret = "ttw-export=" + encodeURIComponent("s:" + cookieSignature.sign(`1.${Date.now() + 60000}`, "other"));
+            const wrongSecret = "ttw-export=" + encodeURIComponent("s:" + signCookie(`1.${Date.now() + 60000}`, "other"));
             assert.equal((await req("/export/pings.json", { headers: { Cookie: wrongSecret } })).status, 403);
         }
 
@@ -314,6 +342,45 @@ async function testServer() {
             assert.equal((await req("/export/pings.json", badTokenGoodCookie)).status, 403);
             // the rest of the old API is gone
             assert.equal((await req("/pings", api)).status, 410);
+        }
+
+        // cancelling a download partway through closes the file
+        {
+            const streams = [];
+            const realCreateReadStream = fs.createReadStream;
+            fs.createReadStream = (...args) => {
+                const stream = realCreateReadStream(...args);
+                streams.push(stream);
+                return stream;
+            };
+            try {
+                await new Promise((resolve, reject) => {
+                    const clientReq = http.get(base + "/export/user.db", {
+                        headers: { Authorization: "Bearer ttwprivate_api!4.bigtoken" },
+                    }, res => {
+                        assert.equal(res.statusCode, 200);
+                        assert(Number(res.headers["content-length"]) > 32 * 1024 * 1024);
+                        // stop reading so the server is stuck partway through the file, then disconnect
+                        res.once("data", () => {
+                            res.pause();
+                            setTimeout(() => {
+                                clientReq.destroy();
+                                resolve();
+                            }, 200);
+                        });
+                    });
+                    clientReq.on("error", err => { if (err.code !== "ECONNRESET") reject(err); });
+                });
+            } finally {
+                fs.createReadStream = realCreateReadStream;
+            }
+            assert.equal(streams.length, 1);
+            const [stream] = streams;
+            for (let i = 0; i < 40 && !stream.destroyed; i++) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+            assert(stream.destroyed, "file left open after the download was cancelled");
+            assert(stream.bytesRead < 32 * 1024 * 1024, "the whole file was read before cancelling");
         }
 
         // an account without a user database

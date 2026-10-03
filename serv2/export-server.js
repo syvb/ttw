@@ -18,6 +18,7 @@ const fs = require("fs");
 const http = require("http");
 const https = require("https");
 const path = require("path");
+const { pipeline } = require("stream");
 
 const SESSION_COOKIE = "ttw-export";
 const LEGACY_COOKIE = "retag-auth";
@@ -328,7 +329,10 @@ ${error ? `<div class="error" role="alert">${escapeHtml(error)}</div>` : ""}
         res.attachment(req.path === "/db" ? "user.db" : `${req.user.username}.db`);
         res.type("application/vnd.sqlite3");
         res.set("Content-Length", String(size));
-        fs.createReadStream(file).on("error", err => res.destroy(err)).pipe(res);
+        // pipeline closes the file if the client disconnects partway through
+        pipeline(fs.createReadStream(file), res, err => {
+            if (err && err.code !== "ERR_STREAM_PREMATURE_CLOSE") console.error(err);
+        });
     }
 
     const app = express();
@@ -436,6 +440,11 @@ ${error ? `<div class="error" role="alert">${escapeHtml(error)}</div>` : ""}
     });
 
     app.use((err, req, res, next) => {
+        // client errors, such as a login form that is too large
+        const status = err.status || err.statusCode;
+        if (status >= 400 && status < 500 && !res.headersSent) {
+            return res.status(status).send(page("Bad request", `<h1>Bad request</h1><p><a href="/">Go back</a> and try again.</p>`));
+        }
         console.error(err);
         if (res.headersSent) return res.destroy();
         res.status(500).send(page("Error", `<h1>Something went wrong</h1><p><a href="/">Go back</a> and try again.</p>`));
