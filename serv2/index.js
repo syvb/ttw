@@ -641,6 +641,12 @@ app.use("/internal/push", pushHandler(globalDb));
 app.use("/internal/beem", beem.router);
 app.use(static);
 
+// Interface to bind the API to. Passing a host to listen() keeps the backend off
+// every interface by default; set "api-listen-host" in config.json to bind
+// elsewhere (e.g. "0.0.0.0" for all IPv4 interfaces, or "::" for all).
+const apiListenHost = config["api-listen-host"] || "127.0.0.1";
+const onListen = () => console.log(`API listening on ${apiListenHost}:${config["api-listen-port"]}`);
+
 if (config["https-crt"]) {
     const httpsConfig = {
         key: fs.readFileSync(config["https-key"]),
@@ -650,9 +656,9 @@ if (config["https-crt"]) {
         httpsConfig.ca = fs.readFileSync(config["https-ca"]);
     }
     const server = https.createServer(httpsConfig, app);
-    server.listen(config["api-listen-port"]);
+    server.listen(config["api-listen-port"], apiListenHost, onListen);
 } else {
-    app.listen(config["api-listen-port"]);
+    app.listen(config["api-listen-port"], apiListenHost, onListen);
 }
 
 if (process.env["SERV2_TEST_MODE"]) {
