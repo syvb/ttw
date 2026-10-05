@@ -6,7 +6,7 @@ It's like [TagTime](https://tagti.me), but on the web. It has a number of featur
 - TagTime import/export
 
 ## Usage
-You can use my [public instance](https://ttw.smitop.com/) or [host it yourself](docs/run-server.md).
+You can [host it yourself](docs/run-server.md).
 
 ## Notes
 - It is is internally called `retag`.
