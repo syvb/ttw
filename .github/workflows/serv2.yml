@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node: [ '14' ]
+        node: [ '24' ]
     name: serv2 on Node ${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
