@@ -7,8 +7,9 @@
 // This is a dry run by default: it prints who would get what and sends nothing.
 // Options:
 //   --template <file>   Required. The first line is "Subject: ...", then a blank
-//                       line, then the plain-text body. {{usernames}} is replaced
-//                       with the recipient's usernames.
+//                       line, then the body. {{usernames}} is replaced with the
+//                       recipient's usernames. The body can use **bold** and
+//                       [text](url) links.
 //   --send              Actually send to real users.
 //   --test-to <address> Send one email, built for the first real recipient, to
 //                       this address instead. Never sends to real users.
@@ -94,17 +95,39 @@ function parseTemplate(source) {
     return { subject: match[1].trim(), body: match[2] };
 }
 
-// Builds the email for one recipient. The HTML version is the text version with
-// paragraphs and links, since Cloudflare recommends sending both.
+// The bits of Markdown the template can use: [text](url) links and **bold**.
+// Bare URLs are linked too.
+const INLINE_MARKUP = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)|\*\*(.+?)\*\*|(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g;
+
+function inlineToHtml(source) {
+    let html = "";
+    let last = 0;
+    for (const match of source.matchAll(INLINE_MARKUP)) {
+        html += escapeHtml(source.slice(last, match.index));
+        const [, linkText, linkUrl, bold, url] = match;
+        if (linkUrl) html += `<a href="${escapeHtml(linkUrl)}">${escapeHtml(linkText)}</a>`;
+        else if (bold) html += `<strong>${escapeHtml(bold)}</strong>`;
+        else html += `<a href="${escapeHtml(url)}">${escapeHtml(url)}</a>`;
+        last = match.index + match[0].length;
+    }
+    return html + escapeHtml(source.slice(last));
+}
+
+function inlineToText(source) {
+    return source.replace(INLINE_MARKUP, (all, linkText, linkUrl, bold, url) =>
+        linkUrl ? `${linkText} (${linkUrl})` : bold ? bold : url);
+}
+
+// Builds the email for one recipient, as both plain text and HTML since
+// Cloudflare recommends sending both.
 function buildMessage(template, recipient) {
     const names = recipient.accounts.map(a => a.username);
     const usernames = names.length === 1 ? names[0]
         : names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
-    const text = template.body.replace(/\{\{usernames\}\}/g, usernames);
-    const html = text.trim().split(/\r?\n\s*\r?\n/).map(paragraph =>
-        "<p>" + escapeHtml(paragraph)
-            .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, url => `<a href="${url}">${url}</a>`)
-            .replace(/\r?\n/g, "<br>\n") + "</p>"
+    const source = template.body.replace(/\{\{usernames\}\}/g, usernames);
+    const text = inlineToText(source);
+    const html = source.trim().split(/\r?\n\s*\r?\n/).map(paragraph =>
+        "<p>" + inlineToHtml(paragraph).replace(/\r?\n/g, "<br>\n") + "</p>"
     ).join("\n");
     return { subject: template.subject, text, html };
 }

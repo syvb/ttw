@@ -94,6 +94,9 @@ async function main_() {
         const message = buildMessage(template, recipients[1]);
         assert.equal(message.text, "Hi dave and erin,\n\nSee https://example.com/.\nBye\n");
         assert.equal(message.html, '<p>Hi dave and erin,</p>\n<p>See <a href="https://example.com/">https://example.com/</a>.<br>\nBye</p>');
+        const markdown = buildMessage({ subject: "s", body: "A **bold <b>** [link & text](https://example.com/a?b=1&c=2) (see: https://example.org/x).\n" }, recipients[0]);
+        assert.equal(markdown.text, "A bold <b> link & text (https://example.com/a?b=1&c=2) (see: https://example.org/x).\n");
+        assert.equal(markdown.html, '<p>A <strong>bold &lt;b&gt;</strong> <a href="https://example.com/a?b=1&amp;c=2">link &amp; text</a> (see: <a href="https://example.org/x">https://example.org/x</a>).</p>');
 
         // dry run: no API calls, no credentials needed, nothing logged as sent
         let api = fakeApi();

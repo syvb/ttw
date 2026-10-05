@@ -1,11 +1,20 @@
 Subject: TagTime Web has shut down: download your data
 
-Hi {{usernames}},
+Hi {{usernames}}!
 
-TagTime Web has shut down. You can no longer tag pings, but you can still log in with your username and password to download your data:
+You’re getting this email because you signed up for TagTime Web (TTW, https://ttw.smitop.com/) at some point in the last 6 years. It's a hosted version of TTW that runs my open source code (available at https://github.com/syvb/ttw).
 
-https://ttw.smitop.com/
+I have **shut down the hosted service** today. If you want to keep using TTW from today, you’ll have to use the open source code (which is unaffected) to run it yourself (I recommend running in a way that doesn’t expose it to the public Internet).
 
-You can download your pings as a TagTime log, as JSON, or as a SQLite database.
+You can export all of your data by logging in at: https://ttwbackend.smitop.com/
 
-If you have questions, or want your data deleted, reply to this email.
+I will try to keep this data export service running for at least 9 months, although I might be keep it running longer.
+
+The reason I’ve decided to stop running the hosted service is that keeping the hosted server up-to-date has become an increasing maintenance burden on me. I also can’t continue to be confident that I’m able to keep the data secure, especially given today’s cybersecurity environment.
+
+If you have any questions you can reply to me (at me@iter.ca); I’m happy to help you out. If you'd like your data deleted from the export, reply and I'll delete it. I can also help you set up the open source server yourself if you run into any problems. It was a pleasure helping hundreds of users track their time over the last 6 years, and I appreciate your trust in me as a server operator.
+
+Yours truly,
+[Smitty van Bodegom](https://iter.ca/)
+
+You are receiving this email because TTW is being shut down. If you don’t want to receive future messages from me, please ask in a reply and I’ll remove you from the list.
