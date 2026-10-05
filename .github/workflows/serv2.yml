@@ -40,3 +40,6 @@ jobs:
       - name: Test export server
         run: node tests/export-server.js
         working-directory: serv2
+      - name: Test email script
+        run: node tests/email-users.js
+        working-directory: serv2

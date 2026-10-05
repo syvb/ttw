@@ -5,3 +5,4 @@ user-dbs/
 !user-dbs/.gitkeep
 logged-out-tokens.txt
 pkg/
+email-sent.log

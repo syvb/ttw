@@ -1,0 +1,11 @@
+Subject: TagTime Web has shut down: download your data
+
+Hi {{usernames}},
+
+TagTime Web has shut down. You can no longer tag pings, but you can still log in with your username and password to download your data:
+
+https://ttw.smitop.com/
+
+You can download your pings as a TagTime log, as JSON, or as a SQLite database.
+
+If you have questions, or want your data deleted, reply to this email.
