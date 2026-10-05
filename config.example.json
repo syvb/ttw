@@ -1,6 +1,7 @@
 {
     "api-server": "http://localhost:8081",
     "api-listen-port": 8081,
+    "api-listen-host": "127.0.0.1",
     "root-domain": "http://localhost:8080",
     "db-max-size": 41943040,
     "vapid-public": "BN3U2jx8tbB437KQ2-nW0G2Xa-84heeYw1LPkcz2A-j3q0S8sEQln5khXhQl3SjCW7xYCJazw10fHRQ7q2hCTc4",
