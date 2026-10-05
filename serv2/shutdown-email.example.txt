@@ -6,7 +6,7 @@ You’re getting this email because you signed up for TagTime Web (TTW, https://
 
 I have **shut down the hosted service** today. If you want to keep using TTW from today, you’ll have to use the open source code (which is unaffected) to run it yourself (I recommend running in a way that doesn’t expose it to the public Internet).
 
-You can export all of your data by logging in at: https://ttwbackend.smitop.com/
+You can export all of your data by logging in at: https://export.ttw.smitop.com/
 
 I will try to keep this data export service running for at least 9 months, although I might keep it running longer.
 
