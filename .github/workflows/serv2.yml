@@ -43,3 +43,9 @@ jobs:
       - name: Test email script
         run: node tests/email-users.js
         working-directory: serv2
+      - name: Test shutdown worker
+        run: node tests/shutdown-worker.js
+        working-directory: serv2
+      - name: Test shutdown push script
+        run: node tests/push-shutdown.js
+        working-directory: serv2

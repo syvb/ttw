@@ -80,6 +80,15 @@ If you set `user-db-dir`, use that directory instead of `user-dbs`.
    The frontend domain matters: installed copies of the app check it for a new service worker.
    The export server serves one that deletes the app's caches and unregisters itself.
    Someone who opens an installed copy may see the old app once, and sees the shutdown page from then on.
+
+   If the export server runs on its own domain instead, the old domains must still serve that service worker at `/sw.js` with a `200`, since browsers don't accept a redirect as a service worker update.
+   `serv2/shutdown-worker.mjs` is a Cloudflare Worker that does this: route the old domains to it after setting `EXPORT_ORIGIN`.
+   It serves `/sw.js`, passes requests with an API token through to the export server, and redirects everything else there.
+1. Optionally, run `node push-shutdown.js --send` in `serv2` with the old config, once the old frontend domain serves the new `/sw.js`.
+   It sends a push to every device that had notifications on.
+   Waking the old service worker for a push makes the browser check for a service worker update, so the old app is removed without the user opening it.
+   The old app shows no notification for it, although Chrome may show "This site has been updated in the background".
+   Run it without `--send` first to see how many devices it will reach.
 1. Check that it works: log in, download each format, and open the old app URL.
 
 Old app pages like `/app` redirect to the shutdown page.
