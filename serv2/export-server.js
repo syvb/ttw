@@ -453,6 +453,36 @@ ${error ? `<div class="error" role="alert">${escapeHtml(error)}</div>` : ""}
     return app;
 }
 
+/**
+ * Handles plain HTTP requests when the server also runs HTTPS. Redirects
+ * everything to HTTPS, except ACME HTTP-01 challenges, which are served from
+ * acmeWebroot (when given) so `certbot --webroot` can renew certificates while
+ * the server keeps running.
+ */
+function createHttpRedirectHandler(acmeWebroot) {
+    return (req, res) => {
+        const challenge = req.url.match(/^\/\.well-known\/acme-challenge\/([A-Za-z0-9_-]+)$/);
+        if (acmeWebroot && challenge && (req.method === "GET" || req.method === "HEAD")) {
+            fs.readFile(path.join(acmeWebroot, ".well-known", "acme-challenge", challenge[1]), (err, data) => {
+                if (err) {
+                    res.writeHead(404, { "Content-Type": "text/plain" });
+                    return res.end("Not found\n");
+                }
+                res.writeHead(200, { "Content-Type": "text/plain" });
+                res.end(req.method === "HEAD" ? undefined : data);
+            });
+            return;
+        }
+        const host = (req.headers.host || "").replace(/:\d+$/, "");
+        if (!/^[a-z0-9.-]+$/i.test(host)) {
+            res.writeHead(400, { "Content-Type": "text/plain" });
+            return res.end("Bad request\n");
+        }
+        res.writeHead(301, { "Location": `https://${host}${req.url.startsWith("/") ? req.url : "/"}` });
+        res.end();
+    };
+}
+
 function loadConfig() {
     const root = path.join(__dirname, "..");
     const read = name => JSON.parse(fs.readFileSync(path.join(root, name), "utf-8"));
@@ -487,10 +517,15 @@ function main() {
         server = http.createServer(app);
     }
     server.listen(port, () => console.log(`Export server listening on port ${port}`));
+    if (config["export-http-port"]) {
+        if (!config["https-crt"]) throw new Error("export-http-port redirects to HTTPS, so it needs https-crt and https-key");
+        http.createServer(createHttpRedirectHandler(config["acme-webroot"]))
+            .listen(config["export-http-port"], () => console.log(`Redirecting HTTP to HTTPS on port ${config["export-http-port"]}`));
+    }
 }
 
 if (require.main === module) {
     main();
 }
 
-module.exports = { createApp, createSerialQueue, tagtimeLineFormatter, QueueFullError, SW_SCRIPT, TZ_SCRIPT, STYLE };
+module.exports = { createApp, createHttpRedirectHandler, createSerialQueue, tagtimeLineFormatter, QueueFullError, SW_SCRIPT, TZ_SCRIPT, STYLE };

@@ -10,7 +10,7 @@ const path = require("path");
 const argon2 = require("argon2");
 const Database = require("better-sqlite3");
 const fetch = require("node-fetch");
-const { createApp, createSerialQueue, tagtimeLineFormatter, QueueFullError } = require("../export-server.js");
+const { createApp, createHttpRedirectHandler, createSerialQueue, tagtimeLineFormatter, QueueFullError } = require("../export-server.js");
 
 const SECRET = "test-cookie-secret";
 // Cheap hashing parameters so the tests run quickly. verify() reads them from the hash.
@@ -432,6 +432,46 @@ async function testServer() {
     }
 }
 
+async function testHttpRedirect() {
+    const webroot = fs.mkdtempSync(path.join(os.tmpdir(), "ttw-acme-test-"));
+    fs.mkdirSync(path.join(webroot, ".well-known", "acme-challenge"), { recursive: true });
+    fs.writeFileSync(path.join(webroot, ".well-known", "acme-challenge", "tok-EN_1"), "tok-EN_1.thumbprint");
+    fs.writeFileSync(path.join(webroot, "secret.txt"), "not served");
+    const server = await new Promise(resolve => {
+        const s = http.createServer(createHttpRedirectHandler(webroot)).listen(0, "127.0.0.1", () => resolve(s));
+    });
+    const base = `http://127.0.0.1:${server.address().port}`;
+    const get = (urlPath, options = {}) => fetch(base + urlPath, { redirect: "manual", ...options });
+    try {
+        // certbot's challenge files are served, nothing else is
+        let res = await get("/.well-known/acme-challenge/tok-EN_1", { headers: { Host: "export.example.com" } });
+        assert.equal(res.status, 200);
+        assert.equal(await res.text(), "tok-EN_1.thumbprint");
+        assert.equal((await get("/.well-known/acme-challenge/missing")).status, 404);
+        res = await get("/.well-known/acme-challenge/..%2Fsecret.txt", { headers: { Host: "export.example.com" } });
+        assert.equal(res.status, 301);
+        assert.equal((await get("/.well-known/acme-challenge/tok-EN_1", { method: "POST", headers: { Host: "a.example.com" } })).status, 301);
+
+        // everything else redirects to the same place over HTTPS
+        res = await get("/export/tags.log?tz=UTC", { headers: { Host: "export.example.com:80" } });
+        assert.equal(res.status, 301);
+        assert.equal(res.headers.get("location"), "https://export.example.com/export/tags.log?tz=UTC");
+        assert.equal((await get("/", { headers: { Host: "bad host/" } })).status, 400);
+
+        // without a webroot, challenges redirect too
+        const plain = createHttpRedirectHandler(null);
+        const headers = {};
+        let status;
+        plain({ url: "/.well-known/acme-challenge/tok-EN_1", method: "GET", headers: { host: "a.example.com" } },
+            { writeHead: (s, h) => { status = s; Object.assign(headers, h); }, end: () => {} });
+        assert.equal(status, 301);
+        assert.equal(headers.Location, "https://a.example.com/.well-known/acme-challenge/tok-EN_1");
+    } finally {
+        server.close();
+        fs.rmSync(webroot, { recursive: true, force: true });
+    }
+}
+
 // If a test leaves a promise hanging, Node exits once nothing is left to run.
 // Treat that as a failure rather than a silent success.
 process.exitCode = 1;
@@ -439,6 +479,7 @@ process.exitCode = 1;
     await testQueue();
     testFormatter();
     await testServer();
+    await testHttpRedirect();
     console.log("export server tests passed");
     process.exitCode = 0;
 })().catch(e => {

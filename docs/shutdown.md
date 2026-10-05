@@ -53,8 +53,11 @@ If you set `user-db-dir`, use that directory instead of `user-dbs`.
    | `export-extra-html` | HTML shown under the shutdown notice, such as a link to an announcement |
    | `export-listen-port` | Port to listen on. Defaults to `api-listen-port`. |
    | `global-db`, `auth-db` | Paths to the databases, if they aren't in the working directory |
+   | `export-http-port` | With HTTPS, also listen on this port (usually 80) and redirect plain HTTP to HTTPS |
+   | `acme-webroot` | With `export-http-port`, serve certbot's challenge files from this directory, so `certbot --webroot -w <dir>` can renew certificates while the server runs |
 
    The export server also uses `app-name`, `contact-email`, `cookie-secret`, `secure-cookie`, `cookie-domain`, `user-db-dir`, and the `https-*` keys, with the same meanings as before.
+   It doesn't support `https-both-proto`; use `export-http-port` instead.
    If `auth.db` is missing, old login cookies and API tokens stop working but password logins still work.
 1. Start the export server and keep it running, for example with systemd:
    ```ini
