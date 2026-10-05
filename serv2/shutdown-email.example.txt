@@ -8,7 +8,7 @@ I have **shut down the hosted service** today. If you want to keep using TTW fro
 
 You can export all of your data by logging in at: https://ttwbackend.smitop.com/
 
-I will try to keep this data export service running for at least 9 months, although I might keep keep it running longer.
+I will try to keep this data export service running for at least 9 months, although I might keep it running longer.
 
 The reason I’ve decided to stop running the hosted service is that keeping the hosted server up-to-date has become an increasing maintenance burden on me. I also can’t continue to be confident that I’m able to keep the data secure, especially given today’s cybersecurity environment.
 
