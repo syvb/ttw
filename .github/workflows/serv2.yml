@@ -37,3 +37,6 @@ jobs:
       - name: Try running
         run: SERV2_TEST_MODE=1 ./run.sh
         working-directory: serv2
+      - name: Test export server
+        run: node tests/export-server.js
+        working-directory: serv2
