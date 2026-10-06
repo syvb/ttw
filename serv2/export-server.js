@@ -186,10 +186,6 @@ function createApp(options) {
     };
     const verifyQueue = createSerialQueue(MAX_PENDING_LOGINS);
 
-    function userDbPath(uid) {
-        return path.join(userDbDir, `${uid.toString(36)}.db`);
-    }
-
     function lookupToken(token) {
         if (!stmts.token || typeof token !== "string" || token.length === 0) return null;
         const row = stmts.token.get(token);
@@ -297,7 +293,7 @@ ${error ? `<div class="error" role="alert">${escapeHtml(error)}</div>` : ""}
     }
 
     function openUserDb(req, res) {
-        const file = userDbPath(req.user.id);
+        const file = userDbFile(userDbDir, req.user.id);
         if (!fs.existsSync(file)) {
             sendNoData(res);
             return null;
@@ -318,7 +314,7 @@ ${error ? `<div class="error" role="alert">${escapeHtml(error)}</div>` : ""}
     }
 
     function sendDb(req, res) {
-        const file = userDbPath(req.user.id);
+        const file = userDbFile(userDbDir, req.user.id);
         let size;
         try {
             size = fs.statSync(file).size;
@@ -483,6 +479,22 @@ function createHttpRedirectHandler(acmeWebroot) {
     };
 }
 
+// Where the data is, given the config. delete-user.js uses this too, so it
+// always finds the same files as the export server.
+function dataPaths(config) {
+    return {
+        // index.js opens these relative to the working directory, so do the same.
+        globalDbPath: config["global-db"] || path.resolve("global.db"),
+        authDbPath: config["auth-db"] || path.resolve("auth.db"),
+        userDbDir: config["user-db-dir"] || path.join(__dirname, "user-dbs"),
+    };
+}
+
+// A user's database is named after their user ID in base 36.
+function userDbFile(userDbDir, uid) {
+    return path.join(userDbDir, `${uid.toString(36)}.db`);
+}
+
 function loadConfig() {
     const root = path.join(__dirname, "..");
     const read = name => JSON.parse(fs.readFileSync(path.join(root, name), "utf-8"));
@@ -491,13 +503,12 @@ function loadConfig() {
 
 function main() {
     const config = loadConfig();
-    // index.js opens these relative to the working directory, so do the same.
-    const authDbPath = config["auth-db"] || path.resolve("auth.db");
+    const { globalDbPath, authDbPath, userDbDir } = dataPaths(config);
     const app = createApp({
         cookieSecret: config["cookie-secret"],
-        globalDbPath: config["global-db"] || path.resolve("global.db"),
+        globalDbPath,
         authDbPath: fs.existsSync(authDbPath) ? authDbPath : null,
-        userDbDir: config["user-db-dir"] || path.join(__dirname, "user-dbs"),
+        userDbDir,
         appName: config["app-name"],
         contactEmail: config["contact-email"],
         extraHtml: config["export-extra-html"],
@@ -528,4 +539,4 @@ if (require.main === module) {
     main();
 }
 
-module.exports = { createApp, createHttpRedirectHandler, createSerialQueue, tagtimeLineFormatter, QueueFullError, SW_SCRIPT, TZ_SCRIPT, STYLE };
+module.exports = { createApp, createHttpRedirectHandler, createSerialQueue, tagtimeLineFormatter, dataPaths, userDbFile, QueueFullError, SW_SCRIPT, TZ_SCRIPT, STYLE };

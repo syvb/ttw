@@ -49,3 +49,10 @@ jobs:
       - name: Test shutdown push script
         run: node tests/push-shutdown.js
         working-directory: serv2
+      - name: Test account deletion script
+        run: node tests/delete-user.js
+        working-directory: serv2
+      # root can write to read-only files, which changes what the script does
+      - name: Test account deletion script as root
+        run: sudo "$(command -v node)" tests/delete-user.js
+        working-directory: serv2

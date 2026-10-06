@@ -97,6 +97,41 @@ Other old API endpoints return `410 Gone`.
 Logins check old password hashes, which take about 500 MB of memory each.
 The server checks one password at a time and turns logins away with a "server is busy" message when more than eight are waiting.
 
+## Deleting an account
+
+To delete someone's account and data, such as when they ask you to, run `delete-user.js` in `serv2` on the server.
+By default it's a dry run, which shows what it would delete:
+```sh
+node delete-user.js alice
+```
+Add `--delete` to delete it.
+The switchover made the data read-only, so this needs root.
+`sudo` may not find `node` on its own, so give it the full path:
+```sh
+sudo "$(command -v node)" delete-user.js alice --delete
+```
+
+The export server can keep running.
+The account stops working right away, including for anyone already logged in and for API tokens.
+
+It deletes:
+- the account's username, password hash, and email addresses, from `global.db`
+- its login cookies and API tokens, from `auth.db`
+- its user database, with its pings and settings, including its Beeminder token if it had one
+- its entries in `email-sent.log`, the record of who `email-users.js` emailed, unless another account has the same address
+
+Deleted rows are overwritten, and `global.db` and `auth.db` are vacuumed.
+This also clears out copies of data deleted earlier, such as login cookies from old logouts, which the old server only marked as free space.
+It can't delete copies elsewhere: the backup from the switchover, any other backups, and anything the filesystem or disk keeps after a file is deleted.
+Push subscriptions aren't linked to accounts, so they stay.
+
+It finds the data the same way the export server does.
+`--global-db`, `--auth-db`, `--user-db-dir`, and `--sent-log` override that.
+
+If several accounts have the same username, which used to be possible, it lists them so you can pick one with `--id <user ID>`.
+`--id` also deletes data left from an account that's already gone.
+If it fails partway, run it again: the account is deleted last, so it's still there to find.
+
 ## Stopping the export server
 
 If you eventually stop the export server, consider keeping the frontend domain, even if it only serves a static page.

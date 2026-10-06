@@ -37,6 +37,9 @@ const REPLY_TO = "me@iter.ca";
 const SIMPLE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_ATTEMPTS = 5;
 const REQUEST_TIMEOUT_MS = 30000;
+// next to the script rather than in the working directory, so a rerun from
+// somewhere else still finds it
+const DEFAULT_SENT_LOG = path.join(__dirname, "email-sent.log");
 
 function escapeHtml(value) {
     return String(value)
@@ -266,9 +269,7 @@ async function main(argv, { fetchImpl = fetch, sleep = ms => new Promise(r => se
     const config = loadConfig();
     const globalDbPath = args["global-db"] || config["global-db"] || path.resolve("global.db");
     const userDbDir = args["user-db-dir"] || config["user-db-dir"] || path.join(__dirname, "user-dbs");
-    // next to the script rather than in the working directory, so a rerun from
-    // somewhere else still finds it
-    const sentLogPath = path.resolve(args["sent-log"] || path.join(__dirname, "email-sent.log"));
+    const sentLogPath = path.resolve(args["sent-log"] || DEFAULT_SENT_LOG);
     const delay = args.delay === undefined ? 200 : Number(args.delay);
     if (!(delay >= 0)) throw new Error("--delay must be a number of milliseconds");
     const template = parseTemplate(fs.readFileSync(args.template, "utf-8"));
@@ -362,4 +363,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { findRecipients, parseTemplate, buildMessage, sendEmail, main };
+module.exports = { findRecipients, parseTemplate, buildMessage, sendEmail, main, DEFAULT_SENT_LOG };
