@@ -5268,6 +5268,11 @@ workbox-core@6.3.0:
   resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-6.3.0.tgz#a7d82bae6f623f342e04028a0a2cef39af71af55"
   integrity sha512-SufToEV3SOLwwz3j+P4pgkfpzLRUlR17sX3p/LrMHP/brYKvJQqjTwtSvaCkkAX0RPHX2TFHmN8xhPP1bpmomg==
 
+workbox-core@7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-7.4.1.tgz#5a8811ba5d25a2049821a7b66f63ee9b204dc691"
+  integrity sha512-DT+vu46eh/2vRsSHTY4Xmc32Z1rr9PRlQUXr1Dx30ZuXRWwOsvZgGgcwxcasubQLQmbTNYZjv44LkBAQ4tT5tQ==
+
 workbox-expiration@6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/workbox-expiration/-/workbox-expiration-6.3.0.tgz#1d36c456f9282c39cda6b59a32b99732da7c3535"
@@ -5293,7 +5298,7 @@ workbox-navigation-preload@6.3.0:
   dependencies:
     workbox-core "6.3.0"
 
-workbox-precaching@6.3.0, workbox-precaching@^6.1.2:
+workbox-precaching@6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/workbox-precaching/-/workbox-precaching-6.3.0.tgz#5dc34161ef03ef3cc23af6d78f0b1583f3d180d0"
   integrity sha512-bND3rUxiuzFmDfeKywdvOqK0LQ5LLbOPk0eX22PlMQNOOduHRxzglMpgHo/MR6h+8cPJ3GpxT8hZ895/7bHMqQ==
@@ -5301,6 +5306,15 @@ workbox-precaching@6.3.0, workbox-precaching@^6.1.2:
     workbox-core "6.3.0"
     workbox-routing "6.3.0"
     workbox-strategies "6.3.0"
+
+workbox-precaching@^7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/workbox-precaching/-/workbox-precaching-7.4.1.tgz#059a88c092e762c341cf080ab88b4e8568af21ae"
+  integrity sha512-cdr/9qByww7yzEp7zg/qI4ukUrrNjQLgN+ONQRpjy/VqGQXwkgHwr00KksGJK8v0VifwDXBb8a4cWNZH71jn3Q==
+  dependencies:
+    workbox-core "7.4.1"
+    workbox-routing "7.4.1"
+    workbox-strategies "7.4.1"
 
 workbox-range-requests@6.3.0:
   version "6.3.0"
@@ -5328,12 +5342,26 @@ workbox-routing@6.3.0:
   dependencies:
     workbox-core "6.3.0"
 
+workbox-routing@7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/workbox-routing/-/workbox-routing-7.4.1.tgz#159fdd88260fce25f8ab15b46674852ad8aa48eb"
+  integrity sha512-yubJGErZOusuidAenaL5ypfhQOa7urxP/f8E0ws7FPb4039RiWXUWBAyUkmUoOL/BcQGen3h0J8872d51IYxtA==
+  dependencies:
+    workbox-core "7.4.1"
+
 workbox-strategies@6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/workbox-strategies/-/workbox-strategies-6.3.0.tgz#1d004f42b309cbfa48812c6cc7a8da6458b928c6"
   integrity sha512-SYZt40y+Iu5nA+UEPQOrAuAMMNTxtUBPLCIaMMb4lcADpBYrNP1CD+/s2QsrxzS651a8hfi06REKt+uTp1tqfw==
   dependencies:
     workbox-core "6.3.0"
+
+workbox-strategies@7.4.1:
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/workbox-strategies/-/workbox-strategies-7.4.1.tgz#6efe950e9d434b5d70a6277c4bdcdc5be4dfc8e5"
+  integrity sha512-GZxpaw9NbmOelj7667uZ2kpk5BFpOGbO4X0qjwh5ls8XQ8C+Lha5LQchTiUzsTFSS+NlUpftYAyOVXvQUrcqOQ==
+  dependencies:
+    workbox-core "7.4.1"
 
 workbox-streams@6.3.0:
   version "6.3.0"
