@@ -128,7 +128,8 @@ Push subscriptions aren't linked to accounts, so they stay.
 It finds the data the same way the export server does.
 `--global-db`, `--auth-db`, `--user-db-dir`, and `--sent-log` override that.
 
-If several accounts have the same username, which used to be possible, it lists them so you can pick one with `--id <user ID>`.
+To pick the account by email address instead of username, use `--email <address>`.
+If several accounts have the same username, which used to be possible, or the same email address, it lists them so you can pick one with `--id <user ID>`.
 `--id` also deletes data left from an account that's already gone.
 If it fails partway, run it again: the account is deleted last, so it's still there to find.
 

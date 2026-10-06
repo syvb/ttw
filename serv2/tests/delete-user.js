@@ -81,11 +81,15 @@ async function buildFixture() {
     // were deleted by hand with the sqlite3 command, which doesn't check foreign keys.
     globalDb.pragma("foreign_keys = OFF");
     addEmail.run(4, "dan@example.com", "t");
+    // zed has this address too, so it can't pick an account
+    addEmail.run(4, "zed@example.com", "t");
     globalDb.pragma("foreign_keys = ON");
     addUser.run(5, "erin", await argon2.hash("erin password", FAST_ARGON2), 0);
     addEmail.run(5, "Shared@Example.com ", "t");
     addUser.run(6, "gus", "gushash", 0);
     addEmail.run(6, "gus@example.com", "t");
+    // the same address twice is still one account
+    addEmail.run(6, "Gus@Example.com ", "t");
     // 36 is 10 in base 36, so this is 10.db. It's never deleted.
     addUser.run(36, "zed", "zedhash", 0);
     addEmail.run(36, "zed@example.com", "t");
@@ -238,7 +242,12 @@ function testParseArgs() {
     assert.deepEqual(parseArgs(["--id", "036", "--delete"]), { id: 36, delete: true });
     assert.deepEqual(parseArgs(["zed", "--global-db", "g", "--auth-db", "a", "--user-db-dir", "u", "--sent-log", "s"]),
         { username: "zed", "global-db": "g", "auth-db": "a", "user-db-dir": "u", "sent-log": "s" });
+    assert.deepEqual(parseArgs(["--email", " A@Example.com", "--delete"]), { email: " A@Example.com", delete: true });
     assert.throws(() => parseArgs([]), /^Error: Usage: node delete-user\.js <username>/);
+    assert.throws(() => parseArgs(["alice", "--email", "a@example.com"]), /Usage/);
+    assert.throws(() => parseArgs(["--id", "1", "--email", "a@example.com"]), /Usage/);
+    assert.throws(() => parseArgs(["--email"]), /--email needs a value/);
+    assert.throws(() => parseArgs(["--email", " "]), /--email needs an email address/);
     assert.throws(() => parseArgs(["--delete"]), /Usage/);
     assert.throws(() => parseArgs(["alice", "--id", "1"]), /Usage/);
     assert.throws(() => parseArgs(["alice", "bob"]), /Unexpected argument: bob/);
@@ -332,6 +341,18 @@ async function testDeleteUser() {
         // #4 has data but no account, so it can only be picked by user ID
         assert.throws(() => run(f, ["dan"]), /No account is named dan/);
         assert.throws(() => run(f, ["--id", "999", "--delete"]), /^Error: No data found for account #999$/);
+        // an email address must belong to exactly one user ID, matched like the sent log
+        for (const args of [["--email", "Shared@example.com"], ["--email", " SHARED@example.com ", "--delete"]]) {
+            assertThrowsMessage(() => run(f, args),
+                "2 accounts have the email address shared@example.com: #1 alice, #5 erin. Pick one with --id.");
+        }
+        // data left from a gone account counts, since deleting zed would leave the address there
+        assertThrowsMessage(() => run(f, ["--email", "zed@example.com", "--delete"]),
+            "2 accounts have the email address zed@example.com: #4 (no account left), #36 zed. Pick one with --id.");
+        assertThrowsMessage(() => run(f, ["--email", "nobody@example.com", "--delete"]), "No account has the email address nobody@example.com");
+        // only whole addresses match
+        assertThrowsMessage(() => run(f, ["--email", "alice@example"]), "No account has the email address alice@example");
+        assertThrowsMessage(() => run(f, ["--email", "lice@example.com"]), "No account has the email address lice@example.com");
         // a symlinked user database would leave the data it points to, so it's left for a person to deal with
         {
             const link = path.join(f.userDbDir, "a.db");
@@ -372,6 +393,7 @@ async function testDeleteUser() {
         ]);
         // secrets are never printed
         for (const secret of [f.aliceHash, ...Object.values(ALICE)]) assert(!out.join("\n").includes(secret), secret);
+        assert.deepEqual(run(f, ["--email", " ALICE@Example.com "]), out);
         assert.deepEqual(snapshot(f.dir), original);
         assert.deepEqual(rows(f), originalRows);
 
@@ -466,6 +488,10 @@ async function testDeleteUser() {
         ]);
         assertVacuumedAndIntact(f);
 
+        // with alice gone, the address she shared is only erin's
+        assert.equal(run(f, ["--email", "shared@example.com"])[0], "Account #5 erin, registered 1970-01-01. This deletes:");
+        assertThrowsMessage(() => run(f, ["--email", "alice@example.com"]), "No account has the email address alice@example.com");
+
         // running it again finds nothing
         const afterAlice = snapshot(f.dir);
         assert.throws(() => run(f, ["--id", "1", "--delete"]), /^Error: No data found for account #1$/);
@@ -475,12 +501,15 @@ async function testDeleteUser() {
         out = run(f, ["--id", "4"]);
         assert.deepEqual(out, [
             "There's no account #4, but some of its data is left. This deletes:",
-            `  ${f.globalDbPath}: 1 email address: dan@example.com`,
+            `  ${f.globalDbPath}: 2 email addresses: dan@example.com, zed@example.com`,
             `  ${f.authDbPath}: 1 login cookie`,
             `  ${path.join(f.userDbDir, "4.db")}: ${kb(path.join(f.userDbDir, "4.db"))}, which can't be read (attempt to write a readonly database)`,
             `  ${path.join(f.userDbDir, "4.db-journal")}: 22 bytes`,
+            `keep   ${f.sentLogPath}: 1 entry for zed@example.com, since #36 zed also has that address`,
             "Dry run: nothing was deleted. Add --delete to delete it.",
         ]);
+        // it can be found by an address only it has
+        assert.deepEqual(run(f, ["--email", "DAN@example.com"]), out);
         assert.deepEqual(snapshot(f.dir), afterAlice);
         out = run(f, ["--id", "4", "--delete"]);
         assert.equal(out[out.length - 2], "Deleted the data left from account #4.");
@@ -551,10 +580,10 @@ async function testDeleteUser() {
             assert.equal(query(f.authDbPath, "SELECT COUNT(*) AS n FROM tokens WHERE user_id = 6")[0].n, 2);
             assert(!fs.existsSync(path.join(f.userDbDir, "6.db")));
             assert.equal(fs.readFileSync(f.sentLogPath, "utf-8"), sentLogText([3, 4, 6, 7, 9, 10]));
-            out = run(f, ["gus", "--delete"]);
+            out = run(f, ["--email", "gus@example.com", "--delete"]);
             assert.deepEqual(out.slice(0, 4), [
                 "Account #6 gus, registered 1970-01-01. This deletes:",
-                `  ${f.globalDbPath}: the account (username and password hash), and 1 email address: gus@example.com`,
+                `  ${f.globalDbPath}: the account (username and password hash), and 2 email addresses: gus@example.com, Gus@Example.com`,
                 `  ${f.authDbPath}: 1 login cookie and 1 API token`,
                 `note   no user database at ${path.join(f.userDbDir, "6.db")}`,
             ]);

@@ -9,6 +9,8 @@
 //   --id <user ID>      Pick the account by user ID instead of username. Needed when
 //                       several accounts have the username, or to delete data left
 //                       from an account that's already gone.
+//   --email <address>   Pick the account by email address instead. Fails if several
+//                       accounts have it.
 //   --global-db, --auth-db, --user-db-dir  Database locations. By default, the
 //                       ones the export server uses.
 //   --sent-log <file>   email-users.js's sent log. Defaults to the one it uses.
@@ -31,11 +33,12 @@ const path = require("path");
 const { dataPaths, userDbFile } = require("./export-server.js");
 const { DEFAULT_SENT_LOG } = require("./email-users.js");
 
-const USAGE = "Usage: node delete-user.js <username> [--delete], or node delete-user.js --id <user ID> [--delete]";
+const USAGE = "Usage: node delete-user.js <username> [--delete], or use --id <user ID> or --email <address> instead of a username";
 const READ_ONLY = { readonly: true, fileMustExist: true };
 
 const OPTIONS = {
     "--id": "value",
+    "--email": "value",
     "--delete": "flag",
     "--global-db": "value",
     "--auth-db": "value",
@@ -61,7 +64,8 @@ function parseArgs(argv) {
             args[key] = argv[++i];
         }
     }
-    if ((args.username === undefined) === (args.id === undefined)) throw new Error(USAGE);
+    if ([args.username, args.id, args.email].filter(arg => arg !== undefined).length !== 1) throw new Error(USAGE);
+    if (args.email !== undefined && normalizeEmail(args.email) === "") throw new Error("--email needs an email address");
     if (args.id !== undefined) {
         if (!/^\d+$/.test(args.id) || !Number.isSafeInteger(Number(args.id))) throw new Error(`--id must be a user ID, like 123, not ${args.id}`);
         args.id = Number(args.id);
@@ -156,11 +160,11 @@ function readDb(file, fn) {
 }
 
 /**
- * Finds everything stored about an account, picked by username or user ID,
- * without changing anything. Throws if there's no such account or the username
- * is ambiguous.
+ * Finds everything stored about an account, picked by username, user ID, or
+ * email address, without changing anything. Throws if there's no such account
+ * or the username or email address is ambiguous.
  */
-function findAccount(paths, { username, id }) {
+function findAccount(paths, { username, id, email }) {
     if (!fs.existsSync(paths.globalDbPath)) {
         throw new Error(`${paths.globalDbPath} doesn't exist. Run this from the serv2 directory, or use --global-db.`);
     }
@@ -172,6 +176,23 @@ function findAccount(paths, { username, id }) {
             if (ids.length === 0) throw new Error(`No account is named ${name}`);
             if (ids.length > 1) {
                 throw new Error(`${ids.length} accounts are named ${name}: ${ids.map(n => `#${n}`).join(", ")}. Pick one with --id. Logging in as ${name} logs in to #${ids[0]}.`);
+            }
+            id = ids[0];
+        }
+        if (email !== undefined) {
+            // the same normalization as the sent log; SQLite's LOWER() only handles ASCII
+            const address = normalizeEmail(email);
+            const ids = [...new Set(globalDb.prepare("SELECT user_id, email FROM emails ORDER BY user_id").all()
+                .filter(row => normalizeEmail(row.email) === address)
+                .map(row => row.user_id))];
+            if (ids.length === 0) throw new Error(`No account has the email address ${address}`);
+            if (ids.length > 1) {
+                const usernameOf = globalDb.prepare("SELECT username FROM users WHERE id = ?").pluck();
+                const accounts = ids.map(n => {
+                    const name = usernameOf.get(n);
+                    return name === undefined ? `#${n} (no account left)` : `#${n} ${name}`;
+                });
+                throw new Error(`${ids.length} accounts have the email address ${address}: ${accounts.join(", ")}. Pick one with --id.`);
             }
             id = ids[0];
         }
